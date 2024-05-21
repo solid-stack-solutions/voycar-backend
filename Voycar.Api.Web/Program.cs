@@ -1,20 +1,46 @@
-var builder = WebApplication.CreateBuilder(args);
+Log.Logger = new LoggerConfiguration()
+    .WriteTo.Console()
+    .CreateLogger();
 
-builder.Services.AddFastEndpoints();
-builder.Services.SwaggerDocument(o =>
+try
 {
-    o.DocumentSettings = s =>
+    Log.Information("Starting application!");
+    var builder = WebApplication.CreateBuilder(args);
+
+    builder.Host.UseSerilog((context, loggerConfiguration) =>
     {
-        s.Title = "Voycar Web API Documentation";
-        s.Version = "v1";
-    };
-});
+        loggerConfiguration.WriteTo.Console();
+        loggerConfiguration.ReadFrom.Configuration(context.Configuration);
+    });
 
-var app = builder.Build();
+    builder.Services.AddFastEndpoints();
+    builder.Services.SwaggerDocument(o =>
+    {
+        o.DocumentSettings = s =>
+        {
+            s.Title = "Voycar Web API Documentation";
+            s.Version = "v1";
+        };
+    });
 
-app.UseFastEndpoints();
-app.UseSwaggerGen();
+    var app = builder.Build();
 
-app.Run();
+    app.UseFastEndpoints();
+
+    if (app.Environment.IsDevelopment())
+    {
+        app.UseSwaggerGen();
+    }
+
+    app.Run();
+}
+catch (Exception exception)
+{
+    Log.Fatal(exception, "Application terminated unexpectedly!");
+}
+finally
+{
+    Log.CloseAndFlush();
+}
 
 public partial class Program {}
