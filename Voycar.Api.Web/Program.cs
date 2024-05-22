@@ -29,10 +29,9 @@ try
 
     app.UseFastEndpoints();
 
-    if (app.Environment.IsDevelopment())
-    {
-        app.UseSwaggerGen();
-    }
+    // Caution: Swagger available in production environment
+    app.UseSwaggerGen();
+
 
     app.Run();
 }
