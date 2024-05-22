@@ -1,4 +1,4 @@
-namespace Voycar.Api.Web.Endpoints.Name.GetHello;
+namespace Voycar.Api.Web.Feature.Name.GetHello;
 
 public class Endpoint : Endpoint<Request, Response>
 {
