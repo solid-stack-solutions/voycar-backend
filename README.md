@@ -6,6 +6,7 @@
 Logging based on the Serilog.AspNetCore NuGet.
 
 ### Example
+Use the 
 ```csharp
 // Inject into your container
 private readonly ILogger<Endpoint> _logger;
@@ -59,5 +60,3 @@ logger.LogFatal(exeption,"");
       </tr>
    </tbody>
 </table>
-
-[Reference](https://codewithmukesh.com/blog/structured-logging-with-serilog-in-aspnet-core/)

@@ -2,16 +2,16 @@ namespace Voycar.Api.Web.Endpoints.Name.GetHello;
 
 public class Endpoint : Endpoint<Request, Response>
 {
-    private readonly ILogger<Endpoint> _logger;
+    private readonly ILogger<Endpoint> logger;
 
     public Endpoint(ILogger<Endpoint> logger)
     {
-        this._logger = logger;
+        this.logger = logger;
     }
 
     public override void Configure()
     {
-        this._logger.LogInformation("Start setup");
+        this.logger.LogInformation("Start setup");
 
         this.Post("/hello/world");
         this.AllowAnonymous();
@@ -19,7 +19,7 @@ public class Endpoint : Endpoint<Request, Response>
 
     public override async Task HandleAsync(Request req, CancellationToken ct)
     {
-        this._logger.LogInformation("Endpoint called");
+        this.logger.LogInformation("Endpoint called");
 
         await this.SendAsync(new Response
         {

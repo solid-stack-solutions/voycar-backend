@@ -1,22 +1,16 @@
-Log.Logger = new LoggerConfiguration()
-    .WriteTo.Console()
-    .CreateLogger();
-
 try
 {
-    Log.Information("Starting application!");
     var builder = WebApplication.CreateBuilder(args);
 
-    builder.Host.UseSerilog((context, loggerConfiguration) =>
+    builder.Host.UseSerilog((context, configuration) =>
     {
-        loggerConfiguration.WriteTo.Console();
-        loggerConfiguration.ReadFrom.Configuration(context.Configuration);
+        configuration.ReadFrom.Configuration(context.Configuration);
     });
 
     builder.Services.AddFastEndpoints();
-    builder.Services.SwaggerDocument(o =>
+    builder.Services.SwaggerDocument(options =>
     {
-        o.DocumentSettings = s =>
+        options.DocumentSettings = s =>
         {
             s.Title = "Voycar Web API Documentation";
             s.Version = "v1";
@@ -24,6 +18,8 @@ try
     });
 
     var app = builder.Build();
+
+    app.UseSerilogRequestLogging();
 
     app.UseFastEndpoints();
 
@@ -40,6 +36,7 @@ catch (Exception exception)
 }
 finally
 {
+    Log.Information("Application terminated!");
     Log.CloseAndFlush();
 }
 
