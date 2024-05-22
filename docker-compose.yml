@@ -1,0 +1,6 @@
+﻿services:
+  voycar.api.web:
+    image: voycar.api.web
+    build:
+      context: .
+      dockerfile: Voycar.Api.Web/Dockerfile
