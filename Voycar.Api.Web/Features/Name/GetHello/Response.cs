@@ -1,4 +1,4 @@
-namespace Voycar.Api.Web.Feature.Name.GetHello;
+namespace Voycar.Api.Web.Features.Name.GetHello;
 
 public class Response
 {
