@@ -7,4 +7,13 @@
         <Nullable>enable</Nullable>
     </PropertyGroup>
 
+    <ItemGroup>
+      <ProjectReference Include="..\Voycar.Api.Web\Voycar.Api.Web.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <PackageReference Include="FastEndpoints.Testing" Version="5.25.0" />
+      <PackageReference Include="FluentAssertions" Version="6.12.0" />
+    </ItemGroup>
+
 </Project>
