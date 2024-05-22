@@ -3,29 +3,8 @@
 # Conventions
 
 ## Logging
-Logging based on the Serilog.AspNetCore NuGet.
+Logging based on the Serilog.AspNetCore NuGet package.
 
-### Example
-Use the 
-```csharp
-// Inject into your container
-private readonly ILogger<Endpoint> _logger;
-// Initialize in constructor
-public Endpoint(ILogger<Endpoint> logger)
-{
-    this._logger = logger;
-}
-```
-
-```csharp
-// Use in code
-logger.LogInformation("");
-logger.LogCritical("");
-logger.LogFatal(exeption,"");
-//...
-```
-
-### Information
 <table>
    <thead>
       <tr>
