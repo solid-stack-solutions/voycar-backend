@@ -6,6 +6,8 @@
     build:
       context: .
       dockerfile: Voycar.Api.Web/Dockerfile
+    environment:
+      - ConnectionStrings__VoycarDb=User ID=admin;Password=admin;Server=voycar_db;Port=5432;Database=VoycarDb;
 
   voycar_db:
       image: postgres:16.3
