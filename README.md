@@ -1,8 +1,20 @@
-# Styling
+# Overview
+//Todo: (semi-)short Desciption of the Backend
+# Functionality
+//Todo: what the backend does, what its used for,
+# Installation
+//Todo: explenation Installation of the backend + dependend Modules (Database etc.)
+# Deployment 
+//Docker build, Docker Compose --> start, stopp, restart backend
+# Development
+//Todo: introduction on how the development of any new, fixed or refactored parts of the backend
+## Styling
+//Todo: list styling conventions 
+## Conventions
+//Todo list general conventions for development
 
-# Conventions
-
-## Logging
+//Todo: helpfull informations and how-to's for Development
+### Logging
 Logging based on the Serilog.AspNetCore NuGet package.
 
 <table>
