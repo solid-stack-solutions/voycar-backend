@@ -1,7 +1,6 @@
 namespace Voycar.Api.Web.Tests;
 
 using Microsoft.AspNetCore.Hosting;
-using Web.Features.Name.GetHello;
 
 public class App : AppFixture<Program>
 {
