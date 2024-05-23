@@ -6,7 +6,6 @@ public class Tests(App app) : TestBase<App>
 {
     [Fact]
     public async Task ReturnsExpectedType()
-        // [3]
     {
         var (rsp, res) = await app.Client.POSTAsync<Endpoint, Request, Response>(new Request
         {
@@ -15,6 +14,17 @@ public class Tests(App app) : TestBase<App>
         });
 
         res.Should().BeOfType<Response>();
+    }
+
+    [Fact]
+    public async Task ReturnsExpectedStatusCode()
+    {
+        var (rsp, res) = await app.Client.POSTAsync<Endpoint, Request, Response>(new Request
+        {
+            FirstName = "Foo",
+            LastName = "Bar"
+        });
+
         rsp.StatusCode.Should().Be(HttpStatusCode.OK);
     }
 }
