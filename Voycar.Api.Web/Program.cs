@@ -5,9 +5,8 @@ try
 {
     var builder = WebApplication.CreateBuilder(args);
 
-    var conn = builder.Configuration.GetConnectionString("VoycarDb");
-
-    builder.Services.AddDbContext<VoycarDbContext>(options => options.UseNpgsql(conn));
+    builder.Services.AddDbContext<VoycarDbContext>(options =>
+        options.UseNpgsql(builder.Configuration.GetConnectionString("VoycarDb")));
 
     builder.Host.UseSerilog((context, configuration) =>
     {
