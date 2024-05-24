@@ -1,0 +1,27 @@
+﻿services:
+  voycar.api.web:
+    image: voycar.api.web
+    container_name: VoycarWeb
+    ports:
+      - "8080:8080"
+    build:
+      context: .
+      dockerfile: Voycar.Api.Web/Dockerfile
+    environment:
+      - ConnectionStrings__VoycarDb=User ID=admin;Password=admin;Server=voycar_db;Port=5432;Database=VoycarDb;
+    depends_on:
+      - voycar.postgres
+
+
+  voycar.postgres:
+      image: postgres:16.3
+      container_name: VoycarDb
+      environment:
+        - POSTGRES_USER=admin
+        - POSTGRES_PASSWORD=admin
+        - POSTGRES_DB=VoycarDb
+      ports:
+        - "5432:5432"
+      restart: always
+      volumes:
+        - ./Data/:/var/lib/postgresql/data/

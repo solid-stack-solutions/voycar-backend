@@ -1,6 +1,12 @@
+using Microsoft.EntityFrameworkCore;
+using Voycar.Api.Web.Context;
+
 try
 {
     var builder = WebApplication.CreateBuilder(args);
+
+    builder.Services.AddDbContext<VoycarDbContext>(options =>
+        options.UseNpgsql(builder.Configuration.GetConnectionString("VoycarDb")));
 
     builder.Host.UseSerilog((context, configuration) =>
     {
@@ -23,10 +29,9 @@ try
 
     app.UseFastEndpoints();
 
-    if (app.Environment.IsDevelopment())
-    {
-        app.UseSwaggerGen();
-    }
+    // Caution: Swagger available in production environment
+    app.UseSwaggerGen();
+
 
     app.Run();
 }
