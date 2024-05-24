@@ -1,20 +1,27 @@
 # Overview
-//Todo: (semi-)short Desciption of the Backend
-# Functionality
-//Todo: what the backend does, what its used for,
+//Todo: (semi-)short description of the backend
+# How to use
+//Todo: short description on how to use the backend pages, maybe screenshot/video showcase
 # Installation
-//Todo: explenation Installation of the backend + dependend Modules (Database etc.)
-# Deployment 
-//Docker build, Docker Compose --> start, stopp, restart backend
+//Todo: explanation of the installation of the backend
+## Dependencies
+//Todo: list big dependencies (used Frameworks etc.) with short description + how to install them, along with the steps for the right setup
+# Functionality
+//Todo: description of what the backend does, what it's used for
+# Deployment
+//Todo: docker stuff
 # Development
-//Todo: introduction on how the development of any new, fixed or refactored parts of the backend
-## Styling
-//Todo: list styling conventions 
-## Conventions
-//Todo list general conventions for development
+//Todo: introduction on how the development of any new, fixed or refactored parts of the backend should be done
 
-//Todo: helpfull informations and how-to's for Development
-### Logging
+//Todo: link to documentation of the backend 
+## Code Styling
+//Todo: list code-styling conventions
+## Conventions
+//Todo: list general conventions for development
+
+//Todo: helpful information and how-to's for development
+
+## Logging
 Logging based on the Serilog.AspNetCore NuGet package.
 
 <table>
