@@ -1,6 +1,7 @@
 ﻿services:
   voycar.api.web:
     image: voycar.api.web
+    container_name: VoycarWeb
     ports:
       - "8080:8080"
     build:
@@ -9,10 +10,10 @@
     environment:
       - ConnectionStrings__VoycarDb=User ID=admin;Password=admin;Server=voycar_db;Port=5432;Database=VoycarDb;
     depends_on:
-      - voycar_db
+      - voycar.postgres
 
 
-  voycar_db:
+  voycar.postgres:
       image: postgres:16.3
       container_name: VoycarDb
       environment:
