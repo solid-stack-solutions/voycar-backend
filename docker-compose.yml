@@ -9,6 +9,8 @@
       dockerfile: Voycar.Api.Web/Dockerfile
     environment:
       - ConnectionStrings__VoycarDb=User ID=admin;Password=admin;Server=voycar.postgres;Port=5432;Database=VoycarDb;
+      - SmtpEmail=test-voycar-dev@outlook.de
+      - SmtpAppPassword=
     depends_on:
       - voycar.postgres
 
