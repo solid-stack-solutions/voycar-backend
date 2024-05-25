@@ -24,5 +24,11 @@ public class MemberRepository : IMemberRepository
     }
 
     public async Task<Member?> GetAsync(Request request)
-        => await this._dbContext.Members.FirstOrDefaultAsync(mem => mem.Email == request.Email);
+        => await this._dbContext.Members.FirstOrDefaultAsync(member => member.Email == request.Email);
+
+
+    public async Task<Member?> GetAsync(string verificationToken)
+        => await this._dbContext.Members.FirstOrDefaultAsync(member => member.VerificationToken == verificationToken);
+
+    public async Task SafeAsync() => await this._dbContext.SaveChangesAsync();
 }
