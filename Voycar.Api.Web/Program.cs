@@ -17,7 +17,7 @@ try
     });
 
 
-    builder.Services.AddTransient<IEmailSender, EmailSender>();
+    builder.Services.AddTransient<IEmailService, EmailService>();
     builder.Services.AddTransient<IMemberRepository, MemberRepository>();
 
 
