@@ -58,3 +58,16 @@ Logging based on the Serilog.AspNetCore NuGet package.
       </tr>
    </tbody>
 </table>
+
+## Migrations
+### Command to create a migration: 
+ `dotnet ef migrations add "name"`
+
+### Command to add migration to a database which is running in a docker container: 
+
+// Todo Removed details
+
+`dotnet ef database update <Migration_Name> --connection "User ID=admin;Password=admin;Server=localhost;Port=5432;Database=VoycarDb"`
+
+Migration will be added via localhost to the database but will be persistent due to the docker volume.
+
