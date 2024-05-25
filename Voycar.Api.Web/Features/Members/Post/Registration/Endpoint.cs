@@ -6,13 +6,13 @@ using Services.EmailService;
 public class Endpoint : Endpoint<Request, Response, Mapper>
 {
     private readonly IMemberRepository memberRepository;
-    private readonly IEmailSender emailSender;
+    private readonly IEmailService emailService;
 
 
-    public Endpoint(IMemberRepository memberRepository, IEmailSender emailSender)
+    public Endpoint(IMemberRepository memberRepository, IEmailService emailService)
     {
         this.memberRepository = memberRepository;
-        this.emailSender = emailSender;
+        this.emailService = emailService;
     }
     public override void Configure()
     {
@@ -31,6 +31,7 @@ public class Endpoint : Endpoint<Request, Response, Mapper>
         var member = this.Map.ToEntity(req);
         await this.memberRepository.CreateAsync(member);
 
-        await this.SendAsync(new Response(), cancellation: ct);
+        this.emailService.SendEmail(member);
+        await this.SendAsync(new Response { VerificationToken = member.VerificationToken }, cancellation: ct);
     }
 }
