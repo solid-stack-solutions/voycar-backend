@@ -8,6 +8,7 @@
     </PropertyGroup>
 
     <ItemGroup>
+      <PackageReference Include="BCrypt.Net-Next" Version="4.0.3" />
       <PackageReference Include="FastEndpoints" Version="5.25.0" />
       <PackageReference Include="FastEndpoints.Security" Version="5.25.0" />
       <PackageReference Include="FastEndpoints.Swagger" Version="5.25.0" />
@@ -23,6 +24,13 @@
       <Content Include="..\.dockerignore">
         <Link>.dockerignore</Link>
       </Content>
+    </ItemGroup>
+
+    <ItemGroup>
+      <Folder Include="Features\Members\Delete\" />
+      <Folder Include="Features\Members\Get\" />
+      <Folder Include="Features\Members\Post\" />
+      <Folder Include="Migrations\" />
     </ItemGroup>
 
 </Project>
