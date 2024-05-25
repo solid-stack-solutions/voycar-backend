@@ -1,9 +1,12 @@
 using Microsoft.EntityFrameworkCore;
 using Voycar.Api.Web.Context;
+using Voycar.Api.Web.Features.Members.Repository;
+using Voycar.Api.Web.Features.Members.Services.EmailService;
 
 try
 {
     var builder = WebApplication.CreateBuilder(args);
+
 
     builder.Services.AddDbContext<VoycarDbContext>(options =>
         options.UseNpgsql(builder.Configuration.GetConnectionString("VoycarDb")));
@@ -12,6 +15,12 @@ try
     {
         configuration.ReadFrom.Configuration(context.Configuration);
     });
+
+
+    builder.Services.AddTransient<IEmailSender, EmailSender>();
+    builder.Services.AddTransient<IMemberRepository, MemberRepository>();
+
+
 
     builder.Services.AddFastEndpoints();
     builder.Services.SwaggerDocument(options =>
