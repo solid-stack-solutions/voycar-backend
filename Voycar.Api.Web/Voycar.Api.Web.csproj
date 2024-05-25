@@ -12,11 +12,13 @@
       <PackageReference Include="FastEndpoints" Version="5.25.0" />
       <PackageReference Include="FastEndpoints.Security" Version="5.25.0" />
       <PackageReference Include="FastEndpoints.Swagger" Version="5.25.0" />
+      <PackageReference Include="MailKit" Version="4.6.0" />
       <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="8.0.3">
         <PrivateAssets>all</PrivateAssets>
         <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
       </PackageReference>
       <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="8.0.2" />
+      <PackageReference Include="RandomString4Net" Version="1.8.0" />
       <PackageReference Include="Serilog.AspNetCore" Version="8.0.1" />
     </ItemGroup>
 
@@ -29,7 +31,6 @@
     <ItemGroup>
       <Folder Include="Features\Members\Delete\" />
       <Folder Include="Features\Members\Get\" />
-      <Folder Include="Features\Members\Post\" />
       <Folder Include="Migrations\" />
     </ItemGroup>
 
