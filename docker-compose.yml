@@ -1,6 +1,5 @@
 ﻿services:
   voycar.api.web:
-    image: voycar.api.web
     container_name: VoycarWeb
     ports:
       - "8080:8080"
