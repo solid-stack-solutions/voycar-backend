@@ -1,17 +1,22 @@
 using Microsoft.EntityFrameworkCore;
 using Voycar.Api.Web.Context;
+using Voycar.Api.Web.Features.Permissions.Repository;
 
 try
 {
     var builder = WebApplication.CreateBuilder(args);
 
-    builder.Services.AddDbContext<VoycarDbContext>(options =>
-        options.UseNpgsql(builder.Configuration.GetConnectionString("VoycarDb")));
-
     builder.Host.UseSerilog((context, configuration) =>
     {
         configuration.ReadFrom.Configuration(context.Configuration);
     });
+
+    builder.Services.AddDbContext<VoycarDbContext>((options) =>
+    {
+        options.UseNpgsql(builder.Configuration.GetConnectionString("VoycarDb"));
+    });
+    // repositories
+    builder.Services.AddTransient<IPermissions, Permissions>();
 
     builder.Services.AddFastEndpoints();
     builder.Services.SwaggerDocument(options =>
@@ -31,7 +36,6 @@ try
 
     // Caution: Swagger available in production environment
     app.UseSwaggerGen();
-
 
     app.Run();
 }
