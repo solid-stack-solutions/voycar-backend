@@ -31,7 +31,7 @@ public class Endpoint : Endpoint<Request, Response, Mapper>
         var member = this.Map.ToEntity(req);
         await this.memberRepository.CreateAsync(member);
 
-        this.emailService.SendEmail(member);
+        this.emailService.SendVerificationEmail(member);
         await this.SendAsync(new Response { VerificationToken = member.VerificationToken }, cancellation: ct);
     }
 }
