@@ -11,5 +11,9 @@ riderModule.iml
 # Rider User Settings
 voycar-backend.sln.DotSettings.user
 
+# Logging files
 Logs/
+# Data from the database
 Data/
+# Migration files for the database
+Migrations/
