@@ -1,7 +1,7 @@
 namespace Voycar.Api.Web.Features.Members.Post.Registration;
 
+using System.Security.Cryptography;
 using Entities;
-using RandomString4Net;
 
 public class Mapper : Mapper<Request, Response, Member>
 {
@@ -21,6 +21,6 @@ public class Mapper : Mapper<Request, Response, Member>
         PhoneNumber = r.PhoneNumber,
         IdCardNumber = r.IdCardNumber,
         DriversLicenseNumber = r.DriversLicenseNumber,
-        VerificationToken = RandomString.GetString(Types.ALPHANUMERIC_MIXEDCASE, 256)
+        VerificationToken = Convert.ToHexString(RandomNumberGenerator.GetBytes(256))
     };
 }
