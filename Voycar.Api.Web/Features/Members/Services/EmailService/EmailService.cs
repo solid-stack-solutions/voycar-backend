@@ -19,7 +19,7 @@ public class EmailService : IEmailService
             throw new InvalidOperationException("SMTP email or password environment variables are not set.");
         }
 
-        var email = this.CreateVerificationEmail(member, this.GenerateVerificationLink(member));
+        var email = this.CreateVerificationEmail(member, GenerateVerificationLink(member));
         using var smtpClient = new SmtpClient();
         try
         {
@@ -33,10 +33,10 @@ public class EmailService : IEmailService
         }
     }
 
-    public string GenerateVerificationLink(Member member)
+    private static string GenerateVerificationLink(Member member)
         => $"http://localhost:8080/api/verify/{member.VerificationToken}";
 
-    public MimeMessage CreateVerificationEmail(Member member, string verificationLink )
+    private MimeMessage CreateVerificationEmail(Member member, string verificationLink )
     {
         var email = new MimeMessage();
         email.From.Add(MailboxAddress.Parse(this._smtpEmail));

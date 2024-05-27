@@ -7,6 +7,4 @@ using Post.Registration;
 public interface IEmailService
 {
     void SendVerificationEmail(Member member);
-    string GenerateVerificationLink(Member member);
-    MimeMessage CreateVerificationEmail(Member member, string verificationLink);
 }
