@@ -21,10 +21,10 @@ try
     builder.Services.AddFastEndpoints();
     builder.Services.SwaggerDocument(options =>
     {
-        options.DocumentSettings = s =>
+        options.DocumentSettings = settings =>
         {
-            s.Title = "Voycar Web API Documentation";
-            s.Version = "v1";
+            settings.Title = "Voycar Web API Documentation";
+            settings.Version = "v1";
         };
     });
 
@@ -39,7 +39,7 @@ try
 
     app.Run();
 }
-catch (Exception exception)
+catch (Exception exception) when (exception is not HostAbortedException)
 {
     Log.Fatal(exception, "Application terminated unexpectedly!");
 }

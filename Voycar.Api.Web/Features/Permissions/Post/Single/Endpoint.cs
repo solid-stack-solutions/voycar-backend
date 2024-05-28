@@ -7,6 +7,11 @@ public class Endpoint : Endpoint<Request, Results<Ok, NoContent>, Mapper>
 {
     private readonly IPermissions _permissions;
 
+    public Endpoint(IPermissions permissions)
+    {
+        this._permissions = permissions;
+    }
+
     public override void Configure()
     {
         this.Post("/permission/single");
