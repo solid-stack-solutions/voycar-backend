@@ -26,7 +26,7 @@ public class Endpoint : Endpoint<Request, Response, Mapper>
     {
         this.Post("/api/registration");
         this.AllowAnonymous();
-        this.logger.LogInformation("Registration endpoint configured.");
+        this.logger.LogInformation("Registration-Endpoint configured.");
     }
 
 
