@@ -5,26 +5,23 @@ using MailKit.Net.Smtp;
 using MailKit.Security;
 using MimeKit;
 
-
+/// <summary>
+/// Service for sending verification emails to members.
+///
+/// Uses SMTP settings from environment variables to send emails via Gmail.
+/// </summary>
 public class EmailService : IEmailService
 {
-    private readonly string? _smtpEmail  = Environment.GetEnvironmentVariable("SmtpEmail");
-    private readonly string? _smtpAppPassword = Environment.GetEnvironmentVariable("SmtpAppPassword");
+    private readonly string? smtpEmail  = Environment.GetEnvironmentVariable("SmtpEmail");
+    private readonly string? smtpAppPassword = Environment.GetEnvironmentVariable("SmtpAppPassword");
 
 
-    public void SendVerificationEmail(Member member)
+    private void SendEmail(MimeMessage email)
     {
-        if (string.IsNullOrEmpty(this._smtpEmail) || string.IsNullOrEmpty(this._smtpAppPassword))
-        {
-            throw new InvalidOperationException("SMTP email or password environment variables are not set.");
-        }
-
-        var email = this.CreateVerificationEmail(member, GenerateVerificationLink(member));
         using var smtpClient = new SmtpClient();
         try
         {
-            smtpClient.Connect("smtp.gmail.com", 587, SecureSocketOptions.StartTls);
-            smtpClient.Authenticate(this._smtpEmail, this._smtpAppPassword);
+            this.ConfigureSmtpClient(smtpClient);
             smtpClient.Send(email);
         }
         finally
@@ -33,13 +30,34 @@ public class EmailService : IEmailService
         }
     }
 
+
+    private void ConfigureSmtpClient(SmtpClient smtpClient)
+    {
+        if (string.IsNullOrEmpty(this.smtpEmail) || string.IsNullOrEmpty(this.smtpAppPassword))
+        {
+            throw new InvalidOperationException("SMTP email or password environment variables are not set.");
+        }
+
+        smtpClient.Connect("smtp.gmail.com", 587, SecureSocketOptions.StartTls);
+        smtpClient.Authenticate(this.smtpEmail, this.smtpAppPassword);
+    }
+
+
+    public void SendVerificationEmail(Member member)
+    {
+        var email = this.CreateVerificationEmail(member, GenerateVerificationLink(member));
+        this.SendEmail(email);
+    }
+
+
     private static string GenerateVerificationLink(Member member)
         => $"http://localhost:8080/api/verify/{member.VerificationToken}";
 
-    private MimeMessage CreateVerificationEmail(Member member, string verificationLink )
+
+    private MimeMessage CreateVerificationEmail(Member member, string verificationLink)
     {
         var email = new MimeMessage();
-        email.From.Add(MailboxAddress.Parse(this._smtpEmail));
+        email.From.Add(MailboxAddress.Parse(this.smtpEmail));
         email.To.Add(MailboxAddress.Parse(member.Email));
         email.Subject = "Konto-Verifizierung";
 
