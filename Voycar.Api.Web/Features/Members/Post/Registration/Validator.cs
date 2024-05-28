@@ -35,36 +35,36 @@ public class Validator : Validator<Request>
                     - member.BirthDate.DayNumber) / 365)
             .GreaterThan(18).WithMessage("you are not legal yet!");
 
-        // todo
+        // not implemented yet
         this.RuleFor(member => member.PhoneNumber)
             .NotEmpty().WithMessage("your phone number is required!");
 
-        // todo
+        // not implemented yet
         this.RuleFor(member => member.Street)
             .NotEmpty().WithMessage("your street is required!");
 
-        // todo
+        // not implemented yet
         this.RuleFor(member => member.HouseNumber)
             .NotEmpty().WithMessage("your house number is required!");
 
 
-        // todo
+        // not implemented yet
         this.RuleFor(member => member.PostalCode)
             .NotEmpty().WithMessage("your postal code is required!");
 
-        // todo
+        // not implemented yet
         this.RuleFor(member => member.Place)
             .NotEmpty().WithMessage("your place is required!");
 
-        // todo
+        // not implemented yet
         this.RuleFor(member => member.BirthPlace)
             .NotEmpty().WithMessage("your birth place is required!");
 
-        // todo
+        // not implemented yet
         this.RuleFor(member => member.DriversLicenseNumber)
             .NotEmpty().WithMessage("your DriversLicenseNumber is required!");
 
-        // todo
+        // not implemented yet
         this.RuleFor(member => member.IdCardNumber)
             .NotEmpty().WithMessage("your IdCardNumber is required!");
     }
