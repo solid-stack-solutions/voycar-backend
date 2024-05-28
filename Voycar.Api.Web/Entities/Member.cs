@@ -18,7 +18,7 @@ public class Member
     public required string HouseNumber { get; set; }
     public required string PostalCode { get; set; }
     public required string Place { get; set; }
-    public required DateTime BirthDate { get; set; }
+    public required DateOnly BirthDate { get; set; }
     public required string BirthPlace { get; set; }
     public required string PhoneNumber { get; set; }
     public int RoleId { get; set; }
