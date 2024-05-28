@@ -8,7 +8,7 @@ using Repository;
 /// This endpoint receives verification tokens, checks their validity,
 /// updates the member's verification status, and returns a response indicating success or failure.
 /// </summary>
-public class Endpoint : Endpoint<Request, Response>
+public class Endpoint : Endpoint<Request>
 {
     private readonly IMemberRepository memberRepository;
     private readonly ILogger<Endpoint> logger;
