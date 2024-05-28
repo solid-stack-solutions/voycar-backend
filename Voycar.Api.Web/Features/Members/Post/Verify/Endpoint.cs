@@ -2,6 +2,7 @@ namespace Voycar.Api.Web.Features.Members.Post.Verify;
 
 using Repository;
 
+
 /// <summary>
 /// Handles the verification of new members.
 ///

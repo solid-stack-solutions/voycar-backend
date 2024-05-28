@@ -5,6 +5,7 @@ using MailKit.Net.Smtp;
 using MailKit.Security;
 using MimeKit;
 
+
 /// <summary>
 /// Service for sending verification emails to members.
 ///
