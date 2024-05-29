@@ -47,7 +47,6 @@ catch (Exception exception) when (exception is not HostAbortedException)
 }
 finally
 {
-    Log.Information("Application terminated!");
     Log.CloseAndFlush();
 }
 
