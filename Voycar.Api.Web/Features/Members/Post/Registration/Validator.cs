@@ -1,7 +1,11 @@
 namespace Voycar.Api.Web.Features.Members.Post.Registration;
 
-using System.Text.RegularExpressions;
-
+/// <summary>
+/// Validator class for member registration requests.
+///
+/// This class validates various properties of the registration request, such as email, password,
+/// personal information, and address details to ensure they meet the required criteria.
+/// </summary>
 public class Validator : Validator<Request>
 {
     public Validator()
@@ -35,36 +39,36 @@ public class Validator : Validator<Request>
                     - member.BirthDate.DayNumber) / 365)
             .GreaterThan(18).WithMessage("you are not legal yet!");
 
-        // not implemented yet
+
         this.RuleFor(member => member.PhoneNumber)
             .NotEmpty().WithMessage("your phone number is required!");
 
-        // not implemented yet
+
         this.RuleFor(member => member.Street)
             .NotEmpty().WithMessage("your street is required!");
 
-        // not implemented yet
+
         this.RuleFor(member => member.HouseNumber)
             .NotEmpty().WithMessage("your house number is required!");
 
 
-        // not implemented yet
+
         this.RuleFor(member => member.PostalCode)
             .NotEmpty().WithMessage("your postal code is required!");
 
-        // not implemented yet
+
         this.RuleFor(member => member.Place)
             .NotEmpty().WithMessage("your place is required!");
 
-        // not implemented yet
+
         this.RuleFor(member => member.BirthPlace)
             .NotEmpty().WithMessage("your birth place is required!");
 
-        // not implemented yet
+
         this.RuleFor(member => member.DriversLicenseNumber)
             .NotEmpty().WithMessage("your DriversLicenseNumber is required!");
 
-        // not implemented yet
+
         this.RuleFor(member => member.IdCardNumber)
             .NotEmpty().WithMessage("your IdCardNumber is required!");
     }

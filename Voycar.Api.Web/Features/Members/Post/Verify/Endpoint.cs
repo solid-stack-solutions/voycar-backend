@@ -45,5 +45,4 @@ public class Endpoint : Endpoint<Request>
         this.logger.LogInformation("Member verified successfully with ID: {MemberId}", member.Id);
         await this.SendOkAsync(cancellation: ct);
     }
-
 }
