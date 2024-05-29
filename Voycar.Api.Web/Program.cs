@@ -39,6 +39,8 @@ try
 
     app.Run();
 }
+// ignore unnecessary log message when creating migrations
+// https://stackoverflow.com/questions/70247187/microsoft-extensions-hosting-hostfactoryresolverhostinglistenerstopthehostexce
 catch (Exception exception) when (exception is not HostAbortedException)
 {
     Log.Fatal(exception, "Application terminated unexpectedly!");
