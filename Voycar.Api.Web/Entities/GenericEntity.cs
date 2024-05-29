@@ -2,7 +2,8 @@ namespace Voycar.Api.Web.Entities;
 
 using System.ComponentModel.DataAnnotations;
 
-public class Permission : GenericEntity
+public abstract class GenericEntity
 {
-    public string Name { get; set; }
+    [Key]
+    public Guid Id { get; set; }
 }
