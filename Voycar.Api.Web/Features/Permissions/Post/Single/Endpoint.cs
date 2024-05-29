@@ -23,7 +23,7 @@ public class Endpoint : Endpoint<Request, Results<Ok, NoContent>, Mapper>
 
     public override async Task HandleAsync(Request req, CancellationToken ct)
     {
-        var created = this._permissions.CreatePermission(this.Map.ToEntity(req));
+        var created = this._permissions.Create(this.Map.ToEntity(req));
         await this.SendResultAsync(created ? TypedResults.Ok() : TypedResults.NoContent());
     }
 }
