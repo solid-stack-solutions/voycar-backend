@@ -1,8 +1,8 @@
-namespace Voycar.Api.Web.Features.Repository;
+namespace Voycar.Api.Web.Generic.Repository;
 
 using Entities;
 
-public interface IGenericRepository<T> where T : GenericEntity
+public interface IRepository<T> where T : Entity
 {
     // CRUD operations
     bool Create(T entity);

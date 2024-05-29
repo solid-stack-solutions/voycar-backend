@@ -1,15 +1,15 @@
-namespace Voycar.Api.Web.Features.Repository;
+namespace Voycar.Api.Web.Generic.Repository;
 
+using Microsoft.EntityFrameworkCore;
 using Context;
 using Entities;
-using Microsoft.EntityFrameworkCore;
 
-public class GenericRepository<T> : IGenericRepository<T> where T : GenericEntity
+public class Repository<T> : IRepository<T> where T : Entity
 {
     private readonly VoycarDbContext _context;
     private readonly DbSet<T> dbSet;
 
-    protected GenericRepository(VoycarDbContext context)
+    protected Repository(VoycarDbContext context)
     {
         this._context = context;
         this.dbSet = this._context.Set<T>();
