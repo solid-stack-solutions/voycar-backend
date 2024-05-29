@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations;
 
 public class Member
 {
-    public int Id { get; set; }
+    public Guid Id { get; set; }
 
     // Login
     [EmailAddress]
