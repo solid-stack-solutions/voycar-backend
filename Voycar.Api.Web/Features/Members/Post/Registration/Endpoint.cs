@@ -33,7 +33,7 @@ public class Endpoint : Endpoint<Request, Response, Mapper>
     public override async Task HandleAsync(Request req, CancellationToken ct)
     {
         this.logger.LogInformation("Registration-Endpoint called.");
-        // Check for existing user or password mismatch
+
         if (await this.memberRepository.GetAsync(req) is not null || req.Password != req.ConfirmPassword)
         {
             this.logger.LogWarning("User already exists or passwords do not match.");
