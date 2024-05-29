@@ -10,7 +10,7 @@
     environment:
       - ConnectionStrings__VoycarDb=User ID=admin;Password=admin;Server=voycar.postgres;Port=5432;Database=VoycarDb;
       - SmtpEmail=voycar.dev@gmail.com
-      - SmtpAppPassword=xqmirejhlcxxnosa
+      - SmtpAppPassword=lol
     depends_on:
       - voycar.postgres
 
