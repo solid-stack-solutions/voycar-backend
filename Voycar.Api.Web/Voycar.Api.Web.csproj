@@ -11,6 +11,10 @@
       <PackageReference Include="FastEndpoints" Version="5.25.0" />
       <PackageReference Include="FastEndpoints.Security" Version="5.25.0" />
       <PackageReference Include="FastEndpoints.Swagger" Version="5.25.0" />
+      <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="8.0.5">
+        <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+        <PrivateAssets>all</PrivateAssets>
+      </PackageReference>
       <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="8.0.3">
         <PrivateAssets>all</PrivateAssets>
         <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
@@ -23,6 +27,10 @@
       <Content Include="..\.dockerignore">
         <Link>.dockerignore</Link>
       </Content>
+    </ItemGroup>
+
+    <ItemGroup>
+      <Folder Include="Migrations\" />
     </ItemGroup>
 
 </Project>
