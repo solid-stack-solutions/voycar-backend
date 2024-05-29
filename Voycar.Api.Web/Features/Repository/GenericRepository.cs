@@ -9,19 +9,28 @@ public class GenericRepository<T> : IGenericRepository<T> where T : GenericEntit
     private readonly VoycarDbContext _context;
     private readonly DbSet<T> dbSet;
 
-    public GenericRepository(VoycarDbContext context)
+    protected GenericRepository(VoycarDbContext context)
     {
         this._context = context;
         this.dbSet = this._context.Set<T>();
     }
 
+    /// <summary>
+    ///     exceptions from <c>SaveChanges()</c> are ignored.
+    /// </summary>
     /// <returns>
     ///     <c>true</c> if database changed
     /// </returns>
     private bool SaveChanges()
     {
         var numChanges = 0;
-        numChanges = this._context.SaveChanges();
+        try
+        {
+            numChanges = this._context.SaveChanges();
+        }
+        // ignore some possible exception,
+        // e.g. when trying to create an entity with a duplicate key
+        finally {}
         return numChanges > 0;
     }
 
@@ -31,14 +40,7 @@ public class GenericRepository<T> : IGenericRepository<T> where T : GenericEntit
     public bool Create(T entity)
     {
         this.dbSet.Add(entity);
-        var returnValue = false;
-        try
-        {
-            returnValue = this.SaveChanges();
-        }
-        // ignore possible duplicate key exception
-        finally {}
-        return returnValue;
+        return this.SaveChanges();
     }
 
     public T? Retrieve(Guid id)
