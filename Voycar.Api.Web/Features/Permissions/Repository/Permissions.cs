@@ -18,7 +18,13 @@ public class Permissions : IPermissions
     public bool CreatePermission(Permission permission)
     {
         this._context.Permissions.Add(permission);
-        var numChanges = this._context.SaveChanges();
+        var numChanges = 0;
+        try
+        {
+            numChanges = this._context.SaveChanges();
+        }
+        // ignore possible duplicate key exception
+        finally {}
         // true when something changed
         return numChanges > 0;
     }
