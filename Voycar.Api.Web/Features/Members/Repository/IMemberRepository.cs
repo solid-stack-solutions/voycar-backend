@@ -5,8 +5,8 @@ using Post.Registration;
 
 public interface IMemberRepository
 {
-    public Task CreateAsync(Member member);
-    public Task<Member?> GetAsync(Request request);
-    public Task<Member?> GetAsync(string verificationToken);
-    public Task SafeAsync();
+    Task CreateAsync(Member member);
+    Task<Member?> GetAsync(Request request);
+    Task<Member?> GetAsync(string verificationToken);
+    Task SafeAsync();
 }
