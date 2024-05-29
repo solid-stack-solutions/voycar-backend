@@ -1,6 +1,6 @@
 namespace Voycar.Api.Web.Entities;
 
-using System.ComponentModel.DataAnnotations;
+using Generic;
 
 public class Permission : Entity
 {
