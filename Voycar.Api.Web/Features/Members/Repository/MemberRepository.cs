@@ -14,31 +14,31 @@ using Context;
 /// </summary>
 public class MemberRepository : IMemberRepository
 {
-    private readonly VoycarDbContext dbContext;
+    private readonly VoycarDbContext _dbContext;
 
 
     public MemberRepository(VoycarDbContext dbContext)
     {
-        this.dbContext = dbContext;
+        this._dbContext = dbContext;
     }
 
 
     public async Task CreateAsync(Member member)
     {
-        await this.dbContext.Members.AddAsync(member);
-        await this.dbContext.SaveChangesAsync();
+        await this._dbContext.Members.AddAsync(member);
+        await this._dbContext.SaveChangesAsync();
     }
 
 
     public async Task<Member?> GetAsync(Request request)
-        => await this.dbContext.Members.FirstOrDefaultAsync(
+        => await this._dbContext.Members.FirstOrDefaultAsync(
             member => member.Email == request.Email);
 
 
     public async Task<Member?> GetAsync(string verificationToken)
-        => await this.dbContext.Members.FirstOrDefaultAsync(
+        => await this._dbContext.Members.FirstOrDefaultAsync(
             member => member.VerificationToken == verificationToken);
 
 
-    public async Task SafeAsync() => await this.dbContext.SaveChangesAsync();
+    public async Task SafeAsync() => await this._dbContext.SaveChangesAsync();
 }

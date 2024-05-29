@@ -13,8 +13,8 @@ using MimeKit;
 /// </summary>
 public class EmailService : IEmailService
 {
-    private readonly string? smtpEmail  = Environment.GetEnvironmentVariable("SmtpEmail");
-    private readonly string? smtpAppPassword = Environment.GetEnvironmentVariable("SmtpAppPassword");
+    private readonly string? _smtpEmail  = Environment.GetEnvironmentVariable("SmtpEmail");
+    private readonly string? _smtpAppPassword = Environment.GetEnvironmentVariable("SmtpAppPassword");
 
 
     private void SendEmail(MimeMessage email)
@@ -34,13 +34,13 @@ public class EmailService : IEmailService
 
     private void ConfigureSmtpClient(SmtpClient smtpClient)
     {
-        if (string.IsNullOrEmpty(this.smtpEmail) || string.IsNullOrEmpty(this.smtpAppPassword))
+        if (string.IsNullOrEmpty(this._smtpEmail) || string.IsNullOrEmpty(this._smtpAppPassword))
         {
             throw new InvalidOperationException("SMTP email or password environment variables are not set.");
         }
 
         smtpClient.Connect("smtp.gmail.com", 587, SecureSocketOptions.StartTls);
-        smtpClient.Authenticate(this.smtpEmail, this.smtpAppPassword);
+        smtpClient.Authenticate(this._smtpEmail, this._smtpAppPassword);
     }
 
 
@@ -58,9 +58,9 @@ public class EmailService : IEmailService
     private MimeMessage CreateVerificationEmail(Member member, string verificationLink)
     {
         var email = new MimeMessage();
-        email.From.Add(MailboxAddress.Parse(this.smtpEmail));
+        email.From.Add(MailboxAddress.Parse(this._smtpEmail));
         email.To.Add(MailboxAddress.Parse(member.Email));
-        email.Subject = "Konto-Verifizierung";
+        email.Subject = "Voycar-Konto-Verifizierung";
 
 
         var content = $"Bitte klicken Sie auf den folgenden Link, um Ihr Konto zu verifizieren: " +
