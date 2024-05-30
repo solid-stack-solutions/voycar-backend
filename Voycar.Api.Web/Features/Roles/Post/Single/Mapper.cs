@@ -4,8 +4,8 @@ using Entities;
 
 public class Mapper : RequestMapper<Request, Role>
 {
-    public override Role ToEntity(Request r)
+    public override Task<Role> ToEntityAsync(Request r, CancellationToken ct = new CancellationToken())
     {
-        return new Role() { Name = r.Name };
+        return Task.FromResult(new Role() { Name = r.Name });
     }
 }
