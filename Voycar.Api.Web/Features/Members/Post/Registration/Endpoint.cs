@@ -7,7 +7,7 @@ using Services.EmailService;
 /// Handles the registration of new members.
 ///
 /// This endpoint receives registration requests, checks for existing users,
-/// creates new user accounts and sends verification emails
+/// creates new user accounts and sends verification emails.
 /// </summary>
 public class Endpoint : Endpoint<Request, Response, Mapper>
 {
