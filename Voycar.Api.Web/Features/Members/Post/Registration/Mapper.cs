@@ -15,7 +15,7 @@ public class Mapper : Mapper<Request, Response, Member>
         Street = r.Street,
         HouseNumber = r.HouseNumber,
         PostalCode = r.PostalCode,
-        Place = r.Place,
+        City = r.City,
         BirthDate = r.BirthDate,
         BirthPlace = r.BirthPlace,
         PhoneNumber = r.PhoneNumber,

@@ -17,7 +17,7 @@ public class Member
     public required string Street { get; set; }
     public required string HouseNumber { get; set; }
     public required string PostalCode { get; set; }
-    public required string Place { get; set; }
+    public required string City { get; set; }
     public required DateOnly BirthDate { get; set; }
     public required string BirthPlace { get; set; }
     public required string PhoneNumber { get; set; }

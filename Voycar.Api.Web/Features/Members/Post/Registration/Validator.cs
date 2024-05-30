@@ -31,7 +31,7 @@ public class Validator : Validator<Request>
         this.RuleFor(member => member.PostalCode)
             .NotEmpty().WithMessage("your postal code is required!");
 
-        this.RuleFor(member => member.Place)
+        this.RuleFor(member => member.City)
             .NotEmpty().WithMessage("your place is required!");
 
         this.RuleFor(member
