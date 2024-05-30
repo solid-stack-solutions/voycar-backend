@@ -8,5 +8,6 @@ public class VoycarDbContext : DbContext
     public VoycarDbContext(DbContextOptions<VoycarDbContext> options) : base(options) {}
 
     // db sets for entities
+    public DbSet<Member> Members { get; set; }
     public DbSet<Permission> Permissions { get; set; }
 }
