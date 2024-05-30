@@ -1,5 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using Voycar.Api.Web.Context;
+using Voycar.Api.Web.Features.Permissions.Repository;
 using Voycar.Api.Web.Features.Members.Repository;
 using Voycar.Api.Web.Features.Members.Services.EmailService;
 
@@ -7,16 +8,17 @@ try
 {
     var builder = WebApplication.CreateBuilder(args);
 
-
-    builder.Services.AddDbContext<VoycarDbContext>(options =>
-        options.UseNpgsql(builder.Configuration.GetConnectionString("VoycarDb")));
-
     builder.Host.UseSerilog((context, configuration) =>
     {
         configuration.ReadFrom.Configuration(context.Configuration);
     });
 
-
+    builder.Services.AddDbContext<VoycarDbContext>((options) =>
+    {
+        options.UseNpgsql(builder.Configuration.GetConnectionString("VoycarDb"));
+    });
+    // repositories
+    builder.Services.AddTransient<IPermissions, Permissions>();
     builder.Services.AddTransient<IEmailService, EmailService>();
     builder.Services.AddTransient<IMemberRepository, MemberRepository>();
 
@@ -25,10 +27,10 @@ try
     builder.Services.AddFastEndpoints();
     builder.Services.SwaggerDocument(options =>
     {
-        options.DocumentSettings = s =>
+        options.DocumentSettings = settings =>
         {
-            s.Title = "Voycar Web API Documentation";
-            s.Version = "v1";
+            settings.Title = "Voycar Web API Documentation";
+            settings.Version = "v1";
         };
     });
 
@@ -41,16 +43,16 @@ try
     // Caution: Swagger available in production environment
     app.UseSwaggerGen();
 
-
     app.Run();
 }
-catch (Exception exception)
+// ignore unnecessary log message when creating migrations
+// https://stackoverflow.com/questions/70247187/microsoft-extensions-hosting-hostfactoryresolverhostinglistenerstopthehostexce
+catch (Exception exception) when (exception is not HostAbortedException)
 {
     Log.Fatal(exception, "Application terminated unexpectedly!");
 }
 finally
 {
-    Log.Information("Application terminated!");
     Log.CloseAndFlush();
 }
 
