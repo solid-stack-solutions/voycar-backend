@@ -19,8 +19,8 @@ public class Mapper : Mapper<Request, Response, Member>
         BirthDate = r.BirthDate,
         BirthPlace = r.BirthPlace,
         PhoneNumber = r.PhoneNumber,
-        IdCardNumber = r.IdCardNumber,
         DriversLicenseNumber = r.DriversLicenseNumber,
+        IdCardNumber = r.IdCardNumber,
         VerificationToken = Convert.ToHexString(RandomNumberGenerator.GetBytes(256))
     };
 }
