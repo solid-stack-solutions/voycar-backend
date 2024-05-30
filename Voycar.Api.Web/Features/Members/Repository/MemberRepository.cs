@@ -29,14 +29,18 @@ public class MemberRepository : IMemberRepository
         await this._dbContext.SaveChangesAsync();
     }
 
-
+    /// <summary>
+    /// Get the Member which has the same E-Mail as in the given request.
+    /// </summary>
     public async Task<Member?> GetAsync(Request request)
     {
         return await this._dbContext.Members.FirstOrDefaultAsync(
             member => member.Email == request.Email);
     }
 
-
+    /// <summary>
+    /// Get the Member which has the same VerificationToken as in the given request.
+    /// </summary>
     public async Task<Member?> GetAsync(string verificationToken)
     {
          return await this._dbContext.Members.FirstOrDefaultAsync(
