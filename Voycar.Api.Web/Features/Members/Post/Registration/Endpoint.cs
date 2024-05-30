@@ -6,7 +6,7 @@ using Services.EmailService;
 /// <summary>
 /// Handles the registration of new members.
 ///
-/// This endpoint receives registration requests, checks for existing users or password mismatches,
+/// This endpoint receives registration requests, checks for existing users,
 /// creates new user accounts and sends verification emails
 /// </summary>
 public class Endpoint : Endpoint<Request, Response, Mapper>
@@ -31,7 +31,7 @@ public class Endpoint : Endpoint<Request, Response, Mapper>
 
     public override async Task HandleAsync(Request req, CancellationToken ct)
     {
-        if (await this._memberRepository.GetAsync(req) is not null || req.Password != req.ConfirmPassword)
+        if (await this._memberRepository.GetAsync(req) is not null)
         {
             this._logger.LogWarning("User already exists or passwords do not match.");
             await this.SendErrorsAsync(cancellation: ct);

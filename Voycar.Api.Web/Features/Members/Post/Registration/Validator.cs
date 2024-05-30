@@ -15,15 +15,6 @@ public class Validator : Validator<Request>
             .EmailAddress().WithMessage("not a valid email address");
 
 
-        this.RuleFor(member => member.Password)
-            .Equal(member => member.ConfirmPassword)
-            .WithMessage("passwords do not match")
-            .Matches("[a-z]+").WithMessage("password must contain at least 1 lowercase letter")
-            .Matches("[A-Z]+").WithMessage("password must contain at least 1 uppercase letter")
-            .Matches("(\\d)+").WithMessage("password must contain at least 1 number")
-            .Matches("(\\W)+").WithMessage("password must contain at least 1 symbol");
-
-
         this.RuleFor(member => member.FirstName)
             .NotEmpty().WithMessage("your firstname is required!")
             .Length(2, 250).WithMessage("your name is too short!");
