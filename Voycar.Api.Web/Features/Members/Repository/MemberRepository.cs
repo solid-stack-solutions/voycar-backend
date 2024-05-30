@@ -31,14 +31,18 @@ public class MemberRepository : IMemberRepository
 
 
     public async Task<Member?> GetAsync(Request request)
-        => await this._dbContext.Members.FirstOrDefaultAsync(
+    {
+        return await this._dbContext.Members.FirstOrDefaultAsync(
             member => member.Email == request.Email);
+    }
 
 
     public async Task<Member?> GetAsync(string verificationToken)
-        => await this._dbContext.Members.FirstOrDefaultAsync(
-            member => member.VerificationToken == verificationToken);
+    {
+         return await this._dbContext.Members.FirstOrDefaultAsync(
+             member => member.VerificationToken == verificationToken);
+    }
 
 
-    public async Task SafeAsync() => await this._dbContext.SaveChangesAsync();
+    public async Task SaveAsync() => await this._dbContext.SaveChangesAsync();
 }

@@ -8,5 +8,5 @@ public interface IMemberRepository
     Task CreateAsync(Member member);
     Task<Member?> GetAsync(Request request);
     Task<Member?> GetAsync(string verificationToken);
-    Task SafeAsync();
+    Task SaveAsync();
 }

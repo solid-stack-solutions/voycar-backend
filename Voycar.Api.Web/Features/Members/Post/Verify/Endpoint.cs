@@ -37,7 +37,7 @@ public class Endpoint : Endpoint<Request>
         }
 
         member.VerifiedAt = DateTime.UtcNow;
-        await this._memberRepository.SafeAsync();
+        await this._memberRepository.SaveAsync();
 
         this._logger.LogInformation("Member verified successfully with ID: {MemberId}", member.Id);
         await this.SendOkAsync(cancellation: ct);
