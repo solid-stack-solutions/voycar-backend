@@ -22,7 +22,7 @@ public class Member
     public required string BirthPlace { get; set; }
     public required string PhoneNumber { get; set; }
     public int RoleId { get; set; }
-    public int TariffId { get; set; }
+    public int TierId { get; set; }
     public required string? DriversLicenseNumber { get; set; }
     public bool ValidDriversLicense { get; set; }
     public required string IdCardNumber { get; set; }
