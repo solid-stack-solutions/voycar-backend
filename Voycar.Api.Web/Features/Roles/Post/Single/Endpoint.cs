@@ -5,5 +5,5 @@ using Repository;
 
 public class Endpoint : Generic.Endpoint.Post.Single<Role, Request, Mapper>
 {
-    public Endpoint(IRoles roles) : base(roles, "/role/single") {}
+    public Endpoint(IRoles roles) : base(roles, "/role/single", ["admin"] ) {}
 }

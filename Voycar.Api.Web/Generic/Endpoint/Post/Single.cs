@@ -4,24 +4,26 @@ using Microsoft.AspNetCore.Http.HttpResults;
 using Repository;
 
 public abstract class Single<TEntity, TRequest, TMapper>
-    : FastEndpoints.Endpoint<TRequest, Results<Ok, NoContent>, TMapper>
-    where TEntity : Generic.Entity
+    : Endpoint<TRequest, Results<Ok, NoContent>, TMapper>
+    where TEntity : Entity
     where TRequest : class
     where TMapper : RequestMapper<TRequest, TEntity>
 {
     private readonly IRepository<TEntity> _repository;
     private readonly string route;
+    private readonly string[] roles;
 
-    protected Single(IRepository<TEntity> repository, string route)
+    protected Single(IRepository<TEntity> repository, string route, string[] roles)
     {
         this._repository = repository;
         this.route = route;
+        this.roles = roles;
     }
 
     public override void Configure()
     {
         this.Post(this.route);
-        this.Group<Authorization>();
+        this.Roles(this.roles);
     }
 
     public override async Task HandleAsync(TRequest req, CancellationToken ct)

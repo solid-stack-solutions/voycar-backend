@@ -1,6 +1,6 @@
 namespace Voycar.Api.Web.Generic.Endpoint.Get;
 
-public class Single
+public abstract class Single
 {
 
 }
