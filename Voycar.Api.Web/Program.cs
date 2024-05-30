@@ -16,7 +16,7 @@ try
         options.UseNpgsql(builder.Configuration.GetConnectionString("VoycarDb"));
     });
     // repositories
-    builder.Services.AddTransient<IPermissions, Permissions>();
+    builder.Services.AddTransient<IRoles, Roles>();
 
     builder.Services.AddFastEndpoints();
     builder.Services.SwaggerDocument(options =>

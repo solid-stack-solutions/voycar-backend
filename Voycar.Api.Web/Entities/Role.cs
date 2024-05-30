@@ -2,7 +2,7 @@ namespace Voycar.Api.Web.Entities;
 
 using Generic;
 
-public class Permission : Entity
+public class Role : Entity
 {
     public string Name { get; set; }
 }
