@@ -1,7 +1,5 @@
 namespace Voycar.Api.Web.Generic.Repository;
 
-using Entities;
-
 public interface IRepository<T> where T : Entity
 {
     // CRUD operations
