@@ -9,7 +9,7 @@ public class Mapper : Mapper<Request, Response, Member>
     public override Member ToEntity(Request r) => new()
     {
         Email = r.Email,
-        PasswordHash = BCrypt.Net.BCrypt.HashPassword(r.Password),
+        PasswordHash = BCrypt.Net.BCrypt.EnhancedHashPassword(r.Password),
         FirstName = r.FirstName,
         LastName = r.LastName,
         Street = r.Street,
