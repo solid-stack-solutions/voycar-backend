@@ -9,7 +9,7 @@ using MimeKit;
 /// <summary>
 /// Service for sending verification emails to members.
 ///
-/// Uses SMTP settings from environment variables to send emails via Gmail.
+/// Uses SMTP credentials from environment variables to send emails via Gmail.
 /// </summary>
 public class EmailService : IEmailService
 {
