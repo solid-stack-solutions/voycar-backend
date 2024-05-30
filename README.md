@@ -61,7 +61,7 @@ Logging based on the Serilog.AspNetCore NuGet package.
 
 ## Migrations
 ### Command to create a migration: 
- `dotnet ef migrations add "name"`
+ `dotnet ef migrations add <Migration_Name>`
 
 ### Command to add migration to a database which is running in a docker container: 
 
