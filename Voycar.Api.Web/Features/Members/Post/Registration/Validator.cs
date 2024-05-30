@@ -46,9 +46,9 @@ public class Validator : Validator<Request>
             .NotEmpty().WithMessage("your phone number is required!");
 
         this.RuleFor(member => member.DriversLicenseNumber)
-            .NotEmpty().WithMessage("your DriversLicenseNumber is required!");
+            .NotEmpty().WithMessage("your drivers license number is required!");
 
         this.RuleFor(member => member.IdCardNumber)
-            .NotEmpty().WithMessage("your IdCardNumber is required!");
+            .NotEmpty().WithMessage("your id card number is required!");
     }
 }
