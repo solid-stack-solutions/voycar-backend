@@ -1,6 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using Voycar.Api.Web.Context;
-using Voycar.Api.Web.Features.Permissions.Repository;
+using Voycar.Api.Web.Features.Roles.Repository;
 
 try
 {

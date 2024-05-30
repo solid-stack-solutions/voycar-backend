@@ -1,6 +1,6 @@
-namespace Voycar.Api.Web.Features.Permissions.Repository;
+namespace Voycar.Api.Web.Features.Roles.Repository;
 
 using Entities;
-using Generic.Repository;
+using Voycar.Api.Web.Generic.Repository;
 
 public interface IRoles : IRepository<Role>;

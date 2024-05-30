@@ -1,4 +1,4 @@
-namespace Voycar.Api.Web.Features.Permissions.Post.Single;
+namespace Voycar.Api.Web.Features.Roles.Post.Single;
 
 public class Request
 {
