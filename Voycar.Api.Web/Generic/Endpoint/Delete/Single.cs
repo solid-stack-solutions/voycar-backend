@@ -2,7 +2,7 @@ namespace Voycar.Api.Web.Generic.Endpoint.Delete;
 
 using Repository;
 
-public class Single<TEntity>
+public abstract class Single<TEntity>
     : Endpoint<Entity, Results<Ok, NotFound>>
     where TEntity : Entity
 {
@@ -23,13 +23,13 @@ public class Single<TEntity>
 
     public override async Task HandleAsync(Entity req, CancellationToken ct)
     {
-        var retrieved = this._repository.Retrieve(req.Id);
+        var deleted = this._repository.Delete(req.Id);
 
-        if (retrieved is null)
+        if (deleted)
         {
             await this.SendResultAsync(TypedResults.NotFound());
         }
 
-        await this.SendResultAsync(TypedResults.Ok(retrieved));
+        await this.SendResultAsync(TypedResults.Ok());
     }
 }
