@@ -1,3 +1,4 @@
+using FastEndpoints.Security;
 using Microsoft.EntityFrameworkCore;
 using Voycar.Api.Web.Context;
 using Voycar.Api.Web.Features.Members.Repository;
@@ -16,6 +17,18 @@ try
     {
         options.UseNpgsql(builder.Configuration.GetConnectionString("VoycarDb"));
     });
+
+
+    builder.Services
+        .AddAuthenticationCookie(validFor: TimeSpan.FromMinutes(1), options =>
+        {
+            // handler to re-issue a new cookie with a new expiration time any
+            // time it processes a request which is more than halfway through the expiration window.
+            options.SlidingExpiration = true;
+        } )
+        .AddAuthorization();
+
+
     // repositories
     builder.Services.AddTransient<IEmailService, EmailService>();
     builder.Services.AddTransient<IMemberRepository, MemberRepository>();
@@ -36,10 +49,12 @@ try
 
     app.UseSerilogRequestLogging();
 
-    app.UseFastEndpoints();
-
     // Caution: Swagger available in production environment
-    app.UseSwaggerGen();
+    app.UseSerilogRequestLogging()
+       .UseAuthentication()
+       .UseAuthorization()
+       .UseFastEndpoints()
+       .UseSwaggerGen();
 
     app.Run();
 }
