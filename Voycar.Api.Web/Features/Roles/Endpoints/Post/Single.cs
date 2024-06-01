@@ -1,4 +1,4 @@
-namespace Voycar.Api.Web.Features.Roles.Post;
+namespace Voycar.Api.Web.Features.Roles.Endpoints.Post;
 
 using Entities;
 using Repository;

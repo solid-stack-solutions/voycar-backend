@@ -1,4 +1,4 @@
-namespace Voycar.Api.Web.Features.Roles.Get;
+namespace Voycar.Api.Web.Features.Roles.Endpoints.Get;
 
 using Entities;
 using Repository;

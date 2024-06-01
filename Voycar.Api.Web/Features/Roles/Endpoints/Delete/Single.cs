@@ -1,4 +1,4 @@
-namespace Voycar.Api.Web.Features.Roles.Delete;
+namespace Voycar.Api.Web.Features.Roles.Endpoints.Delete;
 
 using Entities;
 using Repository;
