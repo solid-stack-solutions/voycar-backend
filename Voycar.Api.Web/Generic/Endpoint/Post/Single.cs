@@ -18,7 +18,8 @@ public abstract class Single<TEntity>
     public override void Configure()
     {
         this.Post(typeof(TEntity).Name.ToLowerInvariant());
-        this.Roles(this.roles);
+        //this.Roles(this.roles);
+        this.AllowAnonymous();
     }
 
     public override async Task HandleAsync(TEntity req, CancellationToken ct)
