@@ -1,6 +1,5 @@
 using Microsoft.EntityFrameworkCore;
 using Voycar.Api.Web.Context;
-using Voycar.Api.Web.Features.Permissions.Repository;
 using Voycar.Api.Web.Features.Members.Repository;
 using Voycar.Api.Web.Features.Members.Services.EmailService;
 
@@ -18,7 +17,6 @@ try
         options.UseNpgsql(builder.Configuration.GetConnectionString("VoycarDb"));
     });
     // repositories
-    builder.Services.AddTransient<IPermissions, Permissions>();
     builder.Services.AddTransient<IEmailService, EmailService>();
     builder.Services.AddTransient<IMemberRepository, MemberRepository>();
 
