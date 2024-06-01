@@ -11,7 +11,7 @@ try
         configuration.ReadFrom.Configuration(context.Configuration);
     });
 
-    builder.Services.AddDbContext<VoycarDbContext>((options) =>
+    builder.Services.AddDbContext<VoycarDbContext>(options =>
     {
         options.UseNpgsql(builder.Configuration.GetConnectionString("VoycarDb"));
     });
