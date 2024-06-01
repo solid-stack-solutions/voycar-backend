@@ -1,4 +1,4 @@
-namespace Voycar.Api.Web.Features.Members.Post.Verify;
+namespace Voycar.Api.Web.Features.Members.Get.Verify;
 
 public class Request
 {

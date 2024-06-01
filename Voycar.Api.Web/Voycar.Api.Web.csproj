@@ -32,9 +32,7 @@
     </ItemGroup>
 
     <ItemGroup>
-      <Folder Include="Features\Members\Delete\" />
       <Folder Include="Features\Members\Get\" />
-      <Folder Include="Migrations\" />
     </ItemGroup>
 
 </Project>
