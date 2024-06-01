@@ -32,10 +32,10 @@ public class MemberRepository : IMemberRepository
     /// <summary>
     /// Get the Member which has the same E-Mail as in the given request.
     /// </summary>
-    public async Task<Member?> GetAsync(Request request)
+    public async Task<User?> GetAsync(Request request)
     {
-        return await this._dbContext.Members.FirstOrDefaultAsync(
-            member => member.Email == request.Email);
+        return await this._dbContext.Users.FirstOrDefaultAsync(
+            user => user.Email == request.Email);
     }
 
     /// <summary>
