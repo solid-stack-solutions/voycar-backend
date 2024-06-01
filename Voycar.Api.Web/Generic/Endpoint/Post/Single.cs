@@ -18,7 +18,7 @@ public abstract class Single<TEntity>
 
     public override void Configure()
     {
-        this.Post(typeof(TEntity).Name);
+        this.Post(typeof(TEntity).Name.ToLowerInvariant());
         this.Roles(this.roles);
     }
 

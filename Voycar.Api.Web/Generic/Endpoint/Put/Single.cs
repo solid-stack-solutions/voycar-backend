@@ -1,5 +1,6 @@
 namespace Voycar.Api.Web.Generic.Endpoint.Put;
 
+using System.Globalization;
 using Repository;
 
 public abstract class Single<TEntity>
@@ -17,7 +18,7 @@ public abstract class Single<TEntity>
 
     public override void Configure()
     {
-        this.Put(typeof(TEntity).Name);
+        this.Put(typeof(TEntity).Name.ToLowerInvariant());
         this.Roles(this.roles);
     }
 
