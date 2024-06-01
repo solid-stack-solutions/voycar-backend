@@ -22,9 +22,7 @@ public class Member
     public string? VerificationToken { get; set; }
     public DateTime? VerifiedAt { get; set; }
 
-    // Reset
-    public string? PasswordResetToken { get; set; }
-    public DateTime? ResetTokenExpires { get; set; }
+
 
     public User User { get; set; } // Set the navigation property, useful for Repository
 }
