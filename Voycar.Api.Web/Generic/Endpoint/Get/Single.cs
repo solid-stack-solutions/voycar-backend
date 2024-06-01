@@ -1,6 +1,5 @@
 namespace Voycar.Api.Web.Generic.Endpoint.Get;
 
-using Microsoft.AspNetCore.Http.HttpResults;
 using Repository;
 
 public abstract class Single<TEntity>

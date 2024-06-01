@@ -1,6 +1,5 @@
 namespace Voycar.Api.Web.Generic.Endpoint.Put;
 
-using System.Globalization;
 using Repository;
 
 public abstract class Single<TEntity>

@@ -2,7 +2,6 @@ namespace Voycar.Api.Web.Generic.Repository;
 
 using Microsoft.EntityFrameworkCore;
 using Context;
-using Entities;
 
 public class Repository<T> : IRepository<T> where T : Entity
 {
