@@ -50,10 +50,19 @@ public class EmailService : IEmailService
         this.SendEmail(email);
     }
 
+    public void SendPasswordResetEmail(User user)
+    {
+        var email = this.CreatePasswordResetEmail(user, GeneratePasswordResetLink());
+        this.SendEmail(email);
+    }
+
 
     private static string GenerateVerificationLink(Member member)
         => $"http://localhost:8080/api/verify/{member.VerificationToken}";
 
+    // todo
+    private static string GeneratePasswordResetLink()
+        => $"http://localhost:8080/api/reset-password";
 
     private MimeMessage CreateVerificationEmail(Member member, string verificationLink)
     {
@@ -65,6 +74,27 @@ public class EmailService : IEmailService
 
         var content = $"Bitte klicken Sie auf den folgenden Link, um Ihr Konto zu verifizieren: " +
                       $"<a href=\"{verificationLink}\">Link zum Verifizieren</a>";
+
+        var htmlContent = $"<html><body><p style='font-weight: bold;'>{content}</p></body></html>";
+        email.Body = new TextPart("html")
+        {
+            Text = htmlContent
+        };
+
+        return email;
+    }
+
+    // todo
+    private MimeMessage CreatePasswordResetEmail(User user, string passwordResetLink)
+    {
+        var email = new MimeMessage();
+        email.From.Add(MailboxAddress.Parse(this._smtpEmail));
+        email.To.Add(MailboxAddress.Parse(user.Email));
+        email.Subject = "Voycar-Passwort-Reset";
+
+
+        var content = $"Bitte klicken Sie auf den folgenden Link, um Ihr Passwort zu reseten: " +
+                      $"<a href=\"{passwordResetLink}\">Link zum Passwort-Reseten</a>";
 
         var htmlContent = $"<html><body><p style='font-weight: bold;'>{content}</p></body></html>";
         email.Body = new TextPart("html")
