@@ -28,6 +28,7 @@ public abstract class Single<TEntity>
         if (deleted)
         {
             await this.SendResultAsync(TypedResults.NotFound());
+            return;
         }
 
         await this.SendResultAsync(TypedResults.Ok());

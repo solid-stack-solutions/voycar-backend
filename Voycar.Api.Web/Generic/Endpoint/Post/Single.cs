@@ -29,8 +29,8 @@ public abstract class Single<TEntity>
         if (created)
         {
             await this.SendResultAsync(TypedResults.Ok());
+            return;
         }
-
         await this.SendResultAsync(TypedResults.NoContent());
     }
 }

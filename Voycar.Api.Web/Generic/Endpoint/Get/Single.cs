@@ -28,6 +28,7 @@ public abstract class Single<TEntity>
         if (retrieved is null)
         {
             await this.SendResultAsync(TypedResults.NotFound());
+            return;
         }
 
         await this.SendResultAsync(TypedResults.Ok(retrieved));
