@@ -59,7 +59,7 @@ public class EmailService : IEmailService
     {
         var email = new MimeMessage();
         email.From.Add(MailboxAddress.Parse(this._smtpEmail));
-        email.To.Add(MailboxAddress.Parse(member.Email));
+        email.To.Add(MailboxAddress.Parse(member.User.Email));
         email.Subject = "Voycar-Konto-Verifizierung";
 
 

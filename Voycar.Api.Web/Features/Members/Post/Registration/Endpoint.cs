@@ -41,7 +41,7 @@ public class Endpoint : Endpoint<Request, Response, Mapper>
         this._logger.LogInformation("Creating new user.");
         var member = this.Map.ToEntity(req);
         await this._memberRepository.CreateAsync(member);
-        this._logger.LogInformation("User created with ID: {MemberId}", member.Id);
+        this._logger.LogInformation("User created with ID: {MemberId}", member.UserId);
 
         this._emailService.SendVerificationEmail(member);
         await this.SendAsync(new Response { VerificationToken = member.VerificationToken }, cancellation: ct);
