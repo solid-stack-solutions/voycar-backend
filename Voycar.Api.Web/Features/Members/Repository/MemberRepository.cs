@@ -2,9 +2,8 @@ namespace Voycar.Api.Web.Features.Members.Repository;
 
 using Entities;
 using Microsoft.EntityFrameworkCore;
-using Post.Registration;
-using Context;
 
+using Context;
 
 /// <summary>
 /// Repository for managing member data.
@@ -47,6 +46,11 @@ public class MemberRepository : IMemberRepository
             user => user.Email == request.Email);
     }
 
+    public async Task<User?> GetAsync(Post.ForgotPassword.Request request){
+        return await this._dbContext.Users.FirstOrDefaultAsync(
+            user => user.Email == request.Email);
+    }
+
     /// <summary>
     /// Get the Member which has the same VerificationToken as in the given request.
     /// </summary>
@@ -54,6 +58,12 @@ public class MemberRepository : IMemberRepository
     {
          return await this._dbContext.Members.FirstOrDefaultAsync(
              member => member.VerificationToken == verificationToken);
+    }
+
+    public async Task<User?> GetPrtAsync(string passwordResetToken)
+    {
+        return await this._dbContext.Users.FirstOrDefaultAsync(
+            user => user.PasswordResetToken == passwordResetToken);
     }
 
     public async Task<Member?> GetAsync(Guid userId)
