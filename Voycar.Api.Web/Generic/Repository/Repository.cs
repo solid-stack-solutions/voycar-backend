@@ -3,15 +3,15 @@ namespace Voycar.Api.Web.Generic.Repository;
 using Microsoft.EntityFrameworkCore;
 using Context;
 
-public class Repository<T> : IRepository<T> where T : Entity
+public class Repository<TEntity> : IRepository<TEntity> where TEntity : Entity
 {
     private readonly VoycarDbContext _context;
-    private readonly DbSet<T> dbSet;
+    private readonly DbSet<TEntity> dbSet;
 
     protected Repository(VoycarDbContext context)
     {
         this._context = context;
-        this.dbSet = this._context.Set<T>();
+        this.dbSet = this._context.Set<TEntity>();
     }
 
     /// <summary>
@@ -36,13 +36,13 @@ public class Repository<T> : IRepository<T> where T : Entity
     /// <returns>
     ///     <c>true</c> if entity was created
     /// </returns>
-    public bool Create(T entity)
+    public bool Create(TEntity entity)
     {
         this.dbSet.Add(entity);
         return this.SaveChanges();
     }
 
-    public T? Retrieve(Guid id)
+    public TEntity? Retrieve(Guid id)
     {
         return this.dbSet.Find(id);
     }
@@ -50,7 +50,7 @@ public class Repository<T> : IRepository<T> where T : Entity
     /// <returns>
     ///     <c>true</c> if entity was updated
     /// </returns>
-    public bool Update(T entity)
+    public bool Update(TEntity entity)
     {
         this.dbSet.Update(entity);
         return this.SaveChanges();
@@ -71,7 +71,7 @@ public class Repository<T> : IRepository<T> where T : Entity
         return this.SaveChanges();
     }
 
-    public IEnumerable<T> RetrieveAll()
+    public IEnumerable<TEntity> RetrieveAll()
     {
         return this.dbSet.ToList();
     }
