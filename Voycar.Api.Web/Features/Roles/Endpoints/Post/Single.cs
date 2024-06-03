@@ -3,8 +3,8 @@ namespace Voycar.Api.Web.Features.Roles.Endpoints.Post;
 using Entities;
 using Repository;
 
-public class Endpoint : Generic.Endpoint.Post.Single<Role>
+public class Single : Generic.Endpoint.Post.Single<Role>
 {
-    //TODO roles
-    public Endpoint(IRoles roles) : base(roles, ["admin"] ) {}
+    // TODO roles
+    public Single(IRoles roles) : base(roles, ["admin"]) {}
 }

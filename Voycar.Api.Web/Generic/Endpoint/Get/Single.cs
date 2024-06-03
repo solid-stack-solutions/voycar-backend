@@ -25,12 +25,12 @@ public abstract class Single<TEntity>
     {
         var retrieved = this._repository.Retrieve(req.Id);
 
-        if (retrieved is null)
+        if (retrieved is not null)
         {
-            await this.SendResultAsync(TypedResults.NotFound());
+            await this.SendResultAsync(TypedResults.Ok(retrieved));
             return;
         }
 
-        await this.SendResultAsync(TypedResults.Ok(retrieved));
+        await this.SendResultAsync(TypedResults.NotFound());
     }
 }
