@@ -27,7 +27,7 @@ public class Endpoint : Endpoint<Request>
     public override async Task HandleAsync(Request req, CancellationToken ct)
     {
         // checks whether there is a member for the token in order to verify it
-        var member = await this._memberRepository.GetAsync(req.VerificationToken);
+        var member = this._memberRepository.Retrieve(req.VerificationToken);
 
         if (member is null)
         {
@@ -35,10 +35,10 @@ public class Endpoint : Endpoint<Request>
             return;
         }
 
-        member.VerifiedAt = DateTime.UtcNow;
-        await this._memberRepository.SaveAsync();
+        member.Result.VerifiedAt = DateTime.UtcNow;
+        this._memberRepository.Update(member.Result);
 
-        this._logger.LogInformation("Member verified successfully with ID: {MemberId}", member.UserId);
+        this._logger.LogInformation("Member verified successfully with ID: {MemberId}", member.Id);
         await this.SendOkAsync(cancellation: ct);
     }
 }

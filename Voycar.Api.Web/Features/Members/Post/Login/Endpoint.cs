@@ -7,11 +7,13 @@ using Repository;
 public class Endpoint : Endpoint<Request>
 {
     private readonly IMemberRepository _memberRepository;
+    private readonly IUsers _userRepository;
     private readonly ILogger<Endpoint> _logger;
 
-    public Endpoint(IMemberRepository memberRepository, ILogger<Endpoint> logger)
+    public Endpoint(IMemberRepository memberRepository, IUsers userRepository, ILogger<Endpoint> logger)
     {
         this._memberRepository = memberRepository;
+        this._userRepository = userRepository;
         this._logger = logger;
     }
     public override void Configure()
@@ -23,13 +25,13 @@ public class Endpoint : Endpoint<Request>
     public override async Task HandleAsync(Request req, CancellationToken ct)
     {
         Member? member = null;
-        // checks whether there is a member for the token in order to verify it
-        var user = await this._memberRepository.GetAsync(req);
+
+        var user = await this._userRepository.Retrieve(req.Email.ToLowerInvariant());
 
         // check if user is a member (members must be verified)
         if (user is not null)
         {
-            member = await this._memberRepository.GetAsync(user.Id);
+            member = this._memberRepository.Retrieve(user.Id);
         }
 
         // checks for employee / admin
@@ -49,7 +51,7 @@ public class Endpoint : Endpoint<Request>
         }
 
 
-        // check if member entered valid credentials
+        // check if member entered valid credentials and is verified
         if (member!.VerifiedAt is null || !BCrypt.Net.BCrypt.EnhancedVerify(req.Password, member.User.PasswordHash))
         {
             await this.SendErrorsAsync(cancellation: ct);
@@ -58,16 +60,16 @@ public class Endpoint : Endpoint<Request>
 
         // login member
         await this.SignInUserAsync(user!);
-        this._logger.LogInformation("Member logged successfully in with ID: {MemberId}", member.UserId);
+        this._logger.LogInformation("Member logged successfully in with ID: {MemberId}", member.Id);
         await this.SendOkAsync(cancellation: ct);
     }
 
     private async Task SignInUserAsync(User user)
     {
-        var role = await this._memberRepository.GetRoleAsync(user.RoleId);
+        var role = await this._memberRepository.RetrieveRoleId(user.RoleId);
         await CookieAuth.SignInAsync(u =>
         {
-            u.Roles.Add(role!.ToString()!);
+            u.Roles.Add(role!.Name);
         });
     }
 }
