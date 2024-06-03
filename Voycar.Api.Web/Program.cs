@@ -33,6 +33,7 @@ try
     // repositories
     builder.Services.AddTransient<IRoles, Roles>();
     builder.Services.AddTransient<IMemberRepository, MemberRepository>();
+    builder.Services.AddTransient<IUsers, Users>();
 
     // services
     builder.Services.AddTransient<IEmailService, EmailService>();
