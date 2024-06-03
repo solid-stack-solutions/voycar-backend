@@ -3,14 +3,8 @@ namespace Voycar.Api.Web.Features.Members.Repository;
 using Entities;
 
 
-public interface IMemberRepository
+public interface IMemberRepository : Generic.Repository.IRepository<Member>
 {
-    Task CreateAsync(Member member);
-    Task<User?> GetAsync(Post.Registration.Request request);
-    Task<User?> GetAsync(Post.Login.Request request);
-    Task<Member?> GetAsync(string verificationToken);
-    Task<Member?> GetAsync(Guid userId);
-    Task<Role?> GetRoleAsync(int roleId);
-
-    Task SaveAsync();
+    Task<Member?> Retrieve(string verificationToken);
+    Task<Role?> RetrieveRoleId(Guid roleId);
 }
