@@ -30,6 +30,7 @@ public abstract class Single<TEntity>
             await this.SendResultAsync(TypedResults.Ok());
             return;
         }
+        
         await this.SendResultAsync(TypedResults.NoContent());
     }
 }
