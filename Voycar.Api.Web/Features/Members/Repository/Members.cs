@@ -11,14 +11,15 @@ using Context;
 /// Provides methods for creating members, retrieving members by verification token,
 /// and saving changes to the database.
 /// </summary>
-public class MemberRepository : Generic.Repository.Repository<Member>, IMemberRepository
+public class Members : Generic.Repository.Repository<Member>, IMembers
 {
     private readonly VoycarDbContext _context;
 
-    public MemberRepository(VoycarDbContext context) : base(context)
+    public Members(VoycarDbContext context) : base(context)
     {
         _context = context;
     }
+
 
     public Task<Member?> Retrieve(string verificationToken)
     {
@@ -26,7 +27,7 @@ public class MemberRepository : Generic.Repository.Repository<Member>, IMemberRe
             member => member.VerificationToken == verificationToken);
     }
 
-    public Task<Role?> RetrieveRoleId(Guid roleId)
+    public Task<Role?> RetrieveRole(Guid roleId)
     {
         return this._context.Roles.FirstOrDefaultAsync(
             role => role.Id == roleId);

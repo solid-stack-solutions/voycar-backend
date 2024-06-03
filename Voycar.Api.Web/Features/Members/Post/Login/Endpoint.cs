@@ -6,13 +6,13 @@ using Repository;
 
 public class Endpoint : Endpoint<Request>
 {
-    private readonly IMemberRepository _memberRepository;
+    private readonly IMembers members;
     private readonly IUsers _userRepository;
     private readonly ILogger<Endpoint> _logger;
 
-    public Endpoint(IMemberRepository memberRepository, IUsers userRepository, ILogger<Endpoint> logger)
+    public Endpoint(IMembers members, IUsers userRepository, ILogger<Endpoint> logger)
     {
-        this._memberRepository = memberRepository;
+        this.members = members;
         this._userRepository = userRepository;
         this._logger = logger;
     }
@@ -31,7 +31,7 @@ public class Endpoint : Endpoint<Request>
         // check if user is a member (members must be verified)
         if (user is not null)
         {
-            member = this._memberRepository.Retrieve(user.Id);
+            member = this.members.Retrieve(user.Id);
         }
 
         // checks for employee / admin
@@ -66,7 +66,7 @@ public class Endpoint : Endpoint<Request>
 
     private async Task SignInUserAsync(User user)
     {
-        var role = await this._memberRepository.RetrieveRoleId(user.RoleId);
+        var role = await this.members.RetrieveRole(user.RoleId);
         await CookieAuth.SignInAsync(u =>
         {
             u.Roles.Add(role!.Name);

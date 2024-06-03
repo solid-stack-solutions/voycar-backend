@@ -32,7 +32,7 @@ try
 
     // repositories
     builder.Services.AddTransient<IRoles, Roles>();
-    builder.Services.AddTransient<IMemberRepository, MemberRepository>();
+    builder.Services.AddTransient<IMembers, Members>();
     builder.Services.AddTransient<IUsers, Users>();
 
     // services

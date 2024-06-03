@@ -11,15 +11,15 @@ using Services.EmailService;
 /// </summary>
 public class Endpoint : Endpoint<Request, Response, Mapper>
 {
-    private readonly IMemberRepository _memberRepository;
+    private readonly IMembers members;
     private readonly IUsers _userRepository;
     private readonly IEmailService _emailService;
     private readonly ILogger<Endpoint> _logger;
 
 
-    public Endpoint(IMemberRepository memberRepository, IUsers userRepository, IEmailService emailService, ILogger<Endpoint> logger)
+    public Endpoint(IMembers members, IUsers userRepository, IEmailService emailService, ILogger<Endpoint> logger)
     {
-        this._memberRepository = memberRepository;
+        this.members = members;
         this._emailService = emailService;
         this._logger = logger;
         this._userRepository = userRepository;
@@ -42,7 +42,7 @@ public class Endpoint : Endpoint<Request, Response, Mapper>
 
         this._logger.LogInformation("Creating new user.");
         var member = this.Map.ToEntity(req);
-        this._memberRepository.Create(member);
+        this.members.Create(member);
         this._logger.LogInformation("User created with ID: {MemberId}", member.Id);
 
         this._emailService.SendVerificationEmail(member);
