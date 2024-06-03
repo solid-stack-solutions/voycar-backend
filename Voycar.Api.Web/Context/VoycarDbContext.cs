@@ -19,7 +19,7 @@ public class VoycarDbContext : DbContext
         modelBuilder.Entity<Member>()
             .HasOne(m => m.User)
             .WithOne()
-            .HasForeignKey<Member>(m => m.UserId)
+            .HasForeignKey<Member>(m => m.Id)
             .IsRequired();
 
         // Configure the one-to-many relationship between Role and User
