@@ -1,20 +1,24 @@
 namespace Voycar.Api.Web.Tests.Features.Roles;
 
-using System.Data.Common;
-using Context;
 using Entities;
-using Microsoft.Data.Sqlite;
-using Microsoft.EntityFrameworkCore;
-using Web.Context;
-using Web.Features.Roles.Endpoints.Post;
-using Web.Features.Roles.Repository;
 
-public class Tests(Sut app) : TestBase<Sut>
+public class Tests : TestBase<App>
 {
+    private readonly App app;
+
+    public Tests(App app)
+    {
+        this.app = app;
+    }
+
     [Fact]
     public async Task ExamplePost()
     {
-        var httpResponseMessage = await app.Client.POSTAsync<Endpoint, Role>(new Role() { Name = "Hallo" });
+        var httpResponseMessage =
+            await this.app.Client.POSTAsync<Web.Features.Roles.Endpoints.Post.Single, Role>(new Role()
+            {
+                Name = "admin"
+            });
 
         httpResponseMessage.StatusCode.Should().Be(HttpStatusCode.OK);
     }
