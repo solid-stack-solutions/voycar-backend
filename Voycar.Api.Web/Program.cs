@@ -1,6 +1,7 @@
 using FastEndpoints.Security;
 using Microsoft.EntityFrameworkCore;
 using Voycar.Api.Web.Context;
+using Voycar.Api.Web.Features.Roles.Repository;
 using Voycar.Api.Web.Features.Members.Repository;
 using Voycar.Api.Web.Features.Members.Services.EmailService;
 
@@ -13,7 +14,7 @@ try
         configuration.ReadFrom.Configuration(context.Configuration);
     });
 
-    builder.Services.AddDbContext<VoycarDbContext>((options) =>
+    builder.Services.AddDbContext<VoycarDbContext>(options =>
     {
         options.UseNpgsql(builder.Configuration.GetConnectionString("VoycarDb"));
     });
@@ -30,10 +31,11 @@ try
 
 
     // repositories
-    builder.Services.AddTransient<IEmailService, EmailService>();
+    builder.Services.AddTransient<IRoles, Roles>();
     builder.Services.AddTransient<IMemberRepository, MemberRepository>();
 
-
+    // services
+    builder.Services.AddTransient<IEmailService, EmailService>();
 
     builder.Services.AddFastEndpoints();
     builder.Services.SwaggerDocument(options =>
