@@ -2,10 +2,10 @@ namespace Voycar.Api.Web.Entities;
 
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using Generic;
 
-public class User
+public class User : Entity
 {
-    public Guid Id { get; set; }
     // Login
     [EmailAddress]
     public required string Email{ get; set; }
@@ -20,6 +20,6 @@ public class User
     public required string City { get; set; }
     // Foreign key to Role
     [ForeignKey("Role")]
-    public int RoleId { get; set; }
+    public Guid RoleId { get; set; }
     public Role Role { get; set; } // Navigation property, useful for Repository
 }
