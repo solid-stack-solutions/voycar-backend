@@ -9,4 +9,5 @@ public class VoycarDbContext : DbContext
 
     // db sets for entities
     public DbSet<Role> Roles { get; set; }
+    public DbSet<Member> Members { get; set; }
 }

@@ -1,6 +1,8 @@
 using Microsoft.EntityFrameworkCore;
 using Voycar.Api.Web.Context;
 using Voycar.Api.Web.Features.Roles.Repository;
+using Voycar.Api.Web.Features.Members.Repository;
+using Voycar.Api.Web.Features.Members.Services.EmailService;
 
 try
 {
@@ -17,6 +19,10 @@ try
     });
     // repositories
     builder.Services.AddTransient<IRoles, Roles>();
+    builder.Services.AddTransient<IMemberRepository, MemberRepository>();
+
+    // services
+    builder.Services.AddTransient<IEmailService, EmailService>();
 
     builder.Services.AddFastEndpoints();
     builder.Services.SwaggerDocument(options =>
