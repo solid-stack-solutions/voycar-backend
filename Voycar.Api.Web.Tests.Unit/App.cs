@@ -1,7 +1,7 @@
-﻿using Microsoft.AspNetCore.Hosting;
-using Microsoft.Extensions.DependencyInjection;
+﻿namespace Voycar.Api.Web.Tests.Unit;
 
-namespace Voycar.Api.Web.Tests.Unit;
+using Microsoft.AspNetCore.Hosting;
+using Microsoft.Extensions.DependencyInjection;
 
 public class App : AppFixture<Program>
 {

@@ -1,9 +1,9 @@
-﻿using Microsoft.AspNetCore.Hosting;
+﻿namespace Voycar.Api.Web.Tests.Integration;
+
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
-using Voycar.Api.Web.Context;
-
-namespace Voycar.Api.Web.Tests.Integration;
+using Context;
 
 using Testcontainers.PostgreSql;
 

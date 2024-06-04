@@ -33,15 +33,15 @@ public class Tests : TestBase<App>
     [Fact]
     public async Task PostIsValid()
     {
-        //-- Arrange
+        // Arrange
         const string requestName = "JuNiJa(Ke)²";
         var roleRequestData = new Role { Name = requestName };
 
-        //-- Act
+        // Act
         var httpResponseMessage = await this._app.Client.POSTAsync<R.Post.Single, Role>(roleRequestData);
         var roleInDb = await this._context.Roles.FirstOrDefaultAsync(r => r.Name == roleRequestData.Name);
 
-        //-- Assert
+        // Assert
         httpResponseMessage.StatusCode.Should().Be(HttpStatusCode.OK);
         roleInDb.Should().NotBeNull();
     }
