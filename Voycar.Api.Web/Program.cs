@@ -23,19 +23,19 @@ try
     builder.Services
         .AddAuthenticationCookie(validFor: TimeSpan.FromMinutes(1), options =>
         {
-            // instruct the handler to re-issue a new cookie with a new expiration time any
-            // time it processes a request which is more than halfway through the expiration window
+            /* Instruct the handler to re-issue a new cookie with a new expiration time any
+               time it processes a request which is more than halfway through the expiration window */
             options.SlidingExpiration = true;
         } )
         .AddAuthorization();
 
 
-    // repositories
+    // Repositories
     builder.Services.AddTransient<IRoles, Roles>();
     builder.Services.AddTransient<IMembers, Members>();
     builder.Services.AddTransient<IUsers, Users>();
 
-    // services
+    // Services
     builder.Services.AddTransient<IEmailService, EmailService>();
 
     builder.Services.AddFastEndpoints();
@@ -61,7 +61,7 @@ try
 
     app.Run();
 }
-// ignore unnecessary log message when creating migrations
+// Ignore unnecessary log message when creating migrations
 // https://stackoverflow.com/questions/70247187/microsoft-extensions-hosting-hostfactoryresolverhostinglistenerstopthehostexce
 catch (Exception exception) when (exception is not HostAbortedException)
 {

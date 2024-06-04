@@ -23,7 +23,7 @@ public class Members : Generic.Repository.Repository<Member>, IMembers
 
     public Task<Member?> Retrieve(string verificationToken)
     {
-        return  this._context.Members.FirstOrDefaultAsync(
+        return this._context.Members.FirstOrDefaultAsync(
             member => member.VerificationToken == verificationToken);
     }
 

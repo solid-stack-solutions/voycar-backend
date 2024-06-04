@@ -30,35 +30,35 @@ public class Endpoint : Endpoint<Request>
 
         var user = await this._userRepository.Retrieve(req.Email.ToLowerInvariant());
 
-        // check if user is a member (members must be verified)
+        // Check if user is a member (members must be verified)
         if (user is not null)
         {
             member = this._members.Retrieve(user.Id);
         }
 
-        // checks for employee / admin
+        // Checks for employee / admin
         if (member is null)
         {
-            // check if employee or admin entered valid credentials
+            // Check if employee or admin entered valid credentials
             if (user is null || !BCrypt.Net.BCrypt.EnhancedVerify(req.Password, user.PasswordHash))
             {
                 await this.SendErrorsAsync(cancellation: ct);
                 return;
             }
 
-            // login employee / admin
+            // Login employee / admin
             await this.SignInUserAsync(user!, ct);
             return;
         }
 
-        // check if member entered valid credentials and is verified
+        // Check if member entered valid credentials and is verified
         if (member!.VerifiedAt is null || !BCrypt.Net.BCrypt.EnhancedVerify(req.Password, member.User.PasswordHash))
         {
             await this.SendErrorsAsync(cancellation: ct);
             return;
         }
 
-        // login member
+        // Login member
         await this.SignInUserAsync(user!, ct);
     }
 
