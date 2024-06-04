@@ -27,7 +27,7 @@ public class Mapper : Mapper<Request, Response, Member>
             HouseNumber = r.HouseNumber,
             PostalCode = r.PostalCode,
             City = r.City,
-            // Retrieve the RoleId for the role named "member".
+            // Retrieve the RoleId for the role named "member"
             RoleId = this._roleRepository.Retrieve("member").Result!.Id
         };
 
@@ -35,7 +35,7 @@ public class Mapper : Mapper<Request, Response, Member>
         var member = new Member
         {
             Id = user.Id, // Set the foreign key to the User's Id
-            User = user,      // Set the navigation property, useful for Repository
+            User = user,  // Set the navigation property, useful for Repository
             BirthDate = r.BirthDate,
             BirthPlace = r.BirthPlace,
             PhoneNumber = r.PhoneNumber,
