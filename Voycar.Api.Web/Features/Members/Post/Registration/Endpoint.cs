@@ -11,7 +11,7 @@ using Services.EmailService;
 /// </summary>
 public class Endpoint : Endpoint<Request, Response, Mapper>
 {
-    private readonly IMembers members;
+    private readonly IMembers _members;
     private readonly IUsers _userRepository;
     private readonly IEmailService _emailService;
     private readonly ILogger<Endpoint> _logger;
@@ -19,14 +19,14 @@ public class Endpoint : Endpoint<Request, Response, Mapper>
 
     public Endpoint(IMembers members, IUsers userRepository, IEmailService emailService, ILogger<Endpoint> logger)
     {
-        this.members = members;
+        this._members = members;
         this._emailService = emailService;
         this._logger = logger;
         this._userRepository = userRepository;
     }
     public override void Configure()
     {
-        this.Post("/api/registration");
+        this.Post("/registration");
         this.AllowAnonymous();
     }
 
@@ -42,7 +42,7 @@ public class Endpoint : Endpoint<Request, Response, Mapper>
 
         this._logger.LogInformation("Creating new user.");
         var member = this.Map.ToEntity(req);
-        this.members.Create(member);
+        this._members.Create(member);
         this._logger.LogInformation("User created with ID: {MemberId}", member.Id);
 
         this._emailService.SendVerificationEmail(member);
