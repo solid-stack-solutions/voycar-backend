@@ -23,8 +23,8 @@ try
     builder.Services
         .AddAuthenticationCookie(validFor: TimeSpan.FromMinutes(1), options =>
         {
-            // handler to re-issue a new cookie with a new expiration time any
-            // time it processes a request which is more than halfway through the expiration window.
+            // instruct the handler to re-issue a new cookie with a new expiration time any
+            // time it processes a request which is more than halfway through the expiration window
             options.SlidingExpiration = true;
         } )
         .AddAuthorization();
