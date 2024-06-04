@@ -16,6 +16,10 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Build", "Build", "{4285928D
 		docker-compose.yml = docker-compose.yml
 	EndProjectSection
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Voycar.Api.Web.Tests.Unit", "Voycar.Api.Web.Tests.Unit\Voycar.Api.Web.Tests.Unit.csproj", "{75A791F6-7FB9-49B0-86EA-BA4E8D320818}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Voycar.Api.Web.Tests.Integration", "Voycar.Api.Web.Tests.Integration\Voycar.Api.Web.Tests.Integration.csproj", "{B18BFBB9-0B1D-47C8-9385-D99D75719AED}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -27,6 +31,8 @@ Global
 	GlobalSection(NestedProjects) = preSolution
 		{2D514EF0-A8AF-4BD4-817B-8F2D9A499151} = {D6D0AEE7-FF19-48DD-A331-EB443A73F61F}
 		{BF92D12A-AA47-4FA5-B204-38688EA4CB0B} = {8321EF10-91C1-433E-A020-6B60DEA24752}
+		{75A791F6-7FB9-49B0-86EA-BA4E8D320818} = {8321EF10-91C1-433E-A020-6B60DEA24752}
+		{B18BFBB9-0B1D-47C8-9385-D99D75719AED} = {8321EF10-91C1-433E-A020-6B60DEA24752}
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
 		{2D514EF0-A8AF-4BD4-817B-8F2D9A499151}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
@@ -37,5 +43,13 @@ Global
 		{BF92D12A-AA47-4FA5-B204-38688EA4CB0B}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{BF92D12A-AA47-4FA5-B204-38688EA4CB0B}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{BF92D12A-AA47-4FA5-B204-38688EA4CB0B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{75A791F6-7FB9-49B0-86EA-BA4E8D320818}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{75A791F6-7FB9-49B0-86EA-BA4E8D320818}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{75A791F6-7FB9-49B0-86EA-BA4E8D320818}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{75A791F6-7FB9-49B0-86EA-BA4E8D320818}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B18BFBB9-0B1D-47C8-9385-D99D75719AED}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B18BFBB9-0B1D-47C8-9385-D99D75719AED}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B18BFBB9-0B1D-47C8-9385-D99D75719AED}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B18BFBB9-0B1D-47C8-9385-D99D75719AED}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
