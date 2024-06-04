@@ -6,19 +6,21 @@ using Repository;
 
 public class Endpoint : Endpoint<Request>
 {
-    private readonly IMembers members;
+    private readonly IMembers _members;
     private readonly IUsers _userRepository;
     private readonly ILogger<Endpoint> _logger;
 
     public Endpoint(IMembers members, IUsers userRepository, ILogger<Endpoint> logger)
     {
-        this.members = members;
+        this._members = members;
         this._userRepository = userRepository;
         this._logger = logger;
     }
+
+
     public override void Configure()
     {
-        this.Post("/api/login");
+        this.Post("/login");
         this.AllowAnonymous();
     }
 
@@ -31,7 +33,7 @@ public class Endpoint : Endpoint<Request>
         // check if user is a member (members must be verified)
         if (user is not null)
         {
-            member = this.members.Retrieve(user.Id);
+            member = this._members.Retrieve(user.Id);
         }
 
         // checks for employee / admin
@@ -45,11 +47,9 @@ public class Endpoint : Endpoint<Request>
             }
 
             // login employee / admin
-            await this.SignInUserAsync(user!);
-            this._logger.LogInformation("User logged successfully in with ID: {UserId}", user.Id);
+            await this.SignInUserAsync(user!, ct);
             return;
         }
-
 
         // check if member entered valid credentials and is verified
         if (member!.VerifiedAt is null || !BCrypt.Net.BCrypt.EnhancedVerify(req.Password, member.User.PasswordHash))
@@ -59,17 +59,18 @@ public class Endpoint : Endpoint<Request>
         }
 
         // login member
-        await this.SignInUserAsync(user!);
-        this._logger.LogInformation("Member logged successfully in with ID: {MemberId}", member.Id);
-        await this.SendOkAsync(cancellation: ct);
+        await this.SignInUserAsync(user!, ct);
     }
 
-    private async Task SignInUserAsync(User user)
+
+    private async Task SignInUserAsync(User user, CancellationToken ct)
     {
-        var role = await this.members.RetrieveRole(user.RoleId);
+        var role = await this._members.RetrieveRole(user.RoleId);
         await CookieAuth.SignInAsync(u =>
         {
             u.Roles.Add(role!.Name);
         });
+        this._logger.LogInformation("User logged in successfully with ID: {UserId}", user.Id);
+        await this.SendOkAsync(cancellation: ct);
     }
 }
