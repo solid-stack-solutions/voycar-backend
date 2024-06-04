@@ -1,31 +1,21 @@
 namespace Voycar.Api.Web.Entities;
 
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
+using Generic;
 
-public class Member
+public class Member : Entity
 {
-    public Guid Id { get; set; }
 
-    // Login
-    [EmailAddress]
-    public required string Email{ get; set; }
-    public string PasswordHash { get; set; }
 
-    // Personal Details
-    public required string FirstName { get; set; }
-    public required string LastName { get; set; }
-    public required string Street { get; set; }
-    public required string HouseNumber { get; set; }
-    public required string PostalCode { get; set; }
-    public required string City { get; set; }
-    public required DateOnly BirthDate { get; set; }
-    public required string BirthPlace { get; set; }
-    public required string PhoneNumber { get; set; }
-    public int RoleId { get; set; }
+    public DateOnly BirthDate { get; set; }
+    public string BirthPlace { get; set; }
+    public string PhoneNumber { get; set; }
+
     public int TierId { get; set; }
-    public required string? DriversLicenseNumber { get; set; }
+    public string? DriversLicenseNumber { get; set; }
     public bool ValidDriversLicense { get; set; }
-    public required string IdCardNumber { get; set; }
+    public string IdCardNumber { get; set; }
     public bool ValidPostIdent { get; set; }
 
 
@@ -36,4 +26,6 @@ public class Member
     // Reset
     public string? PasswordResetToken { get; set; }
     public DateTime? ResetTokenExpires { get; set; }
+
+    public User User { get; set; } // Set the navigation property, useful for Repository
 }

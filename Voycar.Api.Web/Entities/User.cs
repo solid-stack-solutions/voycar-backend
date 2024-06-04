@@ -1,13 +1,15 @@
-namespace Voycar.Api.Web.Features.Members.Post.Registration;
+namespace Voycar.Api.Web.Entities;
 
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
+using Generic;
 
-public class Request
+public class User : Entity
 {
     // Login
     [EmailAddress]
     public string Email{ get; set; }
-    public string Password { get; set; }
+    public string PasswordHash { get; set; }
 
     // Personal Details
     public string FirstName { get; set; }
@@ -16,9 +18,8 @@ public class Request
     public string HouseNumber { get; set; }
     public string PostalCode { get; set; }
     public string City { get; set; }
-    public DateOnly BirthDate { get; set; }
-    public string BirthPlace { get; set; }
-    public string PhoneNumber { get; set; }
-    public string? DriversLicenseNumber { get; set; }
-    public string IdCardNumber { get; set; }
+    // Foreign key to Role
+    [ForeignKey("Role")]
+    public Guid RoleId { get; set; }
+    public Role Role { get; set; } // Navigation property, useful for Repository and necessary for relationship
 }

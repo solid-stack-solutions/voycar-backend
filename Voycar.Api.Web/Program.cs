@@ -1,3 +1,4 @@
+using FastEndpoints.Security;
 using Microsoft.EntityFrameworkCore;
 using Voycar.Api.Web.Context;
 using Voycar.Api.Web.Features.Roles.Repository;
@@ -17,11 +18,24 @@ try
     {
         options.UseNpgsql(builder.Configuration.GetConnectionString("VoycarDb"));
     });
-    // repositories
-    builder.Services.AddTransient<IRoles, Roles>();
-    builder.Services.AddTransient<IMemberRepository, MemberRepository>();
 
-    // services
+
+    builder.Services
+        .AddAuthenticationCookie(validFor: TimeSpan.FromMinutes(1), options =>
+        {
+            /* Instruct the handler to re-issue a new cookie with a new expiration time any
+               time it processes a request which is more than halfway through the expiration window */
+            options.SlidingExpiration = true;
+        } )
+        .AddAuthorization();
+
+
+    // Repositories
+    builder.Services.AddTransient<IRoles, Roles>();
+    builder.Services.AddTransient<IMembers, Members>();
+    builder.Services.AddTransient<IUsers, Users>();
+
+    // Services
     builder.Services.AddTransient<IEmailService, EmailService>();
 
     builder.Services.AddFastEndpoints();
@@ -38,14 +52,16 @@ try
 
     app.UseSerilogRequestLogging();
 
-    app.UseFastEndpoints();
-
     // Caution: Swagger available in production environment
-    app.UseSwaggerGen();
+    app.UseSerilogRequestLogging()
+       .UseAuthentication()
+       .UseAuthorization()
+       .UseFastEndpoints()
+       .UseSwaggerGen();
 
     app.Run();
 }
-// ignore unnecessary log message when creating migrations
+// Ignore unnecessary log message when creating migrations
 // https://stackoverflow.com/questions/70247187/microsoft-extensions-hosting-hostfactoryresolverhostinglistenerstopthehostexce
 catch (Exception exception) when (exception is not HostAbortedException)
 {
