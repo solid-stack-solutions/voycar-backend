@@ -17,16 +17,16 @@ public class VoycarDbContext : DbContext
     {
         // Configure the one-to-one relationship between User and Member
         modelBuilder.Entity<Member>()
-            .HasOne(m => m.User)
-            .WithOne()
-            .HasForeignKey<Member>(m => m.Id)
+            .HasOne(m => m.User) // Each Member entity has one User entity
+            .WithOne() // Each User entity is associated with one Member entity
+            .HasForeignKey<User>(u => u.Id) // Sets the foreign key to the Id property of Member, which is also the Id of the associated User
             .IsRequired();
 
         // Configure the one-to-many relationship between Role and User
         modelBuilder.Entity<User>()
-            .HasOne(u => u.Role)
-            .WithMany()
-            .HasForeignKey(u => u.RoleId)
+            .HasOne(u => u.Role) // Each User entity has one Role entity
+            .WithMany() // Each Role entity can be associated with multiple User entities
+            .HasForeignKey(u => u.RoleId) // The RoleId property in User is a foreign key that references the Role entity
             .IsRequired();
 
         base.OnModelCreating(modelBuilder);

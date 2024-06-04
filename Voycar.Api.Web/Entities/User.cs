@@ -21,5 +21,5 @@ public class User : Entity
     // Foreign key to Role
     [ForeignKey("Role")]
     public Guid RoleId { get; set; }
-    public Role Role { get; set; } // Navigation property, useful for Repository
+    public Role Role { get; set; } // Navigation property, useful for Repository and necessary for relationship
 }
