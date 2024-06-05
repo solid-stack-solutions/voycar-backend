@@ -2,19 +2,20 @@ namespace Voycar.Api.Web.Entities;
 
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using Generic;
 
-public class Member
+public class Member : Entity
 {
-    [Key, ForeignKey("User")]
-    public Guid UserId { get; set; }
-    public required DateOnly BirthDate { get; set; }
-    public required string BirthPlace { get; set; }
-    public required string PhoneNumber { get; set; }
+
+
+    public DateOnly BirthDate { get; set; }
+    public string BirthPlace { get; set; }
+    public string PhoneNumber { get; set; }
 
     public int TierId { get; set; }
-    public required string? DriversLicenseNumber { get; set; }
+    public string? DriversLicenseNumber { get; set; }
     public bool ValidDriversLicense { get; set; }
-    public required string IdCardNumber { get; set; }
+    public string IdCardNumber { get; set; }
     public bool ValidPostIdent { get; set; }
 
 

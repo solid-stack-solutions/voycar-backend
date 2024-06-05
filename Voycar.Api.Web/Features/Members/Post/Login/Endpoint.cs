@@ -6,68 +6,71 @@ using Repository;
 
 public class Endpoint : Endpoint<Request>
 {
-    private readonly IMemberRepository _memberRepository;
+    private readonly IMembers _members;
+    private readonly IUsers _userRepository;
     private readonly ILogger<Endpoint> _logger;
 
-    public Endpoint(IMemberRepository memberRepository, ILogger<Endpoint> logger)
+    public Endpoint(IMembers members, IUsers userRepository, ILogger<Endpoint> logger)
     {
-        this._memberRepository = memberRepository;
+        this._members = members;
+        this._userRepository = userRepository;
         this._logger = logger;
     }
+
+
     public override void Configure()
     {
-        this.Post("/api/login");
+        this.Post("/login");
         this.AllowAnonymous();
     }
 
     public override async Task HandleAsync(Request req, CancellationToken ct)
     {
         Member? member = null;
-        // checks whether there is a member for the token in order to verify it
-        var user = await this._memberRepository.GetAsync(req);
 
-        // check if user is a member (members must be verified)
+        var user = await this._userRepository.Retrieve(req.Email.ToLowerInvariant());
+
+        // Check if user is a member (members must be verified)
         if (user is not null)
         {
-            member = await this._memberRepository.GetAsync(user.Id);
+            member = this._members.Retrieve(user.Id);
         }
 
-        // checks for employee / admin
+        // Checks for employee / admin
         if (member is null)
         {
-            // check if employee or admin entered valid credentials
+            // Check if employee or admin entered valid credentials
             if (user is null || !BCrypt.Net.BCrypt.EnhancedVerify(req.Password, user.PasswordHash))
             {
                 await this.SendErrorsAsync(cancellation: ct);
                 return;
             }
 
-            // login employee / admin
-            await this.SignInUserAsync(user!);
-            this._logger.LogInformation("User logged successfully in with ID: {UserId}", user.Id);
+            // Login employee / admin
+            await this.SignInUserAsync(user!, ct);
             return;
         }
 
-
-        // check if member entered valid credentials
+        // Check if member entered valid credentials and is verified
         if (member!.VerifiedAt is null || !BCrypt.Net.BCrypt.EnhancedVerify(req.Password, member.User.PasswordHash))
         {
             await this.SendErrorsAsync(cancellation: ct);
             return;
         }
 
-        // login member
-        await this.SignInUserAsync(user!);
-        this._logger.LogInformation("Member logged successfully in with ID: {MemberId}", member.UserId);
-        await this.SendOkAsync(cancellation: ct);
+        // Login member
+        await this.SignInUserAsync(user!, ct);
     }
 
-    private async Task SignInUserAsync(User user)
+
+    private async Task SignInUserAsync(User user, CancellationToken ct)
     {
-        var role = await this._memberRepository.GetRoleAsync(user.RoleId);
+        var role = await this._members.RetrieveRole(user.RoleId);
         await CookieAuth.SignInAsync(u =>
         {
-            u.Roles.Add(role!.ToString()!);
+            u.Roles.Add(role!.Name);
         });
+        this._logger.LogInformation("User logged in successfully with ID: {UserId}", user.Id);
+        await this.SendOkAsync(cancellation: ct);
     }
 }

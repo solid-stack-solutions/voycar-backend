@@ -6,19 +6,19 @@ public class Request
 {
     // Login
     [EmailAddress]
-    public required string Email{ get; set; }
-    public required string Password { get; set; }
+    public string Email{ get; set; }
+    public string Password { get; set; }
 
     // Personal Details
-    public required string FirstName { get; set; }
-    public required string LastName { get; set; }
-    public required string Street { get; set; }
-    public required string HouseNumber { get; set; }
-    public required string PostalCode { get; set; }
-    public required string City { get; set; }
-    public required DateOnly BirthDate { get; set; }
-    public required string BirthPlace { get; set; }
-    public required string PhoneNumber { get; set; }
-    public required string? DriversLicenseNumber { get; set; }
-    public required string IdCardNumber { get; set; }
+    public string FirstName { get; set; }
+    public string LastName { get; set; }
+    public string Street { get; set; }
+    public string HouseNumber { get; set; }
+    public string PostalCode { get; set; }
+    public string City { get; set; }
+    public DateOnly BirthDate { get; set; }
+    public string BirthPlace { get; set; }
+    public string PhoneNumber { get; set; }
+    public string? DriversLicenseNumber { get; set; }
+    public string IdCardNumber { get; set; }
 }

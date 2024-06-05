@@ -1,6 +1,7 @@
 using FastEndpoints.Security;
 using Microsoft.EntityFrameworkCore;
 using Voycar.Api.Web.Context;
+using Voycar.Api.Web.Features.Roles.Repository;
 using Voycar.Api.Web.Features.Members.Repository;
 using Voycar.Api.Web.Features.Members.Services.EmailService;
 
@@ -13,7 +14,7 @@ try
         configuration.ReadFrom.Configuration(context.Configuration);
     });
 
-    builder.Services.AddDbContext<VoycarDbContext>((options) =>
+    builder.Services.AddDbContext<VoycarDbContext>(options =>
     {
         options.UseNpgsql(builder.Configuration.GetConnectionString("VoycarDb"));
     });
@@ -22,18 +23,20 @@ try
     builder.Services
         .AddAuthenticationCookie(validFor: TimeSpan.FromMinutes(1), options =>
         {
-            // handler to re-issue a new cookie with a new expiration time any
-            // time it processes a request which is more than halfway through the expiration window.
+            /* Instruct the handler to re-issue a new cookie with a new expiration time any
+               time it processes a request which is more than halfway through the expiration window */
             options.SlidingExpiration = true;
         } )
         .AddAuthorization();
 
 
-    // repositories
+    // Repositories
+    builder.Services.AddTransient<IRoles, Roles>();
+    builder.Services.AddTransient<IMembers, Members>();
+    builder.Services.AddTransient<IUsers, Users>();
+
+    // Services
     builder.Services.AddTransient<IEmailService, EmailService>();
-    builder.Services.AddTransient<IMemberRepository, MemberRepository>();
-
-
 
     builder.Services.AddFastEndpoints();
     builder.Services.SwaggerDocument(options =>
@@ -58,7 +61,7 @@ try
 
     app.Run();
 }
-// ignore unnecessary log message when creating migrations
+// Ignore unnecessary log message when creating migrations
 // https://stackoverflow.com/questions/70247187/microsoft-extensions-hosting-hostfactoryresolverhostinglistenerstopthehostexce
 catch (Exception exception) when (exception is not HostAbortedException)
 {

@@ -1,7 +1,8 @@
 namespace Voycar.Api.Web.Entities;
 
-public class Role
+using Generic;
+
+public class Role : Entity
 {
-    public int Id { get; set; }
     public string Name { get; set; }
 }

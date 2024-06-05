@@ -10,24 +10,24 @@ using Repository;
 /// </summary>
 public class Endpoint : Endpoint<Request>
 {
-    private readonly IMemberRepository _memberRepository;
+    private readonly IMembers _members;
     private readonly ILogger<Endpoint> _logger;
 
-    public Endpoint(IMemberRepository memberRepository, ILogger<Endpoint> logger)
+    public Endpoint(IMembers members, ILogger<Endpoint> logger)
     {
-        this._memberRepository = memberRepository;
+        this._members = members;
         this._logger = logger;
     }
     public override void Configure()
     {
-        this.Get("/api/verify/{verificationToken}");
+        this.Get("/verify/{verificationToken}");
         this.AllowAnonymous();
     }
 
     public override async Task HandleAsync(Request req, CancellationToken ct)
     {
         // checks whether there is a member for the token in order to verify it
-        var member = await this._memberRepository.GetAsync(req.VerificationToken);
+        var member = this._members.Retrieve(req.VerificationToken);
 
         if (member is null)
         {
@@ -35,10 +35,10 @@ public class Endpoint : Endpoint<Request>
             return;
         }
 
-        member.VerifiedAt = DateTime.UtcNow;
-        await this._memberRepository.SaveAsync();
+        member.Result!.VerifiedAt = DateTime.UtcNow;
+        this._members.Update(member.Result);
 
-        this._logger.LogInformation("Member verified successfully with ID: {MemberId}", member.UserId);
+        this._logger.LogInformation("Member verified successfully with ID: {MemberId}", member.Id);
         await this.SendOkAsync(cancellation: ct);
     }
 }

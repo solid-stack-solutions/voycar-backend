@@ -11,37 +11,39 @@ using Services.EmailService;
 /// </summary>
 public class Endpoint : Endpoint<Request, Response, Mapper>
 {
-    private readonly IMemberRepository _memberRepository;
+    private readonly IMembers _members;
+    private readonly IUsers _userRepository;
     private readonly IEmailService _emailService;
     private readonly ILogger<Endpoint> _logger;
 
 
-    public Endpoint(IMemberRepository memberRepository, IEmailService emailService, ILogger<Endpoint> logger)
+    public Endpoint(IMembers members, IUsers userRepository, IEmailService emailService, ILogger<Endpoint> logger)
     {
-        this._memberRepository = memberRepository;
+        this._members = members;
         this._emailService = emailService;
         this._logger = logger;
+        this._userRepository = userRepository;
     }
     public override void Configure()
     {
-        this.Post("/api/registration");
+        this.Post("/registration");
         this.AllowAnonymous();
     }
 
 
     public override async Task HandleAsync(Request req, CancellationToken ct)
     {
-        if (await this._memberRepository.GetAsync(req) is not null)
+        if (await this._userRepository.Retrieve(req.Email.ToLowerInvariant()) is not null)
         {
-            this._logger.LogWarning("User already exists or passwords do not match.");
+            this._logger.LogWarning("User already exists.");
             await this.SendErrorsAsync(cancellation: ct);
             return;
         }
 
         this._logger.LogInformation("Creating new user.");
         var member = this.Map.ToEntity(req);
-        await this._memberRepository.CreateAsync(member);
-        this._logger.LogInformation("User created with ID: {MemberId}", member.UserId);
+        this._members.Create(member);
+        this._logger.LogInformation("User created with ID: {MemberId}", member.Id);
 
         this._emailService.SendVerificationEmail(member);
         await this.SendAsync(new Response { VerificationToken = member.VerificationToken }, cancellation: ct);
