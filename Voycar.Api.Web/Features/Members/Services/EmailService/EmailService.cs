@@ -13,9 +13,8 @@ using MimeKit;
 /// </summary>
 public class EmailService : IEmailService
 {
-    private readonly string? _smtpEmail  = Environment.GetEnvironmentVariable("SmtpEmail");
-    private readonly string? _smtpAppPassword = Environment.GetEnvironmentVariable("SmtpAppPassword");
-
+    private readonly string? _smtpEmail  = Environment.GetEnvironmentVariable("SmtpEmail") ?? "voycar.dev@gmail.com";
+    private readonly string? _smtpAppPassword = Environment.GetEnvironmentVariable("SmtpAppPassword") ?? "pwd";
 
     private void SendEmail(MimeMessage email)
     {
