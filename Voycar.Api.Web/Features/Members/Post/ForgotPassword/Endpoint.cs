@@ -6,26 +6,26 @@ using Services.EmailService;
 
 public class Endpoint : Endpoint<Request>
 {
-    private readonly IMemberRepository _memberRepository;
+    private readonly IUsers _repository;
     private readonly ILogger<Get.Verify.Endpoint> _logger;
     private readonly IEmailService _emailService;
 
-    public Endpoint(IMemberRepository memberRepository, ILogger<Get.Verify.Endpoint> logger, IEmailService emailService)
+    public Endpoint(IUsers repository, ILogger<Get.Verify.Endpoint> logger, IEmailService emailService)
     {
-        this._memberRepository = memberRepository;
+        this._repository = repository;
         this._logger = logger;
         this._emailService = emailService;
     }
     public override void Configure()
     {
-        this.Post("/api/forgot-password");
+        this.Post("/forgot-password");
         this.AllowAnonymous();
     }
 
     public override async Task HandleAsync(Request req, CancellationToken ct)
     {
         // checks whether there is a user for the req
-        var user = await this._memberRepository.GetAsync(req);
+        var user = await this._repository.Retrieve(req.Email);
 
         if (user is null)
         {
@@ -37,9 +37,8 @@ public class Endpoint : Endpoint<Request>
 
         // user has 1 day to reset his password
         user.ResetTokenExpires = DateTime.UtcNow.AddDays(1);
-        await this._memberRepository.SaveAsync();
+        this._repository.Update(user);
 
-        // todo
         this._emailService.SendPasswordResetEmail(user);
         this._logger.LogInformation("Password-Reset-Token successfully created for User with ID: {UserId}", user.Id);
         await this.SendOkAsync(cancellation: ct);
