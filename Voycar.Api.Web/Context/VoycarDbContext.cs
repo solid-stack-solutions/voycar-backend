@@ -19,7 +19,7 @@ public class VoycarDbContext : DbContext
         modelBuilder.Entity<Member>()
             .HasOne(m => m.User) // Each Member entity has one User entity
             .WithOne() // Each User entity is associated with one Member entity
-            .HasForeignKey<User>(u => u.Id) // Sets the foreign key to the Id property of Member, which is also the Id of the associated User
+            .HasForeignKey<Member>(m => m.Id) // Sets the foreign key to the Id property of Member, which is also the Id of the associated User
             .IsRequired();
 
         // Configure the one-to-many relationship between Role and User
@@ -29,6 +29,12 @@ public class VoycarDbContext : DbContext
             .HasForeignKey(u => u.RoleId) // The RoleId property in User is a foreign key that references the Role entity
             .IsRequired();
 
+        // Add default data to role table
+        modelBuilder.Entity<Role>().
+            HasData(
+                new Role { Id = Guid.NewGuid(), Name = "admin" },
+                new Role { Id = Guid.NewGuid(), Name = "employee" },
+                new Role { Id = Guid.NewGuid(), Name = "member" });
         base.OnModelCreating(modelBuilder);
     }
 }
