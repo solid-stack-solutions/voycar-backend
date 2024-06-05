@@ -25,12 +25,8 @@ public class App : AppFixture<Program>
         .WithExposedPort(5000)
         .Build();
 
-    // TODO Add getter and private setter
-    private VoycarDbContext Context;
+    public VoycarDbContext Context { get; private set; }
     private HttpClient Admin { get; set; }
-
-    // TODO Remove this after TODO above is done
-    protected internal VoycarDbContext GetContext() => this.Context;
 
     // See: https://gist.github.com/dj-nitehawk/04a78cea10f2239eb81c958c52ec84e0
     protected override Task PreSetupAsync()
