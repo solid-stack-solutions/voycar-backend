@@ -16,6 +16,6 @@ public class Users : Generic.Repository.Repository<User>, IUsers
     public Task<User?> Retrieve(string email)
     {
         return this._context.Users.FirstOrDefaultAsync(
-            user => user.Email == email);
+            user => user.Email == email.ToLowerInvariant());
     }
 }
