@@ -18,12 +18,9 @@ public class Member : Entity
     public string IdCardNumber { get; set; }
     public bool ValidPostIdent { get; set; }
 
-
     // Verification
     public string? VerificationToken { get; set; }
     public DateTime? VerifiedAt { get; set; }
-
-
 
     public User User { get; set; } // Set the navigation property, useful for Repository
 }

@@ -18,8 +18,13 @@ public class User : Entity
     public string HouseNumber { get; set; }
     public string PostalCode { get; set; }
     public string City { get; set; }
+
     // Foreign key to Role
     [ForeignKey("Role")]
     public Guid RoleId { get; set; }
     public Role Role { get; set; } // Navigation property, useful for Repository and necessary for relationship
+
+    // Reset
+    public string? PasswordResetToken { get; set; }
+    public DateTime ResetTokenExpires { get; set; }
 }
