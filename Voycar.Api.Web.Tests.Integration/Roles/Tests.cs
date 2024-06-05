@@ -17,7 +17,7 @@ public class Tests : TestBase<App>
     public Tests(App app)
     {
         this._app = app;
-        this._context = this._app.GetContext();
+        this._context = this._app.Context;
     }
 
     protected override async Task SetupAsync()
