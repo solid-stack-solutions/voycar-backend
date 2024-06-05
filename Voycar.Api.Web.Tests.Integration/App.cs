@@ -20,9 +20,11 @@ public class App : AppFixture<Program>
         .WithPassword("admin")
         .Build();
 
-    private VoycarDbContext _context;
+    private VoycarDbContext Context;
 
-    protected internal VoycarDbContext GetContext() => this._context;
+    private HttpClient Admin { get; set; }
+
+    protected internal VoycarDbContext GetContext() => this.Context;
 
     // See: https://gist.github.com/dj-nitehawk/04a78cea10f2239eb81c958c52ec84e0
     protected override Task PreSetupAsync()
@@ -30,14 +32,20 @@ public class App : AppFixture<Program>
         return this._container.StartAsync();
     }
 
-    protected override Task SetupAsync()
+    protected override async Task SetupAsync()
     {
         // Place one-time setup code here
-        this._context = this.Services.GetRequiredService<VoycarDbContext>();
 
-        this._context.Database.EnsureDeleted();
-        this._context.Database.EnsureCreated();
-        return Task.CompletedTask;
+        // Db setup
+        this.Context = this.Services.GetRequiredService<VoycarDbContext>();
+        await this.Context.Database.EnsureDeletedAsync(); // Delete data on Db
+        await this.Context.Database.EnsureCreatedAsync(); // Populate with Db schema
+
+        // Http client setup
+        this.Admin = this.CreateClient(config =>
+        {
+
+        });
     }
 
     protected override void ConfigureApp(IWebHostBuilder builder)
@@ -67,6 +75,7 @@ public class App : AppFixture<Program>
     protected override Task TearDownAsync()
     {
         // Do cleanups here
+        this.Admin.Dispose();
         return this._container.StopAsync();
     }
 }
