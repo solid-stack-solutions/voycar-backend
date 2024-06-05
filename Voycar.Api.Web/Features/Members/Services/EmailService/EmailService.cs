@@ -52,7 +52,7 @@ public class EmailService : IEmailService
 
 
     private static string GenerateVerificationLink(Member member)
-        => $"http://localhost:8080/api/verify/{member.VerificationToken}";
+        => $"http://localhost:8080/verify/{member.VerificationToken}";
 
 
     private MimeMessage CreateVerificationEmail(Member member, string verificationLink)
