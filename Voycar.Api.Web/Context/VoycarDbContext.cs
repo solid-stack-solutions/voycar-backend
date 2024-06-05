@@ -29,6 +29,12 @@ public class VoycarDbContext : DbContext
             .HasForeignKey(u => u.RoleId) // The RoleId property in User is a foreign key that references the Role entity
             .IsRequired();
 
+        // Add default data to role table
+        modelBuilder.Entity<Role>().
+            HasData(
+                new Role { Id = Guid.NewGuid(), Name = "admin" },
+                new Role { Id = Guid.NewGuid(), Name = "employee" },
+                new Role { Id = Guid.NewGuid(), Name = "member" });
         base.OnModelCreating(modelBuilder);
     }
 }
