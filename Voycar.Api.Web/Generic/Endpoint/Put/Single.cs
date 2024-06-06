@@ -19,6 +19,20 @@ public abstract class Single<TEntity>
     {
         this.Put(typeof(TEntity).Name.ToLowerInvariant());
         this.Roles(this.roles);
+        Description(b => b
+                .Accepts<TEntity>("Voycar.Api.Web/Generic/Entity")
+                .Produces<IResult>(200)
+                .ProducesProblem(404),
+            clearDefaults: true);
+        Summary(s =>
+        {
+            s.Summary = $"PUT Endpoint for {typeof(TEntity).Name}";
+            s.Description = $"This Endpoint ist used to update {typeof(TEntity).Name} Objects in the database";
+            s.Responses[200] = "OK response if PUT operation was successful";
+            s.Responses[404] =
+                "Not Found response if PUT operation was performed for on an Entity that could not be found in the database";
+            s.ResponseExamples[404] = new {};
+        });
     }
 
     public override async Task HandleAsync(TEntity req, CancellationToken ct)
