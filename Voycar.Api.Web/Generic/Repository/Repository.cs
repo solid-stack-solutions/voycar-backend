@@ -104,8 +104,11 @@ public class Repository<TEntity> : IRepository<TEntity> where TEntity : Entity
     /// </returns>
     public bool CreateUnique(TEntity entity)
     {
-        // check if entity already exists
-        if (this.dbSet.Any(e => EntitiesAreEqual(e, entity)))
+        // Check if entity already exists.
+        // AsEnumerable() is necessary for explicit client evaluation,
+        // as Any() has no server-side translation.
+        // https://learn.microsoft.com/en-us/ef/core/querying/client-eval
+        if (this.dbSet.AsEnumerable().Any(e => EntitiesAreEqual(e, entity)))
         {
             return false;
         }
