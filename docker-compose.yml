@@ -6,10 +6,11 @@
     build:
       context: .
       dockerfile: Voycar.Api.Web/Dockerfile
+    env_file: # for secrets
+      - .env
     environment:
-      - ConnectionStrings__VoycarDb=User ID=admin;Password=admin;Server=voycar.postgres;Port=5432;Database=VoycarDb;
-      - SmtpEmail=voycar.dev@gmail.com
-      - SmtpAppPassword=lol
+      ConnectionStrings__VoycarDb: User ID=admin;Password=admin;Server=voycar.postgres;Port=5432;Database=VoycarDb;
+      SmtpEmail: voycar.dev@gmail.com
     depends_on:
       - voycar.postgres
 
@@ -18,9 +19,9 @@
       image: postgres:16.3
       container_name: VoycarDb
       environment:
-        - POSTGRES_USER=admin
-        - POSTGRES_PASSWORD=admin
-        - POSTGRES_DB=VoycarDb
+        POSTGRES_USER: admin
+        POSTGRES_PASSWORD: admin
+        POSTGRES_DB: VoycarDb
       ports:
         - "5432:5432"
       restart: always
