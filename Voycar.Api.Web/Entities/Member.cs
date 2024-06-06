@@ -6,8 +6,6 @@ using Generic;
 
 public class Member : Entity
 {
-
-
     public DateOnly BirthDate { get; set; }
     public string BirthPlace { get; set; }
     public string PhoneNumber { get; set; }
