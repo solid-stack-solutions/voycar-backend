@@ -1,4 +1,4 @@
-# --- Preconfigured ---
+# --- Pre-configured ---
 bin/
 obj/
 /packages/
@@ -6,9 +6,11 @@ riderModule.iml
 /_ReSharperl.Caches/
 
 # --- Self-configured ---
-# IDE Settings
+# Secret environment variables
+.env
+# IDE settings
 .idea/
-# Rider User Settings
+# Rider user settings
 voycar-backend.sln.DotSettings.user
 
 # Logging files
