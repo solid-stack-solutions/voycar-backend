@@ -1,5 +1,6 @@
 namespace Voycar.Api.Web.Generic.Repository;
 
+using System.Reflection;
 using Microsoft.EntityFrameworkCore;
 using Context;
 
@@ -77,6 +78,23 @@ public class Repository<TEntity> : IRepository<TEntity> where TEntity : Entity
     }
 
     /// <summary>
+    ///     Helper method for <see cref="CreateUnique"/>.
+    /// </summary>
+    /// <returns>
+    ///     <c>true</c> if attribute values of entities are equal, but ignore the <see cref="Entity.Id"/>s.
+    /// </returns>
+    private static bool EntitiesAreEqual(TEntity e1, TEntity e2)
+    {
+        return typeof(TEntity)
+            // Select public instance (not static) attributes of entity
+            .GetProperties(BindingFlags.Public | BindingFlags.Instance)
+            // Ignore Id for comparison
+            .Where(p => p.Name != "Id")
+            // Return if all selected attributes are equal
+            .All(p => Equals(p.GetValue(e1), p.GetValue(e2)));
+    }
+
+    /// <summary>
     ///     Only create entity if it's not already in the database.
     ///     More specifically: If the database does not contain
     ///     an entity with the exact same attribute values.
@@ -87,7 +105,7 @@ public class Repository<TEntity> : IRepository<TEntity> where TEntity : Entity
     public bool CreateUnique(TEntity entity)
     {
         // check if entity already exists
-        if (this.dbSet.Any(e => e.Equals(entity)))
+        if (this.dbSet.Any(e => EntitiesAreEqual(e, entity)))
         {
             return false;
         }
