@@ -75,4 +75,23 @@ public class Repository<TEntity> : IRepository<TEntity> where TEntity : Entity
     {
         return this.dbSet.ToList();
     }
+
+    /// <summary>
+    ///     Only create entity if it's not already in the database.
+    ///     More specifically: If the database does not contain
+    ///     an entity with the exact same attribute values.
+    /// </summary>
+    /// <returns>
+    ///     <c>true</c> if entity was created
+    /// </returns>
+    public bool CreateUnique(TEntity entity)
+    {
+        // check if entity already exists
+        if (this.dbSet.Any(e => e.Equals(entity)))
+        {
+            return false;
+        }
+
+        return this.Create(entity);
+    }
 }
