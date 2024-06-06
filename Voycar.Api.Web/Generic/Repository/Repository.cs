@@ -15,7 +15,7 @@ public class Repository<TEntity> : IRepository<TEntity> where TEntity : Entity
     }
 
     /// <summary>
-    ///     exceptions from <c>SaveChanges()</c> are ignored.
+    ///     Exceptions from <c>SaveChanges()</c> are ignored.
     /// </summary>
     /// <returns>
     ///     <c>true</c> if database changed
@@ -27,7 +27,7 @@ public class Repository<TEntity> : IRepository<TEntity> where TEntity : Entity
         {
             numChanges = this._context.SaveChanges();
         }
-        // ignore some possible exception,
+        // Ignore some possible exception,
         // e.g. when trying to create an entity with a duplicate key
         finally {}
         return numChanges > 0;
