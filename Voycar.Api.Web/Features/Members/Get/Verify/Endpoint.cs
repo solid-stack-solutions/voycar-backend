@@ -30,12 +30,12 @@ public class Endpoint : Endpoint<Request>
         this.Summary(s =>
         {
             s.Summary = "Verify Member";
-            s.Description = "Endpoint to verify a member against the database " +
+            s.Description = "Verify a member against the database " +
                             "and update last time of verification";
             s.Responses[200] = "If verification is successful";
             s.Responses[400] =
                 "If verification fails";
-            s.Params["verificationToken"] = "The verification token of the Member to be verified";
+            s.Params["verificationToken"] = "Verification token of the Member to be verified";
         });
     }
 

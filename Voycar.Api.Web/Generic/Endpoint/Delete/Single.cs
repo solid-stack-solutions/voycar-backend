@@ -27,7 +27,7 @@ public abstract class Single<TEntity>
         this.Summary(s =>
         {
             s.Summary = $"Delete {typeof(TEntity).Name}";
-            s.Description = $"Endpoint to remove {typeof(TEntity).Name} objects from the database";
+            s.Description = $"Remove {typeof(TEntity).Name} objects from the database";
             s.Responses[200] = "If DELETE operation is successful";
             s.Responses[404] =
                 "If DELETE operation is performed for an Entity that could not be found in the database or requesting user isn't authorized";
