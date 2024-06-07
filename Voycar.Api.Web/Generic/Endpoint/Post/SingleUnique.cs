@@ -16,9 +16,6 @@ public abstract class SingleUnique<TEntity>
     {
         this.Post(typeof(TEntity).Name.ToLowerInvariant());
         this.Roles(this.roles);
-        // TODO Swagger documentation
-        //this.Description();
-        //this.Summary();
         this.Description(b => b
                 .Accepts<TEntity>("Voycar.Api.Web/Generic/Entity")
                 .Produces<IResult>(200)
