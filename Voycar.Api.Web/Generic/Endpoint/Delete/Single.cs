@@ -6,8 +6,8 @@ public abstract class Single<TEntity>
     : Endpoint<Entity, Results<Ok, NotFound>>
     where TEntity : Entity
 {
-    private readonly IRepository<TEntity> _repository;
-    private readonly string[] roles;
+    protected readonly IRepository<TEntity> _repository;
+    protected readonly string[] roles;
 
     public Single(IRepository<TEntity> repository, string[] roles)
     {
