@@ -24,8 +24,8 @@ public class Endpoint : Endpoint<Request>
 
     public override async Task HandleAsync(Request req, CancellationToken ct)
     {
-        // checks whether there is a user for the req
-        var user = await this._repository.Retrieve(req.Email);
+        // Checks whether there is a user for the req
+        var user = await this._repository.Retrieve("email",req.Email.ToLowerInvariant());
 
         if (user is null)
         {
@@ -35,12 +35,13 @@ public class Endpoint : Endpoint<Request>
 
         user.PasswordResetToken = Convert.ToHexString(RandomNumberGenerator.GetBytes(256));
 
-        // user has 1 day to reset his password
-        user.ResetTokenExpires = DateTime.UtcNow.AddDays(1);
+        // User has 30 minutes to reset his password
+        user.ResetTokenExpires = DateTime.UtcNow.AddMinutes(30);
         this._repository.Update(user);
 
         this._emailService.SendPasswordResetEmail(user);
         this._logger.LogInformation("Password-Reset-Token successfully created for User with ID: {UserId}", user.Id);
-        await this.SendOkAsync(cancellation: ct);
+        // Todo PasswordResetToken must be removed later
+        await this.SendOkAsync(new Response { PasswordResetToken = user.PasswordResetToken }, cancellation: ct);
     }
 }
