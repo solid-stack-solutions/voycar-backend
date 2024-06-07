@@ -4,6 +4,6 @@ using Entities;
 
 public interface IUsers : Generic.Repository.IRepository<User>
 {
-    Task<User?> Retrieve(string? email);
+    Task<User?> Retrieve(string attribute, string value);
 }
 

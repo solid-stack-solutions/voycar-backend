@@ -13,9 +13,17 @@ public class Users : Generic.Repository.Repository<User>, IUsers
         _context = context;
     }
 
-    public Task<User?> Retrieve(string email)
+public Task<User?> Retrieve(string attribute, string value)
+{
+    return attribute switch
     {
-        return this._context.Users.FirstOrDefaultAsync(
-            user => user.Email == email.ToLowerInvariant());
-    }
+        "email" => this._context.Users.FirstOrDefaultAsync(
+            user => user.Email == value),
+
+        "passwordResetToken" => this._context.Users.FirstOrDefaultAsync(
+            user => user.PasswordResetToken == value),
+
+        _ => throw new ArgumentException("Invalid property name", nameof(attribute))
+    };
+}
 }

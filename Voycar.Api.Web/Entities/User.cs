@@ -26,5 +26,5 @@ public class User : Entity
 
     // Reset
     public string? PasswordResetToken { get; set; }
-    public DateTime ResetTokenExpires { get; set; }
+    public DateTime? ResetTokenExpires { get; set; }
 }
