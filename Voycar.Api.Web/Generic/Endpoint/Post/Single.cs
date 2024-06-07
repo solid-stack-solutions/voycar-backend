@@ -31,7 +31,7 @@ public abstract class Single<TEntity>
             s.Description = $"Endpoint to add new {typeof(TEntity).Name} objects into the database";
             s.Responses[200] = "If POST operation is successful";
             s.Responses[204] =
-                "If POST operation is performed for on an Entity that could not be found in the database";
+                "If POST operation failed";
             s.Responses[404] = "If requesting user isn't authorized";
         });
     }
