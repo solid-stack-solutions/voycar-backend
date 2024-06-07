@@ -4,11 +4,13 @@ using System.Security.Cryptography;
 using Repository;
 using Services.EmailService;
 
+
 public class Endpoint : Endpoint<Request>
 {
     private readonly IUsers _repository;
     private readonly ILogger<Get.Verify.Endpoint> _logger;
     private readonly IEmailService _emailService;
+
 
     public Endpoint(IUsers repository, ILogger<Get.Verify.Endpoint> logger, IEmailService emailService)
     {
@@ -16,16 +18,19 @@ public class Endpoint : Endpoint<Request>
         this._logger = logger;
         this._emailService = emailService;
     }
+
+
     public override void Configure()
     {
         this.Post("/forgot-password");
         this.AllowAnonymous();
     }
 
+
     public override async Task HandleAsync(Request req, CancellationToken ct)
     {
         // Checks whether there is a user for the req
-        var user = await this._repository.Retrieve("email",req.Email.ToLowerInvariant());
+        var user = await this._repository.Retrieve("email", req.Email.ToLowerInvariant());
 
         if (user is null)
         {

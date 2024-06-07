@@ -4,11 +4,12 @@ using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using Generic;
 
+
 public class User : Entity
 {
     // Login
     [EmailAddress]
-    public string Email{ get; set; }
+    public string Email { get; set; }
     public string PasswordHash { get; set; }
 
     // Personal Details

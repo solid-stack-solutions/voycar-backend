@@ -50,19 +50,23 @@ public class EmailService : IEmailService
         this.SendEmail(email);
     }
 
+
     public void SendPasswordResetEmail(User user)
     {
         var email = this.CreatePasswordResetEmail(user, GeneratePasswordResetLink());
         this.SendEmail(email);
     }
 
+
     // todo Link to Frontend must be added + VerificationToken must be attached
     private static string GenerateVerificationLink(Member member)
         => $"http://localhost:8080/verify/{member.VerificationToken}"; // FrontendLink?token={VerificationToken}
 
+
     // todo Link to Frontend must be added + PasswordResetToken must be attached
     private static string GeneratePasswordResetLink()
         => $"http://localhost:8080/reset-password"; // FrontendLink?token={PasswordResetToken}
+
 
     private MimeMessage CreateVerificationEmail(Member member, string verificationLink)
     {

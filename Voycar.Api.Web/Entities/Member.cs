@@ -1,8 +1,7 @@
 namespace Voycar.Api.Web.Entities;
 
-using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
 using Generic;
+
 
 public class Member : Entity
 {

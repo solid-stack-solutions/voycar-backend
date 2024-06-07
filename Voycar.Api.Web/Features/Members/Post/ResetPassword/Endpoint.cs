@@ -2,10 +2,12 @@ namespace Voycar.Api.Web.Features.Members.Post.ResetPassword;
 
 using Repository;
 
+
 public class Endpoint : Endpoint<Request>
 {
     private readonly IUsers _repository;
     private readonly ILogger<Get.Verify.Endpoint> _logger;
+
 
     public Endpoint(IUsers repository, ILogger<Get.Verify.Endpoint> logger)
     {
@@ -33,7 +35,7 @@ public class Endpoint : Endpoint<Request>
         }
 
         // Set new password hash
-        user.PasswordHash =  BCrypt.Net.BCrypt.EnhancedHashPassword(req.Password);
+        user.PasswordHash = BCrypt.Net.BCrypt.EnhancedHashPassword(req.Password);
 
         // Remove reset options
         user.ResetTokenExpires = null;
