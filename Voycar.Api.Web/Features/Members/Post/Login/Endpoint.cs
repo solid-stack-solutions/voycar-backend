@@ -28,7 +28,7 @@ public class Endpoint : Endpoint<Request>
     {
         Member? member = null;
 
-        var user = await this._userRepository.Retrieve(req.Email.ToLowerInvariant());
+        var user = await this._userRepository.Retrieve("email",req.Email.ToLowerInvariant());
 
         // Check if user is a member (members must be verified)
         if (user is not null)
