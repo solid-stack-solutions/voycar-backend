@@ -12,11 +12,11 @@ using Verify = Features.Members.Get.Verify;
 
 public class App : AppFixture<Program>
 {
-    // Test with prod Db
+    // Use this to test with prod Db, see ConfigureServices()
     private const string ConnectionString =
         "User ID=admin;Password=admin;Server=localhost;Port=5432;Database=VoycarDb;";
 
-    // Test in a test-container
+    // Create a Db test container to run tests against
     private readonly PostgreSqlContainer _container = new PostgreSqlBuilder()
         .WithImage("postgres:16.3")
         .WithDatabase("pgsql-testcontainer")
@@ -76,11 +76,6 @@ public class App : AppFixture<Program>
         {
             Email = testMail, Password = password
         });
-
-        // Http client setup
-        //this.Admin = this.CreateClient(config =>
-        //{
-        //});
     }
 
     protected override void ConfigureApp(IWebHostBuilder builder)
@@ -110,7 +105,6 @@ public class App : AppFixture<Program>
     protected override Task TearDownAsync()
     {
         // Do cleanups here
-        //this.Admin.Dispose();
         return this._container.StopAsync();
     }
 }
