@@ -12,6 +12,15 @@ public abstract class SingleUnique<TEntity>
     protected SingleUnique(IRepository<TEntity> repository, string[] roles)
         : base(repository, roles) {}
 
+    public override void Configure()
+    {
+        this.Post(typeof(TEntity).Name.ToLowerInvariant());
+        this.Roles(this.roles);
+        // TODO Swagger documentation
+        //this.Description();
+        //this.Summary();
+    }
+
     public override async Task HandleAsync(TEntity req, CancellationToken ct)
     {
         var created = this._repository.CreateUnique(req);
