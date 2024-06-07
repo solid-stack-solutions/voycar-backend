@@ -19,19 +19,18 @@ public abstract class Single<TEntity>
     {
         this.Delete(typeof(TEntity).Name.ToLowerInvariant() + "/{id}");
         this.Roles(this.roles);
-        Description(b => b
+        this.Description(b => b
                 .Accepts<Entity>("Voycar.Api.Web/Generic/Entity")
                 .Produces<IResult>(200)
                 .ProducesProblem(404),
             clearDefaults: true);
-        Summary(s =>
+        this.Summary(s =>
         {
-            s.Summary = $"DELETE Endpoint for {typeof(TEntity).Name}";
-            s.Description = $"This Endpoint is used to remove {typeof(TEntity).Name} objects from the database";
-            s.Responses[200] = "OK response if DELETE operation was successful";
+            s.Summary = $"Delete {typeof(TEntity).Name}";
+            s.Description = $"Endpoint to remove {typeof(TEntity).Name} objects from the database";
+            s.Responses[200] = "If DELETE operation is successful";
             s.Responses[404] =
-                "Not Found response if DELETE operation was performed for on an Entity that could not be found in the database";
-            s.ResponseExamples[404] = new {};
+                "If DELETE operation is performed for an Entity that could not be found in the database or requesting user isn't authorized";
             s.Params["id"] = $"id derived from the {typeof(TEntity).Name} object";
         });
     }

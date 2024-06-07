@@ -19,18 +19,18 @@ public abstract class Single<TEntity>
     {
         this.Put(typeof(TEntity).Name.ToLowerInvariant());
         this.Roles(this.roles);
-        Description(b => b
+        this.Description(b => b
                 .Accepts<TEntity>("Voycar.Api.Web/Generic/Entity")
                 .Produces<IResult>(200)
                 .ProducesProblem(404),
             clearDefaults: true);
-        Summary(s =>
+        this.Summary(s =>
         {
-            s.Summary = $"PUT Endpoint for {typeof(TEntity).Name}";
-            s.Description = $"This Endpoint ist used to update {typeof(TEntity).Name} Objects in the database";
-            s.Responses[200] = "OK response if PUT operation was successful";
+            s.Summary = $"Update {typeof(TEntity).Name}";
+            s.Description = $"Endpoint to update {typeof(TEntity).Name} Objects in the database";
+            s.Responses[200] = "If PUT operation is successful";
             s.Responses[404] =
-                "Not Found response if PUT operation was performed for on an Entity that could not be found in the database";
+                "If PUT operation is performed for an Entity that could not be found in the database or requesting user isn't authorized";
             s.ResponseExamples[404] = new {};
         });
     }

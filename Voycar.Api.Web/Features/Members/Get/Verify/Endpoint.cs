@@ -22,21 +22,20 @@ public class Endpoint : Endpoint<Request>
     {
         this.Get("/verify/{verificationToken}");
         this.AllowAnonymous();
-        Description(b => b
+        this.Description(b => b
                 .Accepts<Request>("Voycar.Api.Web/Generic/Entity")
                 .Produces<IResult>(200)
                 .ProducesProblem(400),
             clearDefaults: true);
-        Summary(s =>
+        this.Summary(s =>
         {
-            s.Summary = "GET verify Endpoint for Member";
-            s.Description = "This Endpoint is used to verify a member against the database " +
+            s.Summary = "Verify Member";
+            s.Description = "Endpoint to verify a member against the database " +
                             "and update last time of verification";
-            s.Responses[200] = "OK response if verification was successful";
+            s.Responses[200] = "If verification is successful";
             s.Responses[400] =
-                "BAD REQUEST response if verification failed";
-            s.ResponseExamples[400] = new {};
-            s.Params["verificationToken"] = "The verification token of Member that has to be verified";
+                "If verification fails";
+            s.Params["verificationToken"] = "The verification token of the Member to be verified";
         });
     }
 

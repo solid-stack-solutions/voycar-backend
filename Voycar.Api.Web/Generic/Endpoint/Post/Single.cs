@@ -19,19 +19,20 @@ public abstract class Single<TEntity>
     {
         this.Post(typeof(TEntity).Name.ToLowerInvariant());
         this.Roles(this.roles);
-        Description(b => b
+        this.Description(b => b
                 .Accepts<TEntity>("Voycar.Api.Web/Generic/Entity")
                 .Produces<IResult>(200)
+                .ProducesProblem(204)
                 .ProducesProblem(404),
             clearDefaults: true);
-        Summary(s =>
+        this.Summary(s =>
         {
-            s.Summary = $"POST Endpoint for {typeof(TEntity).Name}";
-            s.Description = $"This Endpoint is used to add new {typeof(TEntity).Name} objects into the database";
-            s.Responses[200] = "OK response if POST operation was successful";
-            s.Responses[404] =
-                "Not Found response if POST operation was performed for on an Entity that could not be found in the database";
-            s.ResponseExamples[404] = new {};
+            s.Summary = $"Create {typeof(TEntity).Name}";
+            s.Description = $"Endpoint to add new {typeof(TEntity).Name} objects into the database";
+            s.Responses[200] = "If POST operation is successful";
+            s.Responses[204] =
+                "If POST operation is performed for on an Entity that could not be found in the database";
+            s.Responses[404] = "If requesting user isn't authorized";
         });
     }
 
