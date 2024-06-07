@@ -24,6 +24,8 @@ public class Endpoint : Endpoint<Request, Response, Mapper>
         this._logger = logger;
         this._userRepository = userRepository;
     }
+
+
     public override void Configure()
     {
         this.Post("/registration");
@@ -33,7 +35,7 @@ public class Endpoint : Endpoint<Request, Response, Mapper>
 
     public override async Task HandleAsync(Request req, CancellationToken ct)
     {
-        if (await this._userRepository.Retrieve(req.Email.ToLowerInvariant()) is not null)
+        if (await this._userRepository.Retrieve("email",req.Email.ToLowerInvariant()) is not null)
         {
             this._logger.LogWarning("User already exists.");
             await this.SendErrorsAsync(cancellation: ct);
@@ -46,6 +48,8 @@ public class Endpoint : Endpoint<Request, Response, Mapper>
         this._logger.LogInformation("User created with ID: {MemberId}", member.Id);
 
         this._emailService.SendVerificationEmail(member);
+
+        // Todo VerificationToken must be removed later
         await this.SendAsync(new Response { VerificationToken = member.VerificationToken }, cancellation: ct);
     }
 }
