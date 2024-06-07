@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Context;
-
+using DotNet.Testcontainers.Builders;
 using Testcontainers.PostgreSql;
 
 [DisableWafCache]
@@ -18,6 +18,8 @@ public class App : AppFixture<Program>
         .WithDatabase("VoycarDb-Tests")
         .WithUsername("admin")
         .WithPassword("admin")
+        .WithDockerEndpoint("tcp://localhost:2375")
+        .WithWaitStrategy(Wait.ForUnixContainer().UntilPortIsAvailable(5432))
         .Build();
 
     private VoycarDbContext _context;
