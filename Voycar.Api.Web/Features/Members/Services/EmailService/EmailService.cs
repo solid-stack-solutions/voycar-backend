@@ -56,13 +56,13 @@ public class EmailService : IEmailService
         this.SendEmail(email);
     }
 
-
+    // todo Link to Frontend must be added + VerificationToken must be attached
     private static string GenerateVerificationLink(Member member)
-        => $"http://localhost:8080/verify/{member.VerificationToken}";
+        => $"http://localhost:8080/verify/{member.VerificationToken}"; // FrontendLink?token={VerificationToken}
 
-    // todo
+    // todo Link to Frontend must be added + PasswordResetToken must be attached
     private static string GeneratePasswordResetLink()
-        => $"http://localhost:8080/api/reset-password";
+        => $"http://localhost:8080/reset-password"; // FrontendLink?token={PasswordResetToken}
 
     private MimeMessage CreateVerificationEmail(Member member, string verificationLink)
     {
@@ -93,8 +93,8 @@ public class EmailService : IEmailService
         email.Subject = "Voycar-Passwort-Reset";
 
 
-        var content = $"Bitte klicken Sie auf den folgenden Link, um Ihr Passwort zu reseten: " +
-                      $"<a href=\"{passwordResetLink}\">Link zum Passwort-Reseten</a>";
+        var content = $"Bitte klicken Sie auf den folgenden Link, um Ihr Passwort zurückzusetzen: " +
+                      $"<a href=\"{passwordResetLink}\">Link zum Passwort-Reset</a>";
 
         var htmlContent = $"<html><body><p style='font-weight: bold;'>{content}</p></body></html>";
         email.Body = new TextPart("html")
