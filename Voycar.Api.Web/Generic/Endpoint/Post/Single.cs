@@ -19,6 +19,21 @@ public abstract class Single<TEntity>
     {
         this.Post(typeof(TEntity).Name.ToLowerInvariant());
         this.Roles(this.roles);
+        this.Description(b => b
+                .Accepts<TEntity>("Voycar.Api.Web/Generic/Entity")
+                .Produces<IResult>(200)
+                .ProducesProblem(204)
+                .ProducesProblem(404),
+            clearDefaults: true);
+        this.Summary(s =>
+        {
+            s.Summary = $"Create {typeof(TEntity).Name}";
+            s.Description = $"Add new {typeof(TEntity).Name} objects into the database";
+            s.Responses[200] = "If POST operation is successful";
+            s.Responses[204] =
+                "If POST operation failed";
+            s.Responses[404] = "If requesting user isn't authorized";
+        });
     }
 
     public override async Task HandleAsync(TEntity req, CancellationToken ct)
@@ -30,7 +45,7 @@ public abstract class Single<TEntity>
             await this.SendResultAsync(TypedResults.Ok());
             return;
         }
-        
+
         await this.SendResultAsync(TypedResults.NoContent());
     }
 }
