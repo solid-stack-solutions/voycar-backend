@@ -4,11 +4,9 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Context;
+using Setup;
 using Testcontainers.PostgreSql;
 
-using Login = Features.Members.Post.Login;
-using Registration = Features.Members.Post.Registration;
-using Verify = Features.Members.Get.Verify;
 
 public class App : AppFixture<Program>
 {
@@ -26,6 +24,8 @@ public class App : AppFixture<Program>
         .Build();
 
     public VoycarDbContext Context { get; private set; }
+    private HttpClient Member { get; set; }
+    private HttpClient Employee { get; set; }
     private HttpClient Admin { get; set; }
 
     // See: https://gist.github.com/dj-nitehawk/04a78cea10f2239eb81c958c52ec84e0
@@ -36,56 +36,25 @@ public class App : AppFixture<Program>
 
     protected override async Task SetupAsync()
     {
-        // Place one-time setup code here
+        // == Place one-time setup code here ==
 
         // Db setup
         this.Context = this.Services.GetRequiredService<VoycarDbContext>();
         await this.Context.Database.EnsureDeletedAsync(); // Delete data on Db
         await this.Context.Database.EnsureCreatedAsync(); // Populate with Db schema
 
-        // Populate Db
-        const string testMail = "integration@test.de";
-        const string password = "integration";
-
-        var (regHttpRsp, regBodyRes) =
-            await this.Client.POSTAsync<Registration.Endpoint, Registration.Request, Registration.Response>(
-                new Registration.Request
-                {
-                    Email = testMail,
-                    Password = password,
-                    FirstName = "...",
-                    LastName = "...",
-                    Street = "...",
-                    HouseNumber = "...",
-                    PostalCode = "...",
-                    City = "...",
-                    BirthDate = new DateOnly(2000, 1, 1),
-                    BirthPlace = "...",
-                    PhoneNumber = "...",
-                    DriversLicenseNumber = "...",
-                    IdCardNumber = "..."
-                }
-            );
-
-        var verHttpRsp = await this.Client.GETAsync<Verify.Endpoint, Verify.Request>(new Verify.Request
-        {
-            VerificationToken = regBodyRes.VerificationToken
-        });
-
-        await this.Client.POSTAsync<Login.Endpoint, Login.Request>(new Login.Request
-        {
-            Email = testMail, Password = password
-        });
+        // Create custom HttpClients to use in tests
+        this.Member = await ClientFactory.CreateMemberClient(this);
     }
 
     protected override void ConfigureApp(IWebHostBuilder builder)
     {
-        // Do host builder config here
+        // == Do host builder config here ==
     }
 
     protected override void ConfigureServices(IServiceCollection services)
     {
-        // Do test service registration here
+        // == Do test service registration here ==
         var descriptor =
             services.SingleOrDefault(s => s.ServiceType == typeof(DbContextOptions<VoycarDbContext>));
 
@@ -104,7 +73,11 @@ public class App : AppFixture<Program>
 
     protected override Task TearDownAsync()
     {
-        // Do cleanups here
+        // == Do cleanups here ==
+
+        this.Member.Dispose();
+        this.Employee.Dispose();
+        this.Admin.Dispose();
         return this._container.StopAsync();
     }
 }
