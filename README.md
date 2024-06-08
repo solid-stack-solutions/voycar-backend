@@ -28,7 +28,10 @@
 //Todo: list general conventions for development
 
 //Todo: helpful information and how-to's for development
-## Fix testcontainers when using wsl instead of Docker Desktop
+## Possible fix testcontainers when using wsl instead of Docker Desktop
+**This fix needs certain modifications in the App.cs. 
+When working with other team-members who are on other platforms or use Docker Desktop instead of wls this fix will break their setup**
+
 Go into your wsl terminal and navigate to ` /etc/docker/`. Create a **daemon.json** (or modify if already existing) File
 with the following content:
 ```json
