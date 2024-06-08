@@ -1,4 +1,5 @@
 using FastEndpoints.Security;
+using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.EntityFrameworkCore;
 using Voycar.Api.Web.Context;
 using Voycar.Api.Web.Features.Roles.Repository;
@@ -21,14 +22,35 @@ try
 
 
     builder.Services
-        .AddAuthenticationCookie(validFor: TimeSpan.FromMinutes(1), options =>
+        .AddAuthenticationCookie(validFor: TimeSpan.FromMinutes(10), options =>
         {
             /* Instruct the handler to re-issue a new cookie with a new expiration time any
-               time it processes a request which is more than halfway through the expiration window */
+                time it processes a request which is more than halfway through the expiration window */
             options.SlidingExpiration = true;
+
+            /* Override ASP.NET default cookie middleware, since that tries to redirect to /Account/Login/
+                after an unauthorized request */
+            options.Events = new CookieAuthenticationEvents()
+            {
+                OnRedirectToLogin = (ctx) =>
+                {
+                    if (ctx.Response.StatusCode == 200)
+                    {
+                        ctx.Response.StatusCode = 401;
+                    }
+                    return Task.CompletedTask;
+                },
+                OnRedirectToAccessDenied = (ctx) =>
+                {
+                    if (ctx.Response.StatusCode == 200)
+                    {
+                        ctx.Response.StatusCode = 403;
+                    }
+                    return Task.CompletedTask;
+                }
+            };
         } )
         .AddAuthorization();
-
 
     // Repositories
     builder.Services.AddTransient<IRoles, Roles>();
