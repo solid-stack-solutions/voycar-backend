@@ -29,7 +29,7 @@ public class Endpoint : Endpoint<Request, Response, Mapper>
 
     public override void Configure()
     {
-        this.Post("/registration");
+        this.Post("auth/register");
         this.AllowAnonymous();
     }
 
@@ -50,7 +50,7 @@ public class Endpoint : Endpoint<Request, Response, Mapper>
 
         this._emailService.SendVerificationEmail(member);
 
-        // Todo VerificationToken must be removed later
+        // ToDo VerificationToken must be removed later (is used for debug purposes)
         await this.SendAsync(new Response { VerificationToken = member.VerificationToken }, cancellation: ct);
     }
 }

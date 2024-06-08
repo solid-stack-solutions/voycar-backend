@@ -19,11 +19,6 @@ public abstract class Single<TEntity>
     {
         this.Put(typeof(TEntity).Name.ToLowerInvariant());
         this.Roles(this.roles);
-        this.Description(b => b
-                .Accepts<TEntity>("Voycar.Api.Web/Generic/Entity")
-                .Produces<IResult>(200)
-                .ProducesProblem(404),
-            clearDefaults: true);
         this.Summary(s =>
         {
             s.Summary = $"Update {typeof(TEntity).Name}";
@@ -31,7 +26,6 @@ public abstract class Single<TEntity>
             s.Responses[200] = "If PUT operation is successful";
             s.Responses[404] =
                 "If PUT operation is performed for an Entity that could not be found in the database or requesting user isn't authorized";
-            s.ResponseExamples[404] = new {};
         });
     }
 

@@ -8,11 +8,11 @@ using Services.EmailService;
 public class Endpoint : Endpoint<Request>
 {
     private readonly IUsers _repository;
-    private readonly ILogger<Get.Verify.Endpoint> _logger;
+    private readonly ILogger<Endpoint> _logger;
     private readonly IEmailService _emailService;
 
 
-    public Endpoint(IUsers repository, ILogger<Get.Verify.Endpoint> logger, IEmailService emailService)
+    public Endpoint(IUsers repository, ILogger<Endpoint> logger, IEmailService emailService)
     {
         this._repository = repository;
         this._logger = logger;
@@ -22,7 +22,7 @@ public class Endpoint : Endpoint<Request>
 
     public override void Configure()
     {
-        this.Post("/forgot-password");
+        this.Post("auth/forgot-password");
         this.AllowAnonymous();
     }
 
@@ -30,7 +30,7 @@ public class Endpoint : Endpoint<Request>
     public override async Task HandleAsync(Request req, CancellationToken ct)
     {
         // Checks whether there is a user for the req
-        var user = await this._repository.Retrieve("email", req.Email.ToLowerInvariant());
+        var user = await this._repository.Retrieve("email", req.Email?.ToLowerInvariant());
 
         if (user is null)
         {
@@ -46,7 +46,8 @@ public class Endpoint : Endpoint<Request>
 
         this._emailService.SendPasswordResetEmail(user);
         this._logger.LogInformation("Password-Reset-Token successfully created for User with ID: {UserId}", user.Id);
-        // Todo PasswordResetToken must be removed later
+
+        // Todo PasswordResetToken must be removed later (is used for debug purposes)
         await this.SendOkAsync(new Response { PasswordResetToken = user.PasswordResetToken }, cancellation: ct);
     }
 }

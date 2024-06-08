@@ -16,7 +16,7 @@ public class Users : Generic.Repository.Repository<User>, IUsers
     }
 
 
-    public Task<User?> Retrieve(string attribute, string value)
+    public Task<User?> Retrieve(string attribute, string? value)
     {
         return attribute switch
         {

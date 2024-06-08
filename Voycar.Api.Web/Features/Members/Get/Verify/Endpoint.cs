@@ -1,6 +1,5 @@
 namespace Voycar.Api.Web.Features.Members.Get.Verify;
 
-
 using Repository;
 
 
@@ -25,13 +24,8 @@ public class Endpoint : Endpoint<Request>
 
     public override void Configure()
     {
-        this.Get("/verify/{verificationToken}");
+        this.Get("auth/verify/{verificationToken}");
         this.AllowAnonymous();
-        this.Description(b => b
-                .Accepts<Request>("Voycar.Api.Web/Generic/Entity")
-                .Produces<IResult>(200)
-                .ProducesProblem(400),
-            clearDefaults: true);
         this.Summary(s =>
         {
             s.Summary = "Verify Member";

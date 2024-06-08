@@ -5,5 +5,5 @@ using Entities;
 
 public interface IUsers : Generic.Repository.IRepository<User>
 {
-    Task<User?> Retrieve(string attribute, string value);
+    Task<User?> Retrieve(string attribute, string? value);
 }
