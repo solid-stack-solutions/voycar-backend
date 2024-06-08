@@ -4,8 +4,7 @@ using Entities;
 using FastEndpoints.Security;
 using Repository;
 
-
-public class Endpoint : Endpoint<Request>
+public class Endpoint : Endpoint<Request, Results<Ok, BadRequest>>
 {
     private readonly IMembers _members;
     private readonly IUsers _userRepository;
@@ -29,35 +28,15 @@ public class Endpoint : Endpoint<Request>
 
     public override async Task HandleAsync(Request req, CancellationToken ct)
     {
-        Member? member = null;
-
         var user = await this._userRepository.Retrieve("email", req.Email.ToLowerInvariant());
 
-        // Check if user is a member (members must be verified)
-        if (user is not null)
-        {
-            member = this._members.Retrieve(user.Id);
-        }
 
-        // Checks for employee / admin
-        if (member is null)
+        // Check if user entered valid credentials and verified his email
+        if (user is null || user!.VerifiedAt is null ||
+            !BCrypt.Net.BCrypt.EnhancedVerify(req.Password, user.PasswordHash))
         {
-            // Check if employee or admin entered valid credentials
-            if (user is null || !BCrypt.Net.BCrypt.EnhancedVerify(req.Password, user.PasswordHash))
-            {
-                await this.SendErrorsAsync(cancellation: ct);
-                return;
-            }
-
-            // Login employee / admin
-            await this.SignInUserAsync(user!, ct);
-            return;
-        }
-
-        // Check if member entered valid credentials and is verified
-        if (member!.VerifiedAt is null || !BCrypt.Net.BCrypt.EnhancedVerify(req.Password, member.User.PasswordHash))
-        {
-            await this.SendErrorsAsync(cancellation: ct);
+            // Do not send different request for user not found, since this would reveal which users are signed up
+            await this.SendResultAsync(TypedResults.BadRequest());
             return;
         }
 
@@ -68,12 +47,22 @@ public class Endpoint : Endpoint<Request>
 
     private async Task SignInUserAsync(User user, CancellationToken ct)
     {
-        var role = await this._members.RetrieveRole(user.RoleId);
-        await CookieAuth.SignInAsync(u =>
+        var roleId = user.RoleId;
+        if (roleId is null)
         {
-            u.Roles.Add(role!.Name);
-        });
+            // Sign in without any roles
+            await CookieAuth.SignInAsync(privileges => { });
+        }
+        else
+        {
+            var role = await this._members.RetrieveRole((Guid)roleId);
+            await CookieAuth.SignInAsync(u =>
+            {
+                u.Roles.Add(role!.Name);
+            });
+        }
+
         this._logger.LogInformation("User logged in successfully with ID: {UserId}", user.Id);
-        await this.SendOkAsync(cancellation: ct);
+        await this.SendResultAsync(TypedResults.Ok());
     }
 }
