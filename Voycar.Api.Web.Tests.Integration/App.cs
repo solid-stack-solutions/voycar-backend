@@ -18,8 +18,6 @@ public class App : AppFixture<Program>
         .WithDatabase("VoycarDb-Tests")
         .WithUsername("admin")
         .WithPassword("admin")
-        .WithDockerEndpoint("tcp://localhost:2375")
-        .WithWaitStrategy(Wait.ForUnixContainer().UntilPortIsAvailable(5432))
         .Build();
 
     private VoycarDbContext _context;
