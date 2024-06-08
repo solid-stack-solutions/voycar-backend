@@ -45,6 +45,13 @@ public class Endpoint : Endpoint<Request, Results<Ok, BadRequest>>
     }
 
 
+    /// <summary>
+    /// Signs in a user with cookie authentication and assigns any possible roles.
+    /// If any roles are associated with that user the roles are added to the cookie. A response including the
+    /// cookie is sent back.
+    /// </summary>
+    /// <param name="user">The user to sign in</param>
+    /// <param name="ct"></param>
     private async Task SignInUserAsync(User user, CancellationToken ct)
     {
         var roleId = user.RoleId;
