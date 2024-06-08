@@ -1,6 +1,5 @@
 namespace Voycar.Api.Web.Features.Members.Get.Verify;
 
-
 using Repository;
 
 
