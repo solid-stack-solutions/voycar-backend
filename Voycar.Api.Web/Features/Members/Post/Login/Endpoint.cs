@@ -3,18 +3,20 @@ namespace Voycar.Api.Web.Features.Members.Post.Login;
 using Entities;
 using FastEndpoints.Security;
 using Repository;
+using Roles.Repository;
 
 public class Endpoint : Endpoint<Request, Results<Ok, BadRequest>>
 {
-    private readonly IMembers _members;
     private readonly IUsers _userRepository;
+    private readonly IRoles _rolesRepository;
     private readonly ILogger<Endpoint> _logger;
 
 
-    public Endpoint(IMembers members, IUsers userRepository, ILogger<Endpoint> logger)
+    public Endpoint(IUsers userRepository, IRoles rolesRepository, ILogger<Endpoint> logger)
     {
-        this._members = members;
         this._userRepository = userRepository;
+        // TODO check if this dependency doesn't break the vertical slice pattern
+        this._rolesRepository = rolesRepository;
         this._logger = logger;
     }
 
@@ -62,10 +64,10 @@ public class Endpoint : Endpoint<Request, Results<Ok, BadRequest>>
         }
         else
         {
-            var role = await this._members.RetrieveRole((Guid)roleId);
-            await CookieAuth.SignInAsync(u =>
+            var role = this._rolesRepository.Retrieve((Guid)roleId);
+            await CookieAuth.SignInAsync(privileges =>
             {
-                u.Roles.Add(role!.Name);
+                privileges.Roles.Add(role!.Name);
             });
         }
 
