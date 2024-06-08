@@ -19,12 +19,6 @@ public abstract class Single<TEntity>
     {
         this.Post(typeof(TEntity).Name.ToLowerInvariant());
         this.Roles(this.roles);
-        this.Description(b => b
-                .Accepts<TEntity>("Voycar.Api.Web/Generic/Entity")
-                .Produces<IResult>(200)
-                .ProducesProblem(204)
-                .ProducesProblem(404),
-            clearDefaults: true);
         this.Summary(s =>
         {
             s.Summary = $"Create {typeof(TEntity).Name}";
