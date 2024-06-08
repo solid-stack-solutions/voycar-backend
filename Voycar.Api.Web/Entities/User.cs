@@ -29,5 +29,4 @@ public class User : Entity
     [ForeignKey("Member")]
     public Guid? MemberId { get; set; }
     public Member? Member { get; set; }
-
 }
