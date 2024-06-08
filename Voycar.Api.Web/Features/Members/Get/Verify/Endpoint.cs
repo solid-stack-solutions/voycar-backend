@@ -22,7 +22,9 @@ public class Endpoint : Endpoint<Request>
     {
         this.Get("/verify/{verificationToken}");
         this.AllowAnonymous();
-        this.Description(b => b
+
+        // Does not work yet, must be changed
+        /*this.Description(b => b
                 .Accepts<Request>("Voycar.Api.Web/Generic/Entity")
                 .Produces<IResult>(200)
                 .ProducesProblem(400),
@@ -37,6 +39,7 @@ public class Endpoint : Endpoint<Request>
                 "If verification fails";
             s.Params["verificationToken"] = "Verification token of the Member to be verified";
         });
+        */
     }
 
     public override async Task HandleAsync(Request req, CancellationToken ct)
