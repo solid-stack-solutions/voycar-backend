@@ -21,7 +21,7 @@ public class Endpoint : Endpoint<Request, Results<Ok, BadRequest>>
 
     public override void Configure()
     {
-        this.Post("/login");
+        this.Post("auth/login");
         this.AllowAnonymous();
     }
 

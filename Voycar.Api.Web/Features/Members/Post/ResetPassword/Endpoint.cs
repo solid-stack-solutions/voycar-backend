@@ -6,10 +6,10 @@ using Repository;
 public class Endpoint : Endpoint<Request>
 {
     private readonly IUsers _repository;
-    private readonly ILogger<Get.Verify.Endpoint> _logger;
+    private readonly ILogger<Endpoint> _logger;
 
 
-    public Endpoint(IUsers repository, ILogger<Get.Verify.Endpoint> logger)
+    public Endpoint(IUsers repository, ILogger<Endpoint> logger)
     {
         this._repository = repository;
         this._logger = logger;
@@ -18,7 +18,7 @@ public class Endpoint : Endpoint<Request>
 
     public override void Configure()
     {
-        this.Post("/reset-password");
+        this.Post("auth/reset-password");
         this.AllowAnonymous();
     }
 
