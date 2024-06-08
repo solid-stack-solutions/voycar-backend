@@ -24,7 +24,7 @@ public class Endpoint : Endpoint<Request>
 
     public override void Configure()
     {
-        this.Get("login/verify/{verificationToken}");
+        this.Get("auth/verify/{verificationToken}");
         this.AllowAnonymous();
         this.Summary(s =>
         {

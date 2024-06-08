@@ -22,7 +22,7 @@ public class Endpoint : Endpoint<Request>
 
     public override void Configure()
     {
-        this.Post("login/forgot-password");
+        this.Post("auth/forgot-password");
         this.AllowAnonymous();
     }
 

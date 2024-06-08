@@ -22,7 +22,7 @@ public class Endpoint : Endpoint<Request>
 
     public override void Configure()
     {
-        this.Post("login");
+        this.Post("auth/login");
         this.AllowAnonymous();
     }
 

@@ -18,7 +18,7 @@ public class Endpoint : Endpoint<Request>
 
     public override void Configure()
     {
-        this.Post("login/reset-password");
+        this.Post("auth/reset-password");
         this.AllowAnonymous();
     }
 

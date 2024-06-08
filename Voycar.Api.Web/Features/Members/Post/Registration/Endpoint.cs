@@ -29,7 +29,7 @@ public class Endpoint : Endpoint<Request, Response, Mapper>
 
     public override void Configure()
     {
-        this.Post("login/register");
+        this.Post("auth/register");
         this.AllowAnonymous();
     }
 
