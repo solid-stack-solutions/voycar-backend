@@ -8,11 +8,11 @@ using Services.EmailService;
 public class Endpoint : Endpoint<Request>
 {
     private readonly IUsers _repository;
-    private readonly ILogger<Get.Verify.Endpoint> _logger;
+    private readonly ILogger<Endpoint> _logger;
     private readonly IEmailService _emailService;
 
 
-    public Endpoint(IUsers repository, ILogger<Get.Verify.Endpoint> logger, IEmailService emailService)
+    public Endpoint(IUsers repository, ILogger<Endpoint> logger, IEmailService emailService)
     {
         this._repository = repository;
         this._logger = logger;
@@ -22,7 +22,7 @@ public class Endpoint : Endpoint<Request>
 
     public override void Configure()
     {
-        this.Post("/forgot-password");
+        this.Post("login/forgot-password");
         this.AllowAnonymous();
     }
 
