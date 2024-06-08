@@ -3,6 +3,7 @@ namespace Voycar.Api.Web.Features.Members.Post.Registration;
 using Repository;
 using Services.EmailService;
 
+
 /// <summary>
 /// Handles the registration of new members.
 ///
@@ -24,16 +25,18 @@ public class Endpoint : Endpoint<Request, Response, Mapper>
         this._logger = logger;
         this._userRepository = userRepository;
     }
+
+
     public override void Configure()
     {
-        this.Post("/registration");
+        this.Post("auth/register");
         this.AllowAnonymous();
     }
 
 
     public override async Task HandleAsync(Request req, CancellationToken ct)
     {
-        if (await this._userRepository.Retrieve(req.Email.ToLowerInvariant()) is not null)
+        if (await this._userRepository.Retrieve("email", req.Email.ToLowerInvariant()) is not null)
         {
             this._logger.LogWarning("User already exists.");
             await this.SendErrorsAsync(cancellation: ct);
@@ -46,6 +49,8 @@ public class Endpoint : Endpoint<Request, Response, Mapper>
         this._logger.LogInformation("User created with ID: {MemberId}", member.Id);
 
         this._emailService.SendVerificationEmail(member);
+
+        // ToDo VerificationToken must be removed later (is used for debug purposes)
         await this.SendAsync(new Response { VerificationToken = member.VerificationToken }, cancellation: ct);
     }
 }

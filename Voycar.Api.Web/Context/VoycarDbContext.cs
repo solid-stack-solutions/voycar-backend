@@ -3,11 +3,12 @@ namespace Voycar.Api.Web.Context;
 using Entities;
 using Microsoft.EntityFrameworkCore;
 
+
 public class VoycarDbContext : DbContext
 {
     public VoycarDbContext(DbContextOptions<VoycarDbContext> options) : base(options) {}
 
-    // db sets for entities
+    // Db sets for entities
     public DbSet<User> Users { get; set; }
     public DbSet<Member> Members { get; set; }
     public DbSet<Role> Roles { get; set; }
@@ -30,11 +31,10 @@ public class VoycarDbContext : DbContext
             .IsRequired();
 
         // Add default data to role table
-        modelBuilder.Entity<Role>().
-            HasData(
-                new Role { Id = Guid.NewGuid(), Name = "admin" },
-                new Role { Id = Guid.NewGuid(), Name = "employee" },
-                new Role { Id = Guid.NewGuid(), Name = "member" });
+        modelBuilder.Entity<Role>().HasData(
+            new Role { Id = Guid.NewGuid(), Name = "admin" },
+            new Role { Id = Guid.NewGuid(), Name = "employee" },
+            new Role { Id = Guid.NewGuid(), Name = "member" });
         base.OnModelCreating(modelBuilder);
     }
 }

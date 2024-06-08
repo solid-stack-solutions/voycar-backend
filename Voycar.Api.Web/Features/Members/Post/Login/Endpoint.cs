@@ -4,11 +4,13 @@ using Entities;
 using FastEndpoints.Security;
 using Repository;
 
+
 public class Endpoint : Endpoint<Request>
 {
     private readonly IMembers _members;
     private readonly IUsers _userRepository;
     private readonly ILogger<Endpoint> _logger;
+
 
     public Endpoint(IMembers members, IUsers userRepository, ILogger<Endpoint> logger)
     {
@@ -20,15 +22,16 @@ public class Endpoint : Endpoint<Request>
 
     public override void Configure()
     {
-        this.Post("/login");
+        this.Post("auth/login");
         this.AllowAnonymous();
     }
+
 
     public override async Task HandleAsync(Request req, CancellationToken ct)
     {
         Member? member = null;
 
-        var user = await this._userRepository.Retrieve(req.Email.ToLowerInvariant());
+        var user = await this._userRepository.Retrieve("email", req.Email.ToLowerInvariant());
 
         // Check if user is a member (members must be verified)
         if (user is not null)

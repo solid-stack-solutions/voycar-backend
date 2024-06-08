@@ -6,4 +6,5 @@ using Entities;
 public interface IEmailService
 {
     void SendVerificationEmail(Member member);
+    void SendPasswordResetEmail(User user);
 }
