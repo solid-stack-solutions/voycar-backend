@@ -23,7 +23,6 @@ public abstract class SingleUnique<TEntity>
             s.Responses[200] = "If POST operation is successful";
             s.Responses[204] =
                 $"If POST operation failed or the same {typeof(TEntity).Name} object is already present in the database";
-            s.Responses[404] = "If requesting user isn't authorized";
         });
     }
 

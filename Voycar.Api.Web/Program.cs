@@ -78,7 +78,28 @@ try
     app.UseSerilogRequestLogging()
        .UseAuthentication()
        .UseAuthorization()
-       .UseFastEndpoints()
+       .UseFastEndpoints(c =>
+       {
+           c.Endpoints.Configurator = ep =>
+           {
+               // Setup Swagger Documentation for all endpoints which require a role for accessing
+               if (ep.AllowedRoles?.Count == 0)
+               {
+                   return;
+               }
+
+               ep.Description(b =>
+               {
+                   b.Produces(401); // Unauthorized -> if user is not logged in
+                   b.Produces(403); // Forbidden -> if user is missing roles
+               });
+               ep.Summary(s =>
+               {
+                   s.Responses[401] = "If requesting user isn't authorized";
+                   s.Responses[403] = "If requesting user doesn't have the required roles";
+               });
+           };
+       })
        .UseSwaggerGen();
 
     app.Run();
