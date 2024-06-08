@@ -30,7 +30,7 @@ public class Endpoint : Endpoint<Request>
     public override async Task HandleAsync(Request req, CancellationToken ct)
     {
         // Checks whether there is a user for the req
-        var user = await this._repository.Retrieve("email", req.Email.ToLowerInvariant());
+        var user = await this._repository.Retrieve("email", req.Email?.ToLowerInvariant());
 
         if (user is null)
         {
