@@ -22,11 +22,6 @@ public class Endpoint : Endpoint<Request>
     {
         this.Get("/verify/{verificationToken}");
         this.AllowAnonymous();
-        this.Description(b => b
-                .Accepts<Request>("Voycar.Api.Web/Generic/Entity")
-                .Produces<IResult>(200)
-                .ProducesProblem(400),
-            clearDefaults: true);
         this.Summary(s =>
         {
             s.Summary = "Verify Member";
