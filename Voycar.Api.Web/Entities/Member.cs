@@ -4,9 +4,6 @@ using Generic;
 
 public class Member : Entity
 {
-    // Purchase information
-    public int TierId { get; set; }
-
     // Personal information
     public string FirstName { get; set; }
     public string LastName { get; set; }
@@ -20,7 +17,4 @@ public class Member : Entity
 
     // Contact information (drivers license)
     public string? PhoneNumber { get; set; }
-
-    // EF-Core Navigation property
-    public User User { get; set; }
 }
