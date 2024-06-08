@@ -1,5 +1,7 @@
 namespace Voycar.Api.Web.Tests.Integration.Setup;
 
+using Context;
+using Microsoft.EntityFrameworkCore;
 using Registration = Features.Members.Post.Registration;
 using Verify = Features.Members.Get.Verify;
 using Login = Features.Members.Post.Login;
@@ -44,22 +46,35 @@ public static class ClientFactory
         return member;
     }
 
-    public static async Task<HttpClient> CreateEmployeeClient(AppFixture<Program> app)
+    public static async Task<HttpClient> CreateEmployeeClient(AppFixture<Program> app, VoycarDbContext context)
     {
         const string testMail = "employee.integration@test.de";
         const string password = "integration";
-        Guid roleId = new Guid(); // TODO find id for employee role in DB
+        var roleId = (await context.Roles.FirstOrDefaultAsync(
+            role => role.Name == "employee"))?.Id;
 
-        return await CreateUserWithRoleClient(app, roleId, testMail, password);
+        if (roleId is null)
+        {
+            return null; // TODO better error handling
+        }
+
+
+        return await CreateUserWithRoleClient(app, (Guid)roleId, testMail, password);
     }
 
-    public static async Task<HttpClient> CreateAdminClient(AppFixture<Program> app)
+    public static async Task<HttpClient> CreateAdminClient(AppFixture<Program> app, VoycarDbContext context)
     {
         const string testMail = "admin.integration@test.de";
         const string password = "integration";
-        Guid roleId = new Guid(); // TODO find id for admin role in DB
+        var roleId = (await context.Roles.FirstOrDefaultAsync(
+            role => role.Name == "employee"))?.Id;
 
-        return await CreateUserWithRoleClient(app, roleId, testMail, password);
+        if (roleId is null)
+        {
+            return null; // TODO better error handling
+        }
+
+        return await CreateUserWithRoleClient(app, (Guid)roleId, testMail, password);
     }
 
 
