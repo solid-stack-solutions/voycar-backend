@@ -15,6 +15,6 @@ public class Member : Entity
     public DateOnly BirthDate { get; set; }
     public string BirthPlace { get; set; }
 
-    // Contact information (drivers license)
+    // Contact information
     public string? PhoneNumber { get; set; }
 }
