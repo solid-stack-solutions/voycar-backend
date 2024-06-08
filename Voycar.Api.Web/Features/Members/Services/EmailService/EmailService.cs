@@ -58,12 +58,12 @@ public class EmailService : IEmailService
     }
 
 
-    // todo Link to Frontend must be added + VerificationToken must be attached
+    // ToDo Link to Frontend must be added + VerificationToken must be attached
     private static string GenerateVerificationLink(Member member)
         => $"http://localhost:8080/verify/{member.VerificationToken}"; // FrontendLink?token={VerificationToken}
 
 
-    // todo Link to Frontend must be added + PasswordResetToken must be attached
+    // ToDo Link to Frontend must be added + PasswordResetToken must be attached
     private static string GeneratePasswordResetLink()
         => $"http://localhost:8080/reset-password"; // FrontendLink?token={PasswordResetToken}
 
@@ -88,7 +88,7 @@ public class EmailService : IEmailService
         return email;
     }
 
-    // todo
+
     private MimeMessage CreatePasswordResetEmail(User user, string passwordResetLink)
     {
         var email = new MimeMessage();

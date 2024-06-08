@@ -46,7 +46,8 @@ public class Endpoint : Endpoint<Request>
 
         this._emailService.SendPasswordResetEmail(user);
         this._logger.LogInformation("Password-Reset-Token successfully created for User with ID: {UserId}", user.Id);
-        // Todo PasswordResetToken must be removed later
+
+        // Todo PasswordResetToken must be removed later (is used for debug purposes)
         await this.SendOkAsync(new Response { PasswordResetToken = user.PasswordResetToken }, cancellation: ct);
     }
 }
