@@ -15,6 +15,7 @@ public class Members : Generic.Repository.Repository<Member>, IMembers
 {
     private readonly VoycarDbContext _context;
 
+
     public Members(VoycarDbContext context) : base(context)
     {
         _context = context;
@@ -26,6 +27,7 @@ public class Members : Generic.Repository.Repository<Member>, IMembers
         return this._context.Members.FirstOrDefaultAsync(
             member => member.VerificationToken == verificationToken);
     }
+
 
     public Task<Role?> RetrieveRole(Guid roleId)
     {

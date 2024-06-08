@@ -2,6 +2,7 @@ namespace Voycar.Api.Web.Features.Members.Get.Verify;
 
 using Repository;
 
+
 /// <summary>
 /// Handles the verification of new members.
 ///
@@ -13,11 +14,14 @@ public class Endpoint : Endpoint<Request>
     private readonly IMembers _members;
     private readonly ILogger<Endpoint> _logger;
 
+
     public Endpoint(IMembers members, ILogger<Endpoint> logger)
     {
         this._members = members;
         this._logger = logger;
     }
+
+
     public override void Configure()
     {
         this.Get("/verify/{verificationToken}");
@@ -33,6 +37,7 @@ public class Endpoint : Endpoint<Request>
             s.Params["verificationToken"] = "Verification token of the Member to be verified";
         });
     }
+
 
     public override async Task HandleAsync(Request req, CancellationToken ct)
     {
