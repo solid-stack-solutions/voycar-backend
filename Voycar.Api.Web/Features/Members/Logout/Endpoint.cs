@@ -8,7 +8,7 @@ public class Endpoint : EndpointWithoutRequest
     public override void Configure()
     {
         this.Post("auth/logout");
-        this.AllowAnonymous();
+        this.Roles("admin", "employee", "member");
     }
 
 
