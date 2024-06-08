@@ -24,9 +24,9 @@ public class App : AppFixture<Program>
         .Build();
 
     public VoycarDbContext Context { get; private set; }
-    private HttpClient Member { get; set; }
-    private HttpClient Employee { get; set; }
-    private HttpClient Admin { get; set; }
+    public HttpClient Member { get; private set; }
+    public HttpClient Employee { get; private set; }
+    public HttpClient Admin { get; private set; }
 
     // See: https://gist.github.com/dj-nitehawk/04a78cea10f2239eb81c958c52ec84e0
     protected override Task PreSetupAsync()
@@ -57,7 +57,6 @@ public class App : AppFixture<Program>
         // == Do test service registration here ==
         var descriptor =
             services.SingleOrDefault(s => s.ServiceType == typeof(DbContextOptions<VoycarDbContext>));
-
         if (descriptor is not null)
         {
             services.Remove(descriptor);
@@ -69,6 +68,8 @@ public class App : AppFixture<Program>
             // WARNING: This WILL delete your existing data
             options.UseNpgsql(this._container.GetConnectionString());
         });
+
+
     }
 
     protected override Task TearDownAsync()

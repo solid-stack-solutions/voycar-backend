@@ -38,7 +38,7 @@ public class Tests : TestBase<App>
         var roleRequestData = new Role { Name = requestName };
 
         // Act
-        var httpResponseMessage = await this._app.Client.POSTAsync<R.Post.SingleUnique, Role>(roleRequestData);
+        var httpResponseMessage = await this._app.Admin.POSTAsync<R.Post.SingleUnique, Role>(roleRequestData);
         var roleInDb = await this._context.Roles.FirstOrDefaultAsync(r => r.Name == roleRequestData.Name);
 
         // Assert
