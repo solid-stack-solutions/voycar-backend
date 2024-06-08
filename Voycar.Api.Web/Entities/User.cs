@@ -7,25 +7,27 @@ using Generic;
 
 public class User : Entity
 {
-    // Login
+    // Login information
     [EmailAddress]
-    public string Email { get; set; }
-    public string PasswordHash { get; set; }
+    public required string Email { get; set; }
+    public required string PasswordHash { get; set; }
 
-    // Personal Details
-    public string FirstName { get; set; }
-    public string LastName { get; set; }
-    public string Street { get; set; }
-    public string HouseNumber { get; set; }
-    public string PostalCode { get; set; }
-    public string City { get; set; }
+    // Verify user
+    public string? VerificationToken { get; set; }
+    public DateTime? VerifiedAt { get; set; }
 
-    // Foreign key to Role
-    [ForeignKey("Role")]
-    public Guid RoleId { get; set; }
-    public Role Role { get; set; } // Navigation property, useful for Repository and necessary for relationship
-
-    // Reset
+    // Password reset
     public string? PasswordResetToken { get; set; }
     public DateTime? ResetTokenExpires { get; set; }
+
+    // User role foreign key
+    [ForeignKey("Role")]
+    public Guid? RoleId { get; set; }
+    public Role? Role { get; set; }
+
+    // Member information foreign key
+    [ForeignKey("Member")]
+    public Guid? MemberId { get; set; }
+    public Member? Member { get; set; }
+
 }
