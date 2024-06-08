@@ -4,14 +4,17 @@ using System.Security.Cryptography;
 using Entities;
 using Roles.Repository;
 
+
 public class Mapper : Mapper<Request, Response, Member>
 {
     private readonly IRoles _roleRepository;
+
 
     public Mapper(IRoles roleRepository)
     {
         this._roleRepository = roleRepository;
     }
+
 
     public override Member ToEntity(Request r)
     {
@@ -35,7 +38,7 @@ public class Mapper : Mapper<Request, Response, Member>
         var member = new Member
         {
             Id = user.Id, // Set the foreign key to the User's Id
-            User = user,  // Set the navigation property, useful for Repository
+            User = user, // Set the navigation property, useful for Repository
             BirthDate = r.BirthDate,
             BirthPlace = r.BirthPlace,
             PhoneNumber = r.PhoneNumber,

@@ -19,11 +19,6 @@ public abstract class Single<TEntity>
     {
         this.Delete(typeof(TEntity).Name.ToLowerInvariant() + "/{id}");
         this.Roles(this.roles);
-        this.Description(b => b
-                .Accepts<Entity>("Voycar.Api.Web/Generic/Entity")
-                .Produces<IResult>(200)
-                .ProducesProblem(404),
-            clearDefaults: true);
         this.Summary(s =>
         {
             s.Summary = $"Delete {typeof(TEntity).Name}";

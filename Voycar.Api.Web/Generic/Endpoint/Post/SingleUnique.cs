@@ -16,12 +16,6 @@ public abstract class SingleUnique<TEntity>
     {
         this.Post(typeof(TEntity).Name.ToLowerInvariant());
         this.Roles(this.roles);
-        this.Description(b => b
-                .Accepts<TEntity>("Voycar.Api.Web/Generic/Entity")
-                .Produces<IResult>(200)
-                .ProducesProblem(204)
-                .ProducesProblem(404),
-            clearDefaults: true);
         this.Summary(s =>
         {
             s.Summary = $"Create unique {typeof(TEntity).Name}";
@@ -29,7 +23,6 @@ public abstract class SingleUnique<TEntity>
             s.Responses[200] = "If POST operation is successful";
             s.Responses[204] =
                 $"If POST operation failed or the same {typeof(TEntity).Name} object is already present in the database";
-            s.Responses[404] = "If requesting user isn't authorized";
         });
     }
 

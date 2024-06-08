@@ -50,8 +50,21 @@ public class EmailService : IEmailService
     }
 
 
+    public void SendPasswordResetEmail(User user)
+    {
+        var email = this.CreatePasswordResetEmail(user, GeneratePasswordResetLink());
+        this.SendEmail(email);
+    }
+
+
+    // ToDo Link to Frontend must be added + VerificationToken must be attached
     private static string GenerateVerificationLink(Member member)
-        => $"http://localhost:8080/verify/{member.VerificationToken}";
+        => $"http://localhost:8080/verify/{member.VerificationToken}"; // FrontendLink?token={VerificationToken}
+
+
+    // ToDo Link to Frontend must be added + PasswordResetToken must be attached
+    private static string GeneratePasswordResetLink()
+        => $"http://localhost:8080/reset-password"; // FrontendLink?token={PasswordResetToken}
 
 
     private MimeMessage CreateVerificationEmail(Member member, string verificationLink)
@@ -64,6 +77,27 @@ public class EmailService : IEmailService
 
         var content = $"Bitte klicken Sie auf den folgenden Link, um Ihr Konto zu verifizieren: " +
                       $"<a href=\"{verificationLink}\">Link zum Verifizieren</a>";
+
+        var htmlContent = $"<html><body><p style='font-weight: bold;'>{content}</p></body></html>";
+        email.Body = new TextPart("html")
+        {
+            Text = htmlContent
+        };
+
+        return email;
+    }
+
+
+    private MimeMessage CreatePasswordResetEmail(User user, string passwordResetLink)
+    {
+        var email = new MimeMessage();
+        email.From.Add(MailboxAddress.Parse(this._smtpEmail));
+        email.To.Add(MailboxAddress.Parse(user.Email));
+        email.Subject = "Voycar-Passwort-Reset";
+
+
+        var content = $"Bitte klicken Sie auf den folgenden Link, um Ihr Passwort zurückzusetzen: " +
+                      $"<a href=\"{passwordResetLink}\">Link zum Passwort-Reset</a>";
 
         var htmlContent = $"<html><body><p style='font-weight: bold;'>{content}</p></body></html>";
         email.Body = new TextPart("html")
