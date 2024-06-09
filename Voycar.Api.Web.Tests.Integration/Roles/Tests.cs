@@ -2,7 +2,9 @@ namespace Voycar.Api.Web.Tests.Integration.Roles;
 
 using Context;
 using Entities;
+using Generic;
 using Microsoft.EntityFrameworkCore;
+using Xunit.Priority;
 
 // Include namespace alias of feature to test here
 using R = Features.Roles.Endpoints;
@@ -31,7 +33,7 @@ public class Tests : TestBase<App>
         // Do cleanups here
     }
 
-    [Fact]
+    [Fact, Priority(0)]
     public async Task PostIsValid()
     {
         // Arrange
@@ -48,27 +50,31 @@ public class Tests : TestBase<App>
         roleInDb.Should().NotBeNull();
     }
 
-    [Fact]
+    [Fact, Priority(1)]
     public async Task GetIsValid()
     {
-        const string requestName = "JuNiJa(Ke)²";
-        var role = new Role { Name = requestName };
-        role.Id = this.id;
-        var roleRequestData = role;
-        var httpResponseMessage = await this._app.Client.GETAsync<R.Get.Single, Role>(roleRequestData);
+        //Arrange
+        var id = this.id;
+        var roleRequestData = id;
+        //Act
+        var httpResponseMessage = await this._app.Client.GETAsync<R.Get.Single, Guid>(roleRequestData);
 
+        //Assert
         httpResponseMessage.StatusCode.Should().Be(HttpStatusCode.OK);
     }
 
-    [Fact]
-    public async Task PutIsValid()
+    [Fact, Priority(2)]
+    public async Task DeleteIsValid()
     {
-        const string requestName = "JuNiJa(Ke)²";
-        var role = new Role { Name = requestName };
-        role.Id = this.id;
-        var roleRequestData = role;
-        var httpResponseMessage = await this._app.Client.PUTAsync<R.Put.Single, Role>(roleRequestData);
+        //Arrange
+        var id = this.id;
+        var roleRequestData = id;
 
+        //Act
+        var httpResponseMessage = await this._app.Client.GETAsync<R.Delete.Single, Guid>(roleRequestData);
+
+        //Assert
         httpResponseMessage.StatusCode.Should().Be(HttpStatusCode.OK);
     }
+
 }
