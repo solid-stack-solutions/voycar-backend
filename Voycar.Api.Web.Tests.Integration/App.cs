@@ -37,7 +37,7 @@ public class App : AppFixture<Program>
             .WithDatabase("pgsql-testcontainer")
             .WithUsername("admin")
             .WithPassword("admin")
-            .WithExposedPort(5000)
+            .WithExposedPort(5241)
             .Build();
          await this.Container.StartAsync();
          this.ConnectionString = this.Container.GetConnectionString();
