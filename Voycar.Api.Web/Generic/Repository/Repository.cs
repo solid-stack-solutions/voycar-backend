@@ -113,6 +113,6 @@ public class Repository<TEntity> : IRepository<TEntity> where TEntity : Entity
             return null;
         }
 
-        return this.SaveChanges() ? entity.Id : null;
+        return this.Create(entity);
     }
 }
