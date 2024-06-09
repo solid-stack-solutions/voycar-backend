@@ -1,10 +1,15 @@
-namespace Voycar.Api.Web.Entities;
+namespace Voycar.Api.Web.Features.Members.Post.MemberRegistration;
 
-using Generic;
+using System.ComponentModel.DataAnnotations;
 
-public class Member : Entity
+public class Request
 {
-    // Personal information
+    // In order to verify and authorize the request
+    [EmailAddress]
+    public string Email { get; set; }
+    public string Password { get; set; }
+
+    // Member attributes
     public string FirstName { get; set; }
     public string LastName { get; set; }
     public string Street { get; set; }
@@ -14,7 +19,5 @@ public class Member : Entity
     public string Country { get; set; }
     public DateOnly BirthDate { get; set; }
     public string BirthPlace { get; set; }
-
-    // Contact information
     public string PhoneNumber { get; set; }
 }
