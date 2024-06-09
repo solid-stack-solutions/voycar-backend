@@ -28,12 +28,11 @@
 //Todo: list general conventions for development
 
 //Todo: helpful information and how-to's for development
-## Possible fix testcontainers when using wsl instead of Docker Desktop
-**This fix needs certain modifications in the App.cs. 
-When working with other team-members who are on other platforms or use Docker Desktop instead of wls this fix will break their setup**
+## Fix testcontainers when using WSL without Docker Desktop
+**This fix needs certain modifications in `App.cs`. 
+When working with other team members who are on other platforms or use Docker Desktop instead of WSL this fix will break their setup.**
 
-Go into your wsl terminal and navigate to ` /etc/docker/`. Create a **daemon.json** (or modify if already existing) File
-with the following content:
+Navigate to `/etc/docker/` in a WSL terminal. Create (or modify) a file called `daemon.json` with the following content:
 ```json
 {
     "hosts": [
@@ -42,8 +41,8 @@ with the following content:
     ]
 }
 ```
-Restart your wsl with `wsl --shutdown` in the Windows terminal and open your wsl again.
-Start your docker-daemon with `sudo dockerd` or `sudo systemctl start docker`.
+Restart WSL with `wsl --shutdown` in a Windows terminal and open a WSL terminal again.
+Start the docker-daemon with `sudo dockerd` or `sudo systemctl start docker`.
 
 Verify that docker is now exposing the port `2375` with `netstat -nl | grep 2375`. 
 This should produce the output `tcp6 0  0 ::: :::* LISTEN`.
@@ -53,7 +52,7 @@ In your Test `App.cs` you have to append
         .WithDockerEndpoint("tcp://localhost:2375")
         .WithWaitStrategy(Wait.ForUnixContainer().UntilPortIsAvailable(5432))
 ```
-to your PostgreSqlBuilder so it now looks similar to this
+to your `PostgreSqlBuilder`, so it now looks like this:
 ```csharp
 private readonly PostgreSqlContainer _container = new PostgreSqlBuilder()
         .WithImage("postgres:16.3")
@@ -67,8 +66,10 @@ private readonly PostgreSqlContainer _container = new PostgreSqlBuilder()
 This should fix the issue with misconfigured docker exceptions for testcontainers.
 
 You might need to restart docker and the docker-daemon several times until it works properly.
-(See more information and help here [How to run integration tests using Testcontainers with WSL](https://medium.com/@NelsonBN/how-to-run-integration-tests-using-testcontainers-with-wsl-52c77a2acbbb) and [How to run tests with TestContainers in WSL2 without Docker Desktop
-](https://gist.github.com/sz763/3b0a5909a03bf2c9c5a057d032bd98b7))
+More information and help:
+- [How to run integration tests using testcontainers with WSL](https://medium.com/@NelsonBN/how-to-run-integration-tests-using-testcontainers-with-wsl-52c77a2acbbb)
+- [How to run tests with testcontainers in WSL2 without Docker Desktop](https://gist.github.com/sz763/3b0a5909a03bf2c9c5a057d032bd98b7))
+
 ## Secrets
 - Make a copy of `.env.example` and name it `.env` (will be Git-ignored)
 - Set the names and values of your secret environment variables in there
