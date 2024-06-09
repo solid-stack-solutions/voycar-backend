@@ -59,4 +59,16 @@ public class Tests : TestBase<App>
 
         httpResponseMessage.StatusCode.Should().Be(HttpStatusCode.OK);
     }
+
+    [Fact]
+    public async Task PutIsValid()
+    {
+        const string requestName = "JuNiJa(Ke)²";
+        var role = new Role { Name = requestName };
+        role.Id = this.id;
+        var roleRequestData = role;
+        var httpResponseMessage = await this._app.Client.PUTAsync<R.Put.Single, Role>(roleRequestData);
+
+        httpResponseMessage.StatusCode.Should().Be(HttpStatusCode.OK);
+    }
 }
