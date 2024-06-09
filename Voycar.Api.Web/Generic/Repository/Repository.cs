@@ -35,12 +35,12 @@ public class Repository<TEntity> : IRepository<TEntity> where TEntity : Entity
     }
 
     /// <returns>
-    ///     <c>true</c> if entity was created
+    ///     <see cref="Guid"/> of entity if created, otherwise <c>null</c>
     /// </returns>
-    public bool Create(TEntity entity)
+    public Guid? Create(TEntity entity)
     {
         this.dbSet.Add(entity);
-        return this.SaveChanges();
+        return this.SaveChanges() ? entity.Id : null;
     }
 
     public TEntity? Retrieve(Guid id)
@@ -100,9 +100,9 @@ public class Repository<TEntity> : IRepository<TEntity> where TEntity : Entity
     ///     an entity with the exact same attribute values.
     /// </summary>
     /// <returns>
-    ///     <c>true</c> if entity was created
+    ///     <see cref="Guid"/> of entity if created, otherwise <c>null</c>
     /// </returns>
-    public bool CreateUnique(TEntity entity)
+    public Guid? CreateUnique(TEntity entity)
     {
         // Check if entity already exists.
         // AsEnumerable() is necessary for explicit client evaluation,
@@ -110,9 +110,9 @@ public class Repository<TEntity> : IRepository<TEntity> where TEntity : Entity
         // https://learn.microsoft.com/en-us/ef/core/querying/client-eval
         if (this.dbSet.AsEnumerable().Any(e => EntitiesAreEqual(e, entity)))
         {
-            return false;
+            return null;
         }
 
-        return this.Create(entity);
+        return this.SaveChanges() ? entity.Id : null;
     }
 }
