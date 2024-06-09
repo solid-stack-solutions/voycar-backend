@@ -9,7 +9,7 @@ public abstract class Single<TEntity>
     protected readonly IRepository<TEntity> _repository;
     protected readonly string[] roles;
 
-    public Single(IRepository<TEntity> repository, string[] roles)
+    protected Single(IRepository<TEntity> repository, string[] roles)
     {
         this._repository = repository;
         this.roles = roles;
