@@ -59,12 +59,12 @@ public class EmailService : IEmailService
 
     // ToDo Link to Frontend must be added + VerificationToken must be attached
     private static string GenerateVerificationLink(Member member)
-        => $"http://localhost:8080/verify/{member.VerificationToken}"; // FrontendLink?token={VerificationToken}
+        => $"http://localhost:8080/auth/verify/{member.VerificationToken}"; // FrontendLink?token={VerificationToken}
 
 
     // ToDo Link to Frontend must be added + PasswordResetToken must be attached
     private static string GeneratePasswordResetLink()
-        => $"http://localhost:8080/reset-password"; // FrontendLink?token={PasswordResetToken}
+        => $"http://localhost:8080/auth/reset-password"; // FrontendLink?token={PasswordResetToken}
 
 
     private MimeMessage CreateVerificationEmail(Member member, string verificationLink)

@@ -83,7 +83,7 @@ try
            c.Endpoints.Configurator = ep =>
            {
                // Setup Swagger Documentation for all endpoints which require a role for accessing
-               if (ep.AllowedRoles?.Count == 0)
+               if (ep.AllowedRoles is null || ep.AllowedRoles.Count == 0)
                {
                    return;
                }
