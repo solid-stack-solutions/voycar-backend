@@ -28,6 +28,47 @@
 //Todo: list general conventions for development
 
 //Todo: helpful information and how-to's for development
+## Fix testcontainers when using WSL without Docker Desktop
+**This fix needs certain modifications in `App.cs`. 
+When working with other team members who are on other platforms or use Docker Desktop instead of WSL this fix will break their setup.**
+
+Navigate to `/etc/docker/` in a WSL terminal. Create (or modify) a file called `daemon.json` with the following content:
+```json
+{
+    "hosts": [
+        "tcp://0.0.0.0:2375",
+        "unix:///var/run/docker.sock"
+    ]
+}
+```
+Restart WSL with `wsl --shutdown` in a Windows terminal and open a WSL terminal again.
+Start the docker-daemon with `sudo dockerd` or `sudo systemctl start docker`.
+
+Verify that docker is now exposing the port `2375` with `netstat -nl | grep 2375`. 
+This should produce the output `tcp6 0  0 ::: :::* LISTEN`.
+
+In your Test `App.cs` you have to append 
+```csharp
+        .WithDockerEndpoint("tcp://localhost:2375")
+        .WithWaitStrategy(Wait.ForUnixContainer().UntilPortIsAvailable(5432))
+```
+to your `PostgreSqlBuilder`, so it now looks like this:
+```csharp
+private readonly PostgreSqlContainer _container = new PostgreSqlBuilder()
+        .WithImage("postgres:16.3")
+        .WithDatabase("VoycarDb-Tests")
+        .WithUsername("admin")
+        .WithPassword("admin")
+        .WithDockerEndpoint("tcp://localhost:2375")
+        .WithWaitStrategy(Wait.ForUnixContainer().UntilPortIsAvailable(5432))
+        .Build();
+```
+This should fix the issue with misconfigured docker exceptions for testcontainers.
+
+You might need to restart docker and the docker-daemon several times until it works properly.
+More information and help:
+- [How to run integration tests using testcontainers with WSL](https://medium.com/@NelsonBN/how-to-run-integration-tests-using-testcontainers-with-wsl-52c77a2acbbb)
+- [How to run tests with testcontainers in WSL2 without Docker Desktop](https://gist.github.com/sz763/3b0a5909a03bf2c9c5a057d032bd98b7))
 
 ## Secrets
 - Make a copy of `.env.example` and name it `.env` (will be Git-ignored)
