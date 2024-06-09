@@ -7,7 +7,6 @@ using Context;
 using Setup;
 using Testcontainers.PostgreSql;
 
-
 public class App : AppFixture<Program>
 {
     /* Change this constant to true, to test against production database
@@ -32,23 +31,20 @@ public class App : AppFixture<Program>
         }
 
         // Create a Db test container to run tests against
-        this.Container =  new PostgreSqlBuilder()
+        this.Container = new PostgreSqlBuilder()
             .WithImage("postgres:16.3")
             .WithDatabase("pgsql-testcontainer")
             .WithUsername("admin")
             .WithPassword("admin")
             .WithExposedPort(5241)
             .Build();
-         await this.Container.StartAsync();
-         this.ConnectionString = this.Container.GetConnectionString();
+        await this.Container.StartAsync();
+        this.ConnectionString = this.Container.GetConnectionString();
     }
 
     protected override async Task SetupAsync()
     {
         // == Place one-time setup code here ==
-
-
-
 
         // Set up Db for tests
         this.Context = this.Services.GetRequiredService<VoycarDbContext>();
@@ -67,8 +63,9 @@ public class App : AppFixture<Program>
     protected override void ConfigureServices(IServiceCollection services)
     {
         // == Do test service registration here ==
-        var descriptor =
-            services.SingleOrDefault(s => s.ServiceType == typeof(DbContextOptions<VoycarDbContext>));
+        var descriptor = services.SingleOrDefault(service =>
+            service.ServiceType == typeof(DbContextOptions<VoycarDbContext>)
+        );
         if (descriptor is not null)
         {
             services.Remove(descriptor);
@@ -78,8 +75,6 @@ public class App : AppFixture<Program>
         {
             options.UseNpgsql(this.ConnectionString);
         });
-
-
     }
 
     protected override Task TearDownAsync()
