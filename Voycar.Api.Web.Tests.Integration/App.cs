@@ -53,6 +53,8 @@ public class App : AppFixture<Program>
 
         // Create custom HttpClients to use in tests
         this.Member = await ClientFactory.CreateMemberClient(this);
+        this.Employee = await ClientFactory.CreateEmployeeClient(this, this.Context);
+        this.Admin = await ClientFactory.CreateAdminClient(this, this.Context);
     }
 
     protected override void ConfigureApp(IWebHostBuilder builder)
