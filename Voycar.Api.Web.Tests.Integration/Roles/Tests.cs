@@ -31,7 +31,7 @@ public class Tests : TestBase<App>
     }
 
     [Fact]
-    public async Task PostIsValid()
+    public async Task Post_NewRole_ReturnsOk_And_SavesInDb()
     {
         // Arrange
         const string requestName = "JuNiJa(Ke)²";
@@ -39,10 +39,11 @@ public class Tests : TestBase<App>
 
         // Act
         var httpResponseMessage = await this._app.Admin.POSTAsync<R.Post.SingleUnique, Role>(roleRequestData);
-        var roleInDb = await this._context.Roles.FirstOrDefaultAsync(r => r.Name == roleRequestData.Name);
 
         // Assert
         httpResponseMessage.StatusCode.Should().Be(HttpStatusCode.OK);
+
+        var roleInDb = await this._context.Roles.FirstOrDefaultAsync(role => role.Name == roleRequestData.Name);
         roleInDb.Should().NotBeNull();
     }
 }
