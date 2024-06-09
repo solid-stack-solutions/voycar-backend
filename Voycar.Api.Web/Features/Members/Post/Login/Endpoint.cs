@@ -43,7 +43,7 @@ public class Endpoint : Endpoint<Request, Results<Ok, BadRequest>>
         }
 
         // Login member
-        await this.SignInUserAsync(user!, ct);
+        await this.SignInUserAsync(user!);
     }
 
 
@@ -53,8 +53,7 @@ public class Endpoint : Endpoint<Request, Results<Ok, BadRequest>>
     /// cookie is sent back.
     /// </summary>
     /// <param name="user">The user to sign in</param>
-    /// <param name="ct"></param>
-    private async Task SignInUserAsync(User user, CancellationToken ct)
+    private async Task SignInUserAsync(User user)
     {
         var roleId = user.RoleId;
         if (roleId is null)
