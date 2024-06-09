@@ -3,7 +3,7 @@ namespace Voycar.Api.Web.Generic.Endpoint.Post;
 using Repository;
 
 public abstract class Single<TEntity>
-    : Endpoint<TEntity, Results<Ok, NoContent>>
+    : Endpoint<TEntity, Results<Ok<Guid>, NoContent>>
     where TEntity : Entity
 {
     protected readonly IRepository<TEntity> _repository;
@@ -23,7 +23,7 @@ public abstract class Single<TEntity>
         {
             s.Summary = $"Create {typeof(TEntity).Name}";
             s.Description = $"Add new {typeof(TEntity).Name} objects into the database";
-            s.Responses[200] = "If POST operation is successful";
+            s.Responses[200] = "Generated ID if POST operation is successful";
             s.Responses[204] =
                 "If POST operation failed";
             s.Responses[404] = "If requesting user isn't authorized";
@@ -32,11 +32,11 @@ public abstract class Single<TEntity>
 
     public override async Task HandleAsync(TEntity req, CancellationToken ct)
     {
-        var created = this._repository.Create(req);
+        var guid = this._repository.Create(req);
 
-        if (created)
+        if (guid is not null)
         {
-            await this.SendResultAsync(TypedResults.Ok());
+            await this.SendResultAsync(TypedResults.Ok(guid));
             return;
         }
 
