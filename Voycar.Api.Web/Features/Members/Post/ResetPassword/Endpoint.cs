@@ -3,15 +3,15 @@ namespace Voycar.Api.Web.Features.Members.Post.ResetPassword;
 using Repository;
 
 
-public class Endpoint : Endpoint<Request>
+public class Endpoint : Endpoint<Request, Results<Ok, BadRequest>>
 {
-    private readonly IUsers _repository;
+    private readonly IUsers _userRepository;
     private readonly ILogger<Endpoint> _logger;
 
 
-    public Endpoint(IUsers repository, ILogger<Endpoint> logger)
+    public Endpoint(IUsers userRepository, ILogger<Endpoint> logger)
     {
-        this._repository = repository;
+        this._userRepository = userRepository;
         this._logger = logger;
     }
 
@@ -25,8 +25,8 @@ public class Endpoint : Endpoint<Request>
 
     public override async Task HandleAsync(Request req, CancellationToken ct)
     {
-        // Checks whether there is a user for the req
-        var user = await this._repository.Retrieve("passwordResetToken", req.PasswordResetToken);
+        // Checks whether there is a user for the request
+        var user = await this._userRepository.Retrieve("passwordResetToken", req.PasswordResetToken);
 
         if (user is null || user.ResetTokenExpires < DateTime.Now)
         {
@@ -41,9 +41,9 @@ public class Endpoint : Endpoint<Request>
         user.ResetTokenExpires = null;
         user.PasswordResetToken = null;
 
-        this._repository.Update(user);
+        this._userRepository.Update(user);
 
-        this._logger.LogInformation("Password-Reset-Token successfully created for User with ID: {UserId}", user.Id);
-        await this.SendOkAsync(cancellation: ct);
+        this._logger.LogInformation("Password successfully reset for User with ID: {UserId}", user.Id);
+        await this.SendResultAsync(TypedResults.Ok());
     }
 }
