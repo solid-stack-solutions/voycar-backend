@@ -16,6 +16,7 @@ public class VoycarDbContext : DbContext
     public DbSet<City> Cities { get; set; }
     public DbSet<Station> Stations { get; set; }
     public DbSet<Car> Cars { get; set; }
+    public DbSet<Plan> Plans { get; set; }
 
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
