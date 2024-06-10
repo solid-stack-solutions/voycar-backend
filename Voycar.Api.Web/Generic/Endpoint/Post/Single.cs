@@ -25,6 +25,7 @@ public abstract class Single<TEntity>
             s.Description = $"Add new {typeof(TEntity).Name} object into the database";
             s.Responses[200] = "Generated ID if POST operation is successful";
             s.Responses[204] = "If POST operation failed";
+            s.ResponseExamples = new Dictionary<int, object> {{ 200, new Entity { Id = Guid.NewGuid() }}};
         });
     }
 
