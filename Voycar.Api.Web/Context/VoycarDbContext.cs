@@ -12,6 +12,7 @@ public class VoycarDbContext : DbContext
     public DbSet<User> Users { get; set; }
     public DbSet<Member> Members { get; set; }
     public DbSet<Role> Roles { get; set; }
+    public DbSet<Reservation> Reservations { get; set; }
 
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -28,6 +29,13 @@ public class VoycarDbContext : DbContext
             .HasOne(u => u.Role) // Each User entity has one Role entity
             .WithMany() // Each Role entity can be associated with multiple User entities
             .HasForeignKey(u => u.RoleId) // The RoleId property in User is a foreign key that references the Role entity
+            .IsRequired();
+
+        // Configure the one-to-many relationship between Reservation and Member
+        modelBuilder.Entity<Reservation>()
+            .HasOne(r => r.Member) // Each Reservation has one Member
+            .WithMany() // Each Member can be associated with multiple Reservations
+            .HasForeignKey(r => r.MemberId) // MemberId is foreign key for Member
             .IsRequired();
 
         // Add default data to role table

@@ -33,5 +33,6 @@
 
   <ItemGroup>
     <Folder Include="Features\Members\Get\"/>
+    <Folder Include="Features\Reservation\" />
   </ItemGroup>
 </Project>
