@@ -68,7 +68,7 @@ This should fix the issue with misconfigured docker exceptions for testcontainer
 You might need to restart docker and the docker-daemon several times until it works properly.
 More information and help:
 - [How to run integration tests using testcontainers with WSL](https://medium.com/@NelsonBN/how-to-run-integration-tests-using-testcontainers-with-wsl-52c77a2acbbb)
-- [How to run tests with testcontainers in WSL2 without Docker Desktop](https://gist.github.com/sz763/3b0a5909a03bf2c9c5a057d032bd98b7))
+- [How to run tests with testcontainers in WSL2 without Docker Desktop](https://gist.github.com/sz763/3b0a5909a03bf2c9c5a057d032bd98b7)
 
 ## Secrets
 - Make a copy of `.env.example` and name it `.env` (will be Git-ignored)

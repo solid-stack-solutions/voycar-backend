@@ -3,7 +3,7 @@ namespace Voycar.Api.Web.Generic.Endpoint.Post;
 using Repository;
 
 public abstract class Single<TEntity>
-    : Endpoint<TEntity, Results<Ok<Guid>, NoContent>>
+    : Endpoint<TEntity, Results<Ok<Entity>, NoContent>>
     where TEntity : Entity
 {
     protected readonly IRepository<TEntity> _repository;
@@ -22,7 +22,7 @@ public abstract class Single<TEntity>
         this.Summary(s =>
         {
             s.Summary = $"Create {typeof(TEntity).Name}";
-            s.Description = $"Add new {typeof(TEntity).Name} objects into the database";
+            s.Description = $"Add new {typeof(TEntity).Name} object into the database";
             s.Responses[200] = "Generated ID if POST operation is successful";
             s.Responses[204] =
                 "If POST operation failed";
@@ -36,7 +36,7 @@ public abstract class Single<TEntity>
 
         if (guid is not null)
         {
-            await this.SendResultAsync(TypedResults.Ok(guid));
+            await this.SendResultAsync(TypedResults.Ok(new Entity { Id = guid.Value }));
             return;
         }
 
