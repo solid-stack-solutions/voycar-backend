@@ -4,20 +4,20 @@ using Repository;
 
 
 /// <summary>
-/// Handles the verification of new members.
+/// Handles the verification of new users.
 ///
-/// This endpoint receives verification tokens, checks their validity,
-/// updates the member's verification status, and returns a response indicating success or failure.
+/// This endpoint receives a verification token, checks the validity,
+/// updates the user's verification status, and returns a response indicating success or failure.
 /// </summary>
-public class Endpoint : Endpoint<Request>
+public class Endpoint : Endpoint<Request, Results<Ok, BadRequest>>
 {
-    private readonly IMembers _members;
+    private readonly IUsers _userRepository;
     private readonly ILogger<Endpoint> _logger;
 
 
-    public Endpoint(IMembers members, ILogger<Endpoint> logger)
+    public Endpoint(IUsers userRepository, ILogger<Endpoint> logger)
     {
-        this._members = members;
+        this._userRepository = userRepository;
         this._logger = logger;
     }
 
@@ -28,32 +28,32 @@ public class Endpoint : Endpoint<Request>
         this.AllowAnonymous();
         this.Summary(s =>
         {
-            s.Summary = "Verify Member";
-            s.Description = "Verify a member against the database " +
+            s.Summary = "Verify user";
+            s.Description = "Verify a user against the database " +
                             "and update last time of verification";
             s.Responses[200] = "If verification is successful";
             s.Responses[400] =
                 "If verification fails";
-            s.Params["verificationToken"] = "Verification token of the Member to be verified";
+            s.Params["verificationToken"] = "Verification token of the user to be verified";
         });
     }
 
 
     public override async Task HandleAsync(Request req, CancellationToken ct)
     {
-        // checks whether there is a member for the token in order to verify it
-        var member = this._members.Retrieve(req.VerificationToken);
+        // Checks whether there is a user for the token in order to verify it
+        var user = await this._userRepository.RetrieveByVerificationToken(req.VerificationToken);
 
-        if (member is null)
+        if (user is null)
         {
             await this.SendErrorsAsync(cancellation: ct);
             return;
         }
 
-        member.Result!.VerifiedAt = DateTime.UtcNow;
-        this._members.Update(member.Result);
+        user.VerifiedAt = DateTime.UtcNow;
+        this._userRepository.Update(user);
 
-        this._logger.LogInformation("Member verified successfully with ID: {MemberId}", member.Id);
+        this._logger.LogInformation("User verified successfully with ID: {UserId}", user.Id);
         await this.SendOkAsync(cancellation: ct);
     }
 }
