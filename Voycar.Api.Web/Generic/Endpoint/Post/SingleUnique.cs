@@ -32,7 +32,7 @@ public abstract class SingleUnique<TEntity>
 
         if (guid is not null)
         {
-            await this.SendResultAsync(TypedResults.Ok(guid));
+            await this.SendResultAsync(TypedResults.Ok(new Entity { Id = guid.Value }));
             return;
         }
 
