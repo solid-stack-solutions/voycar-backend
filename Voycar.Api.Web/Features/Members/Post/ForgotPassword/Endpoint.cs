@@ -11,6 +11,8 @@ public class Endpoint : Endpoint<Request>
     private readonly ILogger<Endpoint> _logger;
     private readonly IEmailService _emailService;
 
+    // User has 30 minutes to reset his password
+    private const double ResetTokenValidTime = 30;
 
     public Endpoint(IUsers userRepository, ILogger<Endpoint> logger, IEmailService emailService)
     {
@@ -39,9 +41,8 @@ public class Endpoint : Endpoint<Request>
         }
 
         user.PasswordResetToken = Convert.ToHexString(RandomNumberGenerator.GetBytes(256));
-
-        // User has 30 minutes to reset his password
-        user.ResetTokenExpires = DateTime.UtcNow.AddMinutes(30);
+        user.ResetTokenExpires = DateTime.UtcNow.AddMinutes(ResetTokenValidTime);
+        
         this._userRepository.Update(user);
 
         this._emailService.SendPasswordResetEmail(user);
