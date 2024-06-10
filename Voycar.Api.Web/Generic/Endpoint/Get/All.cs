@@ -24,7 +24,6 @@ public abstract class All<TEntity>
             s.Summary = $"Retrieve all {typeof(TEntity).Name}s";
             s.Description = $"Retrieve all {typeof(TEntity).Name} objects from the database";
             s.Responses[200] = $"All {typeof(TEntity).Name} objects (may be an empty array)";
-            s.Responses[404] = "If requesting user isn't authorized";
         });
     }
 
