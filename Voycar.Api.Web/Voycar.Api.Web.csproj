@@ -32,6 +32,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Folder Include="Features\Cars\" />
     <Folder Include="Features\Cities\" />
     <Folder Include="Features\Members\Get\"/>
     <Folder Include="Features\Reservation\" />

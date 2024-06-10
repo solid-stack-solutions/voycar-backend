@@ -12,5 +12,7 @@ public class Reservation : Entity
     public Guid MemberId { get; set; }
     public Member Member { get; set; }
 
-    // ToDo 1:1 relationship to Car
+    [ForeignKey("Car")]
+    public Guid CarId { get; set; }
+    public Car Car { get; set; }
 }
