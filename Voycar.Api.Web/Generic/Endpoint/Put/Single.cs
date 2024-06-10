@@ -24,8 +24,7 @@ public abstract class Single<TEntity>
             s.Summary = $"Update {typeof(TEntity).Name}";
             s.Description = $"Update {typeof(TEntity).Name} object in the database";
             s.Responses[200] = "If PUT operation is successful";
-            s.Responses[404] =
-                "If PUT operation is performed for an Entity that could not be found in the database or requesting user isn't authorized";
+            s.Responses[404] = "If PUT operation is performed for an Entity that could not be found in the database";
             s.Params["id"] = $"ID of the {typeof(TEntity).Name} object to update";
         });
     }

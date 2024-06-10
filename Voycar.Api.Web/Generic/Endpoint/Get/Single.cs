@@ -22,11 +22,9 @@ public abstract class Single<TEntity>
         this.Summary(s =>
         {
             s.Summary = $"Retrieve {typeof(TEntity).Name}";
-            s.Description =
-                $"Retrieve {typeof(TEntity).Name} object from the database";
+            s.Description = $"Retrieve {typeof(TEntity).Name} object from the database";
             s.Responses[200] = $"{typeof(TEntity).Name} object if GET operation is successful";
-            s.Responses[404] =
-                "If GET operation is performed for an Entity that could not be found in the database or requesting user isn't authorized";
+            s.Responses[404] = "If GET operation is performed for an entity that could not be found in the database";
             s.Params["id"] = $"ID of the {typeof(TEntity).Name} object to retrieve";
         });
     }
