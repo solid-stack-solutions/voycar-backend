@@ -13,6 +13,7 @@ public class VoycarDbContext : DbContext
     public DbSet<Member> Members { get; set; }
     public DbSet<Role> Roles { get; set; }
     public DbSet<Reservation> Reservations { get; set; }
+    public DbSet<City> Cities { get; set; }
 
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
