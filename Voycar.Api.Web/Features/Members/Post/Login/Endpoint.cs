@@ -15,7 +15,6 @@ public class Endpoint : Endpoint<Request, Results<Ok, BadRequest>>
     public Endpoint(IUsers userRepository, IRoles rolesRepository, ILogger<Endpoint> logger)
     {
         this._userRepository = userRepository;
-        // TODO check if this dependency doesn't break the vertical slice pattern
         this._rolesRepository = rolesRepository;
         this._logger = logger;
     }
@@ -30,7 +29,7 @@ public class Endpoint : Endpoint<Request, Results<Ok, BadRequest>>
 
     public override async Task HandleAsync(Request req, CancellationToken ct)
     {
-        var user = await this._userRepository.Retrieve("email", req.Email.ToLowerInvariant());
+        var user = await this._userRepository.Retrieve("email", req.Email!.ToLowerInvariant());
 
 
         // Check if user entered valid credentials and verified his email
