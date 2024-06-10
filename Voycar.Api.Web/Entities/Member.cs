@@ -16,5 +16,5 @@ public class Member : Entity
     public string BirthPlace { get; set; }
 
     // Contact information
-    public string PhoneNumber { get; set; }
+    public string? PhoneNumber { get; set; }
 }

@@ -5,23 +5,25 @@ using Services.EmailService;
 
 
 /// <summary>
-/// Handles the registration of new users.
+/// Handles the registration of new members.
 ///
-/// This endpoint receives a registration request, checks for existing users,
-/// creates a new user account and sends a verification mail.
+/// This endpoint receives registration requests, checks for existing users,
+/// creates new user accounts and sends verification emails.
 /// </summary>
-public class Endpoint : Endpoint<Request, Results<Ok<Response>, BadRequest>, Mapper>
+public class Endpoint : Endpoint<Request, Response, Mapper>
 {
+    private readonly IMembers _members;
     private readonly IUsers _userRepository;
     private readonly IEmailService _emailService;
     private readonly ILogger<Endpoint> _logger;
 
 
-    public Endpoint(IUsers userRepository, IEmailService emailService, ILogger<Endpoint> logger)
+    public Endpoint(IMembers members, IUsers userRepository, IEmailService emailService, ILogger<Endpoint> logger)
     {
-        this._userRepository = userRepository;
+        this._members = members;
         this._emailService = emailService;
         this._logger = logger;
+        this._userRepository = userRepository;
     }
 
 
@@ -36,22 +38,19 @@ public class Endpoint : Endpoint<Request, Results<Ok<Response>, BadRequest>, Map
     {
         if (await this._userRepository.Retrieve("email", req.Email.ToLowerInvariant()) is not null)
         {
-            this._logger.LogWarning("User {UserEmail} already exists.", req.Email.ToLowerInvariant());
+            this._logger.LogWarning("User already exists.");
             await this.SendErrorsAsync(cancellation: ct);
             return;
         }
 
         this._logger.LogInformation("Creating new user.");
-        var user = this.Map.ToEntity(req);
-        this._userRepository.Create(user);
-        this._logger.LogInformation("User created with ID: {MemberId}", user.Id);
+        var member = this.Map.ToEntity(req);
+        this._members.Create(member);
+        this._logger.LogInformation("User created with ID: {MemberId}", member.Id);
 
-        this._emailService.SendVerificationEmail(user);
+        this._emailService.SendVerificationEmail(member);
 
         // ToDo VerificationToken must be removed later (is used for debug purposes)
-        await this.SendAsync(TypedResults.Ok(new Response()
-        {
-            VerificationToken = user.VerificationToken
-        }), cancellation: ct);
+        await this.SendAsync(new Response { VerificationToken = member.VerificationToken }, cancellation: ct);
     }
 }
