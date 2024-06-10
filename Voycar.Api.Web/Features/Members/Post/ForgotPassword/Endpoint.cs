@@ -5,7 +5,7 @@ using Repository;
 using Services.EmailService;
 
 
-public class Endpoint : Endpoint<Request>
+public class Endpoint : Endpoint<Request, Results<Ok<Response>, BadRequest>>
 {
     private readonly IUsers _userRepository;
     private readonly ILogger<Endpoint> _logger;
@@ -42,13 +42,15 @@ public class Endpoint : Endpoint<Request>
 
         user.PasswordResetToken = Convert.ToHexString(RandomNumberGenerator.GetBytes(256));
         user.ResetTokenExpires = DateTime.UtcNow.AddMinutes(ResetTokenValidTime);
-        
+
         this._userRepository.Update(user);
 
         this._emailService.SendPasswordResetEmail(user);
         this._logger.LogInformation("Password-Reset-Token successfully created for User with ID: {UserId}", user.Id);
 
         // Todo PasswordResetToken must be removed later (is used for debug purposes)
-        await this.SendOkAsync(new Response { PasswordResetToken = user.PasswordResetToken }, cancellation: ct);
+        await this.SendResultAsync(TypedResults.Ok(
+            new Response { PasswordResetToken = user.PasswordResetToken }
+        ));
     }
 }
