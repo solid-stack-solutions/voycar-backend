@@ -22,7 +22,7 @@ public abstract class Single<TEntity>
         this.Summary(s =>
         {
             s.Summary = $"Create {typeof(TEntity).Name}";
-            s.Description = $"Add new {typeof(TEntity).Name} objects into the database";
+            s.Description = $"Add new {typeof(TEntity).Name} object into the database";
             s.Responses[200] = "Generated ID if POST operation is successful";
             s.Responses[204] =
                 "If POST operation failed";
