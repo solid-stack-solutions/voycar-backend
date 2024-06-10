@@ -7,14 +7,14 @@ using Services.EmailService;
 
 public class Endpoint : Endpoint<Request>
 {
-    private readonly IUsers _repository;
+    private readonly IUsers _userRepository;
     private readonly ILogger<Endpoint> _logger;
     private readonly IEmailService _emailService;
 
 
-    public Endpoint(IUsers repository, ILogger<Endpoint> logger, IEmailService emailService)
+    public Endpoint(IUsers userRepository, ILogger<Endpoint> logger, IEmailService emailService)
     {
-        this._repository = repository;
+        this._userRepository = userRepository;
         this._logger = logger;
         this._emailService = emailService;
     }
@@ -29,8 +29,8 @@ public class Endpoint : Endpoint<Request>
 
     public override async Task HandleAsync(Request req, CancellationToken ct)
     {
-        // Checks whether there is a user for the req
-        var user = await this._repository.Retrieve("email", req.Email?.ToLowerInvariant());
+        // Checks whether there is a user for the request
+        var user = await this._userRepository.Retrieve("email", req.Email.ToLowerInvariant());
 
         if (user is null)
         {
@@ -42,7 +42,7 @@ public class Endpoint : Endpoint<Request>
 
         // User has 30 minutes to reset his password
         user.ResetTokenExpires = DateTime.UtcNow.AddMinutes(30);
-        this._repository.Update(user);
+        this._userRepository.Update(user);
 
         this._emailService.SendPasswordResetEmail(user);
         this._logger.LogInformation("Password-Reset-Token successfully created for User with ID: {UserId}", user.Id);
