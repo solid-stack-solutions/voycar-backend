@@ -27,7 +27,7 @@ public abstract class Single<TEntity>
             s.Responses[204] =
                 "If POST operation failed";
             s.Responses[404] = "If requesting user isn't authorized";
-            s.ResponseExamples = new Dictionary<int, object> {{ 200, new Entity { Id = new Guid() }}};
+            s.ResponseExamples = new Dictionary<int, object> {{ 200, new Entity { Id = Guid.NewGuid() }}};
         });
     }
 

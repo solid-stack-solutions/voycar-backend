@@ -24,7 +24,7 @@ public abstract class SingleUnique<TEntity>
             s.Responses[204] =
                 $"If POST operation failed or the same {typeof(TEntity).Name} object is already present in the database";
             s.Responses[404] = "If requesting user isn't authorized";
-            s.ResponseExamples = new Dictionary<int, object> {{ 200, new Entity { Id = new Guid() }}};
+            s.ResponseExamples = new Dictionary<int, object> {{ 200, new Entity { Id = Guid.NewGuid() }}};
         });
     }
 
