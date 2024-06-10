@@ -35,11 +35,32 @@ public class VoycarDbContext : DbContext
             .HasForeignKey(u => u.RoleId) // The RoleId property in User is a foreign key that references the Role entity
             .IsRequired();
 
-        // Configure the one-to-many relationship between Reservation and Member
+        // One-to-many relationship between Reservation and Member
         modelBuilder.Entity<Reservation>()
-            .HasOne(r => r.Member) // Each Reservation has one Member
-            .WithMany() // Each Member can be associated with multiple Reservations
-            .HasForeignKey(r => r.MemberId) // MemberId is foreign key for Member
+            .HasOne(r => r.Member)
+            .WithMany()
+            .HasForeignKey(r => r.MemberId)
+            .IsRequired();
+
+        // One-to-many relationship between Reservation and Car
+        modelBuilder.Entity<Reservation>()
+            .HasOne(r => r.Car)
+            .WithMany()
+            .HasForeignKey(r => r.CarId)
+            .IsRequired();
+
+        // One-to-many relationship between Station and City
+        modelBuilder.Entity<Station>()
+            .HasOne(s => s.City)
+            .WithMany()
+            .HasForeignKey(s => s.CityId)
+            .IsRequired();
+
+        // One-to-many relationship between Car and Station
+        modelBuilder.Entity<Car>()
+            .HasOne(c => c.Station)
+            .WithMany()
+            .HasForeignKey(c => c.StationId)
             .IsRequired();
 
         // Add default data to role table
