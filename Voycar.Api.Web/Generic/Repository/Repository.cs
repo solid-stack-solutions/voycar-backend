@@ -30,7 +30,7 @@ public class Repository<TEntity> : IRepository<TEntity> where TEntity : Entity
         }
         // Ignore some possible exception,
         // e.g. when trying to create an entity with a duplicate key
-        finally {}
+        catch {}
         return numChanges > 0;
     }
 
