@@ -37,7 +37,7 @@ public class Endpoint : Endpoint<Request, Results<Ok, BadRequest>>
             !BCrypt.Net.BCrypt.EnhancedVerify(req.Password, user.PasswordHash))
         {
             // Do not send different request for user not found, since this would reveal which users are signed up
-            await this.SendResultAsync(TypedResults.BadRequest());
+            await this.SendErrorsAsync(cancellation: ct);
             return;
         }
 
