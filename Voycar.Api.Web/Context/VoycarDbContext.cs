@@ -68,6 +68,14 @@ public class VoycarDbContext : DbContext
             new Role { Id = Guid.NewGuid(), Name = "admin" },
             new Role { Id = Guid.NewGuid(), Name = "employee" },
             new Role { Id = Guid.NewGuid(), Name = "member" });
+
+        // Add default data to plan table
+        modelBuilder.Entity<Plan>().HasData(
+            new Plan { Id = Guid.NewGuid(), Name = "basic",     MonthlyPrice = 10.0f, HourlyPrice = 15.0f },
+            new Plan { Id = Guid.NewGuid(), Name = "reduced",   MonthlyPrice = 20.0f, HourlyPrice = 12.5f },
+            new Plan { Id = Guid.NewGuid(), Name = "exclusive", MonthlyPrice = 40.0f, HourlyPrice = 10.0f });
+
+        // Configure when default data should be used
         base.OnModelCreating(modelBuilder);
     }
 }
