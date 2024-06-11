@@ -61,7 +61,7 @@ public class Endpoint : Endpoint<Request, Results<Ok, BadRequest>, Mapper>
         this._logger.LogInformation("Member created with ID: {MemberId}", member.Id);
 
 
-        this._emailService.SendVerificationEmail(member);
+        this._emailService.SendVerificationEmail(user);
 
         // ToDo VerificationToken must be removed later (is used for debug purposes)
         await this.SendResultAsync(TypedResults.Ok(
