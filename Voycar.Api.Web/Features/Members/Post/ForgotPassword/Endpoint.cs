@@ -5,7 +5,7 @@ using Repository;
 using Services.EmailService;
 
 
-public class Endpoint : Endpoint<Request, Results<Ok<Response>, BadRequest>>
+public class Endpoint : Endpoint<Request, Results<Ok<Response>, BadRequest<ErrorResponse>>>
 {
     private readonly IUsers _userRepository;
     private readonly ILogger<Endpoint> _logger;

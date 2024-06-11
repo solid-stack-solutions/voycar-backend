@@ -5,7 +5,7 @@ using FastEndpoints.Security;
 using Repository;
 using Roles.Repository;
 
-public class Endpoint : Endpoint<Request, Results<Ok, BadRequest>>
+public class Endpoint : Endpoint<Request, Results<Ok, BadRequest<ErrorResponse>>>
 {
     private readonly IUsers _userRepository;
     private readonly IRoles _rolesRepository;

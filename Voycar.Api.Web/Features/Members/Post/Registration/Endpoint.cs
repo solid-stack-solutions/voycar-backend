@@ -12,7 +12,7 @@ using Services.EmailService;
 /// This endpoint receives a registration request, checks for existing users,
 /// creates a new user account with a member entity and sends a verification email.
 /// </summary>
-public class Endpoint : Endpoint<Request, Results<Ok, BadRequest>, Mapper>
+public class Endpoint : Endpoint<Request, Results<Ok, BadRequest<ErrorResponse>>, Mapper>
 {
     private readonly IUsers _userRepository;
     private readonly IMembers _memberRepository;

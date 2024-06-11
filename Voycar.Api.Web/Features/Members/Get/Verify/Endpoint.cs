@@ -9,7 +9,7 @@ using Repository;
 /// This endpoint receives a verification token, checks the validity,
 /// updates the user's verification status, and returns a response indicating success or failure.
 /// </summary>
-public class Endpoint : Endpoint<Request, Results<Ok, BadRequest>>
+public class Endpoint : Endpoint<Request, Results<Ok, BadRequest<ErrorResponse>>>
 {
     private readonly IUsers _userRepository;
     private readonly ILogger<Endpoint> _logger;
