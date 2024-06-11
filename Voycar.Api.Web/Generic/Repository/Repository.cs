@@ -6,8 +6,8 @@ using Context;
 
 public class Repository<TEntity> : IRepository<TEntity> where TEntity : Entity
 {
-    private readonly VoycarDbContext _context;
-    private readonly DbSet<TEntity> dbSet;
+    protected readonly VoycarDbContext _context;
+    protected readonly DbSet<TEntity> dbSet;
 
     protected Repository(VoycarDbContext context)
     {
