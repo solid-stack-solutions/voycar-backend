@@ -28,7 +28,7 @@ public class Endpoint : Endpoint<Request, Results<Ok, BadRequest<ErrorResponse>>
         // Checks whether there is a user for the request
         var user = await this._userRepository.Retrieve("passwordResetToken", req.PasswordResetToken);
 
-        if (user is null || user.ResetTokenExpires < DateTime.Now)
+        if (user is null || user.ResetTokenExpires < DateTime.UtcNow)
         {
             await this.SendErrorsAsync(cancellation: ct);
             return;
