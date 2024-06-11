@@ -54,20 +54,11 @@ public class Endpoint : Endpoint<Request, Results<Ok, BadRequest<ErrorResponse>>
     /// <param name="user">The user to sign in</param>
     private async Task SignInUserAsync(User user)
     {
-        var roleId = user.RoleId;
-        if (roleId is null)
+        var role = this._rolesRepository.Retrieve(user.RoleId);
+        await CookieAuth.SignInAsync(privileges =>
         {
-            // Sign in without any roles
-            await CookieAuth.SignInAsync(privileges => { });
-        }
-        else
-        {
-            var role = this._rolesRepository.Retrieve((Guid)roleId);
-            await CookieAuth.SignInAsync(privileges =>
-            {
-                privileges.Roles.Add(role!.Name);
-            });
-        }
+            privileges.Roles.Add(role!.Name);
+        });
 
         this._logger.LogInformation("User logged in successfully with ID: {UserId}", user.Id);
         await this.SendResultAsync(TypedResults.Ok());

@@ -22,8 +22,8 @@ public class User : Entity
 
     // User role foreign key
     [ForeignKey("Role")]
-    public Guid? RoleId { get; set; }
-    public Role? Role { get; set; }
+    public Guid RoleId { get; set; }
+    public Role Role { get; set; }
 
     // Member information foreign key
     [ForeignKey("Member")]
