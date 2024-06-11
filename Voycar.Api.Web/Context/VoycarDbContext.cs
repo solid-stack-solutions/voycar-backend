@@ -22,10 +22,10 @@ public class VoycarDbContext : DbContext
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         // Configure the one-to-one relationship between User and Member
-        modelBuilder.Entity<Member>()
-            .HasOne(m => m.User) // Each Member entity has one User entity
-            .WithOne() // Each User entity is associated with one Member entity
-            .HasForeignKey<Member>(m => m.Id) // Sets the foreign key to the Id property of Member, which is also the Id of the associated User
+        modelBuilder.Entity<User>()
+            .HasOne(u => u.Member) // Each User entity has one Member entity
+            .WithOne() // Each Member entity is associated with one User entity
+            .HasForeignKey<User>(u => u.MemberId) // The MemberId property in User is a foreign key that references the Member entity
             .IsRequired();
 
         // Configure the one-to-many relationship between Role and User

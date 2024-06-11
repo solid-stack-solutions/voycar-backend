@@ -3,7 +3,7 @@ namespace Voycar.Api.Web.Features.Members.Logout;
 using FastEndpoints.Security;
 
 
-public class Endpoint : EndpointWithoutRequest
+public class Endpoint : EndpointWithoutRequest<Ok>
 {
     public override void Configure()
     {

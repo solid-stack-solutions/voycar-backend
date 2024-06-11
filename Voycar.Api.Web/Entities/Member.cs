@@ -2,22 +2,19 @@ namespace Voycar.Api.Web.Entities;
 
 using Generic;
 
-
 public class Member : Entity
 {
+    // Personal information
+    public string FirstName { get; set; }
+    public string LastName { get; set; }
+    public string Street { get; set; }
+    public string HouseNumber { get; set; }
+    public string PostalCode { get; set; }
+    public string City { get; set; }
+    public string Country { get; set; }
     public DateOnly BirthDate { get; set; }
     public string BirthPlace { get; set; }
-    public string PhoneNumber { get; set; }
 
-    public int TierId { get; set; }
-    public string? DriversLicenseNumber { get; set; }
-    public bool ValidDriversLicense { get; set; }
-    public string IdCardNumber { get; set; }
-    public bool ValidPostIdent { get; set; }
-
-    // Verification
-    public string? VerificationToken { get; set; }
-    public DateTime? VerifiedAt { get; set; }
-
-    public User User { get; set; } // Set the navigation property, useful for Repository
+    // Contact information
+    public string? PhoneNumber { get; set; }
 }

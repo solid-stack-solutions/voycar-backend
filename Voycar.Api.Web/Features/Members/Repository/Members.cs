@@ -20,18 +20,4 @@ public class Members : Generic.Repository.Repository<Member>, IMembers
     {
         _context = context;
     }
-
-
-    public Task<Member?> Retrieve(string verificationToken)
-    {
-        return this._context.Members.FirstOrDefaultAsync(
-            member => member.VerificationToken == verificationToken);
-    }
-
-
-    public Task<Role?> RetrieveRole(Guid roleId)
-    {
-        return this._context.Roles.FirstOrDefaultAsync(
-            role => role.Id == roleId);
-    }
 }
