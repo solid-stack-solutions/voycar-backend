@@ -1,29 +1,35 @@
 namespace Voycar.Api.Web.Features.Members.Post.Registration;
 
+using System.Security.Cryptography;
+using Entities;
 using Repository;
+using Roles.Repository;
 using Services.EmailService;
-
 
 /// <summary>
 /// Handles the registration of new members.
 ///
-/// This endpoint receives registration requests, checks for existing users,
-/// creates new user accounts and sends verification emails.
+/// This endpoint receives a registration request, checks for existing users,
+/// creates a new user account with a member entity and sends a verification email.
 /// </summary>
-public class Endpoint : Endpoint<Request, Response, Mapper>
+public class Endpoint : Endpoint<Request, Results<Ok, BadRequest<ErrorResponse>>, Mapper>
 {
-    private readonly IMembers _members;
     private readonly IUsers _userRepository;
+    private readonly IMembers _memberRepository;
+    private readonly IRoles _roleRepository;
     private readonly IEmailService _emailService;
     private readonly ILogger<Endpoint> _logger;
 
+    private const string MemberRoleName = "member";
 
-    public Endpoint(IMembers members, IUsers userRepository, IEmailService emailService, ILogger<Endpoint> logger)
+    public Endpoint(IUsers userRepository, IMembers memberRepository, IRoles roleRepository,
+        IEmailService emailService, ILogger<Endpoint> logger)
     {
-        this._members = members;
+        this._userRepository = userRepository;
+        this._memberRepository = memberRepository;
+        this._roleRepository = roleRepository;
         this._emailService = emailService;
         this._logger = logger;
-        this._userRepository = userRepository;
     }
 
 
@@ -36,21 +42,43 @@ public class Endpoint : Endpoint<Request, Response, Mapper>
 
     public override async Task HandleAsync(Request req, CancellationToken ct)
     {
+        // Check for existing users
         if (await this._userRepository.Retrieve("email", req.Email.ToLowerInvariant()) is not null)
         {
-            this._logger.LogWarning("User already exists.");
+            this._logger.LogWarning("User {UserMail} already exists.", req.Email);
             await this.SendErrorsAsync(cancellation: ct);
             return;
         }
 
-        this._logger.LogInformation("Creating new user.");
+        this._logger.LogInformation("Creating new member and user entities.");
+        // Create member and user as local variables before saving them in DB to avoid conflicts in DB
         var member = this.Map.ToEntity(req);
-        this._members.Create(member);
-        this._logger.LogInformation("User created with ID: {MemberId}", member.Id);
+        var user = this.CreateUser(req, member);
 
-        this._emailService.SendVerificationEmail(member);
+        this._memberRepository.Create(member);
+        this._logger.LogInformation("User created with Email: {UserEmail}", user.Email);
+        this._userRepository.Create(user);
+        this._logger.LogInformation("Member created with ID: {MemberId}", member.Id);
+
+
+        this._emailService.SendVerificationEmail(user);
 
         // ToDo VerificationToken must be removed later (is used for debug purposes)
-        await this.SendAsync(new Response { VerificationToken = member.VerificationToken }, cancellation: ct);
+        await this.SendResultAsync(TypedResults.Ok(
+            new Response { VerificationToken = user.VerificationToken! }
+        ));
+    }
+
+    private User CreateUser(Request req, Member member)
+    {
+        return new User
+        {
+            Email = req.Email.ToLowerInvariant(),
+            PasswordHash = BCrypt.Net.BCrypt.EnhancedHashPassword(req.Password),
+            VerificationToken = Convert.ToHexString(RandomNumberGenerator.GetBytes(256)),
+            // Retrieve member role
+            RoleId = this._roleRepository.Retrieve(MemberRoleName).Result!.Id,
+            MemberId = member.Id
+        };
     }
 }
