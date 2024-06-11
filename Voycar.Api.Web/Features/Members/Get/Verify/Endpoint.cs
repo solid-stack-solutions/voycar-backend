@@ -30,7 +30,7 @@ public class Endpoint : Endpoint<Request, Results<Ok, BadRequest<ErrorResponse>>
         {
             s.Summary = "Verify user";
             s.Description = "Verify a user against the database " +
-                            "and update last time of verification";
+                            "and update time of verification";
             s.Responses[200] = "If verification is successful";
             s.Responses[400] =
                 "If verification fails";
