@@ -8,6 +8,7 @@ using Voycar.Api.Web.Features.Roles.Repository;
 using Voycar.Api.Web.Features.Members.Repository;
 using Voycar.Api.Web.Features.Members.Services.EmailService;
 using Voycar.Api.Web.Features.Plans.Repository;
+using Voycar.Api.Web.Features.Stations.Repository;
 
 try
 {
@@ -62,6 +63,7 @@ try
     builder.Services.AddTransient<ICars, Cars>();
     builder.Services.AddTransient<ICities, Cities>();
     builder.Services.AddTransient<IPlans, Plans>();
+    builder.Services.AddTransient<IStations, Stations>();
 
     // Services
     builder.Services.AddTransient<IEmailService, EmailService>();

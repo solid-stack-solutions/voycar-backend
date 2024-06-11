@@ -34,6 +34,5 @@
   <ItemGroup>
     <Folder Include="Features\Members\Get\"/>
     <Folder Include="Features\Reservation\" />
-    <Folder Include="Features\Stations\" />
   </ItemGroup>
 </Project>
