@@ -13,18 +13,12 @@ using Context;
 /// </summary>
 public class Members : Generic.Repository.Repository<Member>, IMembers
 {
-    private readonly VoycarDbContext _context;
-
-
-    public Members(VoycarDbContext context) : base(context)
-    {
-        _context = context;
-    }
+    public Members(VoycarDbContext context) : base(context) {}
 
 
     public Task<Member?> Retrieve(string verificationToken)
     {
-        return this._context.Members.FirstOrDefaultAsync(
+        return this.dbSet.FirstOrDefaultAsync(
             member => member.VerificationToken == verificationToken);
     }
 
