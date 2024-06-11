@@ -12,6 +12,6 @@ public class All : Generic.Endpoint.Get.All<City>
     {
         base.Configure();
         // Manually correct grammar
-        this.Summary(s => s.Summary = $"Retrieve all Cities");
+        this.Summary(s => s.Summary = "Retrieve all Cities");
     }
 }
