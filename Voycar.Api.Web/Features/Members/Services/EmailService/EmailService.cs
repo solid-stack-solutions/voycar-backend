@@ -7,14 +7,31 @@ using MimeKit;
 
 
 /// <summary>
-/// Service for sending verification emails to members.
+/// Service for sending verification and password reset emails to users.
 ///
 /// Uses SMTP credentials from environment variables to send emails via Gmail.
 /// </summary>
 public class EmailService : IEmailService
 {
-    private readonly string? _smtpEmail  = Environment.GetEnvironmentVariable("SmtpEmail");
-    private readonly string? _smtpAppPassword = Environment.GetEnvironmentVariable("SmtpAppPassword");
+    private readonly string? SmtpEmail  = Environment.GetEnvironmentVariable("SmtpEmail");
+    private readonly string? SmtpAppPassword = Environment.GetEnvironmentVariable("SmtpAppPassword");
+
+    private const string SmtpHostAddress = "smtp.gmail.com";
+    private const int SmtpPort = 587;
+
+
+    public void SendVerificationEmail(User user)
+    {
+        var email = this.CreateVerificationEmail(user, CreateVerificationLink(user));
+        this.SendEmail(email);
+    }
+
+
+    public void SendPasswordResetEmail(User user)
+    {
+        var email = this.CreatePasswordResetEmail(user, CreatePasswordResetLink());
+        this.SendEmail(email);
+    }
 
 
     private void SendEmail(MimeMessage email)
@@ -34,45 +51,35 @@ public class EmailService : IEmailService
 
     private void ConfigureSmtpClient(SmtpClient smtpClient)
     {
-        if (string.IsNullOrEmpty(this._smtpEmail) || string.IsNullOrEmpty(this._smtpAppPassword))
+        if (string.IsNullOrEmpty(this.SmtpEmail) || string.IsNullOrEmpty(this.SmtpAppPassword))
         {
             throw new InvalidOperationException("SMTP email or password environment variables are not set.");
         }
 
-        smtpClient.Connect("smtp.gmail.com", 587, SecureSocketOptions.StartTls);
-        smtpClient.Authenticate(this._smtpEmail, this._smtpAppPassword);
-    }
-
-
-    public void SendVerificationEmail(Member member)
-    {
-        var email = this.CreateVerificationEmail(member, GenerateVerificationLink(member));
-        this.SendEmail(email);
-    }
-
-
-    public void SendPasswordResetEmail(User user)
-    {
-        var email = this.CreatePasswordResetEmail(user, GeneratePasswordResetLink());
-        this.SendEmail(email);
+        smtpClient.Connect(SmtpHostAddress, SmtpPort, SecureSocketOptions.StartTls);
+        smtpClient.Authenticate(this.SmtpEmail, this.SmtpAppPassword);
     }
 
 
     // ToDo Link to Frontend must be added + VerificationToken must be attached
-    private static string GenerateVerificationLink(Member member)
-        => $"http://localhost:8080/auth/verify/{member.VerificationToken}"; // FrontendLink?token={VerificationToken}
+    private static string CreateVerificationLink(User user)
+    {
+        return $"http://localhost:8080/auth/verify/{user.VerificationToken}"; // FrontendLink?token={VerificationToken}
+    }
 
 
     // ToDo Link to Frontend must be added + PasswordResetToken must be attached
-    private static string GeneratePasswordResetLink()
-        => $"http://localhost:8080/auth/reset-password"; // FrontendLink?token={PasswordResetToken}
+    private static string CreatePasswordResetLink()
+    {
+        return $"http://localhost:8080/auth/reset-password"; // FrontendLink?token={PasswordResetToken}
+    }
 
 
-    private MimeMessage CreateVerificationEmail(Member member, string verificationLink)
+    private MimeMessage CreateVerificationEmail(User user, string verificationLink)
     {
         var email = new MimeMessage();
-        email.From.Add(MailboxAddress.Parse(this._smtpEmail));
-        email.To.Add(MailboxAddress.Parse(member.User.Email));
+        email.From.Add(MailboxAddress.Parse(this.SmtpEmail));
+        email.To.Add(MailboxAddress.Parse(user.Email));
         email.Subject = "Voycar-Konto-Verifizierung";
 
 
@@ -92,7 +99,7 @@ public class EmailService : IEmailService
     private MimeMessage CreatePasswordResetEmail(User user, string passwordResetLink)
     {
         var email = new MimeMessage();
-        email.From.Add(MailboxAddress.Parse(this._smtpEmail));
+        email.From.Add(MailboxAddress.Parse(this.SmtpEmail));
         email.To.Add(MailboxAddress.Parse(user.Email));
         email.Subject = "Voycar-Passwort-Reset";
 

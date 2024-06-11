@@ -1,7 +1,6 @@
 namespace Voycar.Api.Web.Features.Members.Repository;
 
 using Entities;
-using Microsoft.EntityFrameworkCore;
 using Context;
 
 
@@ -14,18 +13,4 @@ using Context;
 public class Members : Generic.Repository.Repository<Member>, IMembers
 {
     public Members(VoycarDbContext context) : base(context) {}
-
-
-    public Task<Member?> Retrieve(string verificationToken)
-    {
-        return this.dbSet.FirstOrDefaultAsync(
-            member => member.VerificationToken == verificationToken);
-    }
-
-
-    public Task<Role?> RetrieveRole(Guid roleId)
-    {
-        return this._context.Roles.FirstOrDefaultAsync(
-            role => role.Id == roleId);
-    }
 }

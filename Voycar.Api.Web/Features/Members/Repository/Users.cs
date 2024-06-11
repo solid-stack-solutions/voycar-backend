@@ -10,6 +10,12 @@ public class Users : Generic.Repository.Repository<User>, IUsers
     public Users(VoycarDbContext context) : base(context) {}
 
 
+    public Task<User?> RetrieveByVerificationToken(string verificationToken)
+    {
+        return this._context.Users.FirstOrDefaultAsync(
+            member => member.VerificationToken == verificationToken);
+    }
+
     public Task<User?> Retrieve(string attribute, string? value)
     {
         return attribute switch
