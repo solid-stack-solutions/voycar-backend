@@ -1,5 +1,6 @@
 namespace Voycar.Api.Web.Tests.Integration.Setup;
 
+using Common;
 using Context;
 using Entities;
 using Microsoft.EntityFrameworkCore;
@@ -50,14 +51,14 @@ public static class ClientFactory
     {
         const string testMail = "employee.integration@test.de";
         const string password = "integration";
+
+        // Get employee role ID
         var roleId = (await context.Roles.FirstOrDefaultAsync(
             role => role.Name == "employee"))?.Id;
-
         if (roleId is null)
         {
-            return null; // TODO better error handling
+            throw new RoleNotInDbException("role \"employee\" is not in db");
         }
-
 
         return await CreateUserWithRoleClient(app, context, (Guid)roleId, testMail, password);
     }
@@ -66,12 +67,13 @@ public static class ClientFactory
     {
         const string testMail = "admin.integration@test.de";
         const string password = "integration";
-        var roleId = (await context.Roles.FirstOrDefaultAsync(
-            role => role.Name == "employee"))?.Id;
 
+        // Get admin role ID
+        var roleId = (await context.Roles.FirstOrDefaultAsync(
+            role => role.Name == "admin"))?.Id;
         if (roleId is null)
         {
-            return null; // TODO better error handling
+            throw new RoleNotInDbException("role \"admin\" is not in db");
         }
 
         return await CreateUserWithRoleClient(app, context, (Guid)roleId, testMail, password);
@@ -93,7 +95,7 @@ public static class ClientFactory
         var changedAmount = await context.SaveChangesAsync();
         if (changedAmount < 1)
         {
-            throw new DbUpdateException("unable to create user in db for integration test");
+            throw new DbUpdateException("unable to create user in db");
         }
 
         // Login user client
