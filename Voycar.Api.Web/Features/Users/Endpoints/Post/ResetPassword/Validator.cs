@@ -1,4 +1,4 @@
-namespace Voycar.Api.Web.Features.Members.Post.ResetPassword;
+namespace Voycar.Api.Web.Features.Users.Endpoints.Post.ResetPassword;
 
 public class Validator : Validator<Request>
 {
