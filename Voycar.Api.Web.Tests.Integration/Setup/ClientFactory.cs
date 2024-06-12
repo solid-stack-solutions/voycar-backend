@@ -44,8 +44,8 @@ public static class ClientFactory
             );
         registerHttpResponse.StatusCode.Should().Be(HttpStatusCode.OK);
 
-        VerifyUserInDb(context, testMail);
-        LogInHttpClient(member, testMail, password);
+        await VerifyUserInDb(context, testMail);
+        await LogInHttpClient(member, testMail, password);
 
         return member;
     }
@@ -132,13 +132,13 @@ public static class ClientFactory
         }
 
         var userClient = app.CreateClient();
-        VerifyUserInDb(context, email);
-        LogInHttpClient(userClient, email, password);
+        await VerifyUserInDb(context, email);
+        await LogInHttpClient(userClient, email, password);
 
         return userClient;
     }
 
-    private static async void VerifyUserInDb(VoycarDbContext context, string email)
+    private static async Task VerifyUserInDb(VoycarDbContext context, string email)
     {
         // ToDo register endpoint should return ID, which can then be used to find user
         var userEntity = await context.Users.FirstOrDefaultAsync(user => user.Email == email);
@@ -154,7 +154,7 @@ public static class ClientFactory
         }
     }
 
-    private static async void LogInHttpClient(HttpClient client, string email, string password)
+    private static async Task LogInHttpClient(HttpClient client, string email, string password)
     {
         // Login user client, calling login endpoint since manually handling auth cookies would be too complicated
         var response = await client.POSTAsync<Login.Endpoint, Login.Request>(new Login.Request()
