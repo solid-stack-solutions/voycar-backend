@@ -2,9 +2,14 @@ using FastEndpoints.Security;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.EntityFrameworkCore;
 using Voycar.Api.Web.Context;
+using Voycar.Api.Web.Features.Cars.Repository;
+using Voycar.Api.Web.Features.Cities.Repository;
 using Voycar.Api.Web.Features.Roles.Repository;
 using Voycar.Api.Web.Features.Members.Repository;
 using Voycar.Api.Web.Features.Members.Services.EmailService;
+using Voycar.Api.Web.Features.Plans.Repository;
+using Voycar.Api.Web.Features.Reservation.Repository;
+using Voycar.Api.Web.Features.Stations.Repository;
 
 try
 {
@@ -56,6 +61,11 @@ try
     builder.Services.AddTransient<IRoles, Roles>();
     builder.Services.AddTransient<IMembers, Members>();
     builder.Services.AddTransient<IUsers, Users>();
+    builder.Services.AddTransient<ICars, Cars>();
+    builder.Services.AddTransient<ICities, Cities>();
+    builder.Services.AddTransient<IPlans, Plans>();
+    builder.Services.AddTransient<IStations, Stations>();
+    builder.Services.AddTransient<IReservations, Reservations>();
 
     // Services
     builder.Services.AddTransient<IEmailService, EmailService>();
