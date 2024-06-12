@@ -1,6 +1,7 @@
 namespace Voycar.Api.Web.Entities;
 
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Text.Json.Serialization;
 using Generic;
 
 public class Car : Entity
@@ -15,5 +16,6 @@ public class Car : Entity
 
     [ForeignKey("Station")]
     public Guid StationId { get; set; }
+    [JsonIgnore]
     public Station Station { get; set; }
 }

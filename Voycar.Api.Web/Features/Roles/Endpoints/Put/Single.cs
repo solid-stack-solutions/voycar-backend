@@ -6,5 +6,5 @@ using Repository;
 public class Single : Generic.Endpoint.Put.Single<Role>
 {
     // ToDo roles
-    public Single(IRoles roles) : base(roles, ["admin"]) {}
+    public Single(IRoles repository) : base(repository, ["admin"]) {}
 }
