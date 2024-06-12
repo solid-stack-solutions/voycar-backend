@@ -10,6 +10,7 @@ using Login = Features.Members.Post.Login;
 
 public static class ClientFactory
 {
+
     public static async Task<HttpClient> CreateMemberClient(AppFixture<Program> app)
     {
         var member = app.CreateClient();
@@ -49,15 +50,16 @@ public static class ClientFactory
 
     public static async Task<HttpClient> CreateEmployeeClient(AppFixture<Program> app, VoycarDbContext context)
     {
-        const string testMail = "employee.integration@test.de";
+        const string EmployeeRoleName = "employee";
+        const string testMail = $"{EmployeeRoleName}.integration@test.de";
         const string password = "integration";
 
         // Get employee role ID
         var roleId = (await context.Roles.FirstOrDefaultAsync(
-            role => role.Name == "employee"))?.Id;
+            role => role.Name == EmployeeRoleName))?.Id;
         if (roleId is null)
         {
-            throw new RoleNotInDbException("role \"employee\" is not in db");
+            throw new RoleNotInDbException($"role \"{EmployeeRoleName}\" is not in db");
         }
 
         return await CreateUserWithRoleClient(app, context, (Guid)roleId, testMail, password);
@@ -65,15 +67,16 @@ public static class ClientFactory
 
     public static async Task<HttpClient> CreateAdminClient(AppFixture<Program> app, VoycarDbContext context)
     {
-        const string testMail = "admin.integration@test.de";
+        const string AdminRoleName = "admin";
+        const string testMail = $"{AdminRoleName}.integration@test.de";
         const string password = "integration";
 
         // Get admin role ID
         var roleId = (await context.Roles.FirstOrDefaultAsync(
-            role => role.Name == "admin"))?.Id;
+            role => role.Name == AdminRoleName))?.Id;
         if (roleId is null)
         {
-            throw new RoleNotInDbException("role \"admin\" is not in db");
+            throw new RoleNotInDbException($"role \"{AdminRoleName}\" is not in db");
         }
 
         return await CreateUserWithRoleClient(app, context, (Guid)roleId, testMail, password);
