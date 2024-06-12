@@ -1,4 +1,4 @@
-namespace Voycar.Api.Web.Features.Members.Get.Verify;
+namespace Voycar.Api.Web.Features.Users.Endpoints.Get.Verify;
 
 public class Validator : Validator<Request>
 {

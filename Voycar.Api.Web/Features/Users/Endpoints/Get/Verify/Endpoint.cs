@@ -1,7 +1,6 @@
-namespace Voycar.Api.Web.Features.Members.Get.Verify;
+namespace Voycar.Api.Web.Features.Users.Endpoints.Get.Verify;
 
-using Repository;
-
+using Members.Repository;
 
 /// <summary>
 /// Handles the verification of new users.
