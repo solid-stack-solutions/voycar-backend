@@ -44,4 +44,25 @@ public class Single : TestBase<App>
         A.CallTo(() => fakeRoleRepository.Retrieve(fakeRole.Id)).MustHaveHappenedOnceExactly();
         Assert.Equal(StatusCodes.Status200OK, rsp.StatusCode);
     }
+
+
+    [Fact]
+    public async Task RetrieveRoleFailure()
+    {
+        // Arrange
+        var fakeRole = new Role { Id = new Guid("4BAB396C-8E26-4DC5-95E4-913F427E42F2"), Name = "fakeRole"};
+        var fakeRoleRepository = A.Fake<IRoles>();
+
+        A.CallTo(() => fakeRoleRepository.Retrieve(fakeRole.Id)).Returns(null);
+        var ep = Factory.Create<Features.Roles.Endpoints.Get.Single>(fakeRoleRepository);
+
+        // Act
+        await ep.HandleAsync(fakeRole, default);
+        var rsp = ep.HttpContext.Response;
+
+        // Assert
+        Assert.NotNull(rsp);
+        A.CallTo(() => fakeRoleRepository.Retrieve(fakeRole.Id)).MustHaveHappenedOnceExactly();
+        Assert.Equal(StatusCodes.Status404NotFound, rsp.StatusCode);
+    }
 }
