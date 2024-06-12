@@ -34,7 +34,6 @@ public class Single : TestBase<App>
         responseBodyStream.Seek(0, SeekOrigin.Begin);
         var responseBodyText  = await new StreamReader(responseBodyStream).ReadToEndAsync();
 
-
         var retrievedRole = JsonSerializer.Deserialize<Role>(responseBodyText, this.options);
         var rsp = ep.HttpContext.Response;
 
