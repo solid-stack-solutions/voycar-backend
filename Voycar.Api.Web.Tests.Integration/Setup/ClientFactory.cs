@@ -132,6 +132,7 @@ public static class ClientFactory
         }
 
         var userClient = app.CreateClient();
+        VerifyUserInDb(context, email);
         LogInHttpClient(userClient, email, password);
 
         return userClient;
