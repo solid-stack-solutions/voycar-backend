@@ -6,16 +6,11 @@ using Microsoft.EntityFrameworkCore;
 
 public class Roles : Generic.Repository.Repository<Role>, IRoles
 {
-    private readonly VoycarDbContext _context;
-
-    public Roles(VoycarDbContext context) : base(context)
-    {
-        this._context = context;
-    }
+    public Roles(VoycarDbContext context) : base(context) {}
 
     public Task<Role?> Retrieve(string name)
     {
-        return this._context.Roles.FirstOrDefaultAsync(
+        return this.dbSet.FirstOrDefaultAsync(
             role => role.Name == name);
     }
 }

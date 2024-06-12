@@ -5,6 +5,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Context;
 using Setup;
+using DotNet.Testcontainers.Builders;
 using Testcontainers.PostgreSql;
 
 public class App : AppFixture<Program>

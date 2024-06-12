@@ -19,20 +19,20 @@ public abstract class SingleUnique<TEntity>
         this.Summary(s =>
         {
             s.Summary = $"Create unique {typeof(TEntity).Name}";
-            s.Description = $"Add new unique {typeof(TEntity).Name} objects into the database";
-            s.Responses[200] = "If POST operation is successful";
-            s.Responses[204] =
-                $"If POST operation failed or the same {typeof(TEntity).Name} object is already present in the database";
+            s.Description = $"Add new unique {typeof(TEntity).Name} object into the database";
+            s.Responses[200] = "Generated ID if POST operation is successful";
+            s.Responses[204] = $"If POST operation failed or the same {typeof(TEntity).Name} object is already present in the database";
+            s.ResponseExamples = new Dictionary<int, object> {{ 200, new Entity { Id = Guid.NewGuid() }}};
         });
     }
 
     public override async Task HandleAsync(TEntity req, CancellationToken ct)
     {
-        var created = this._repository.CreateUnique(req);
+        var guid = this._repository.CreateUnique(req);
 
-        if (created)
+        if (guid is not null)
         {
-            await this.SendResultAsync(TypedResults.Ok());
+            await this.SendResultAsync(TypedResults.Ok(new Entity { Id = guid.Value }));
             return;
         }
 

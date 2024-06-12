@@ -3,9 +3,9 @@ namespace Voycar.Api.Web.Generic;
 using System.ComponentModel.DataAnnotations;
 
 /// <summary>
-///     basic entity that every other entity should extend
+///     Basic entity that every other entity should extend
 /// </summary>
-public abstract class Entity
+public class Entity
 {
     [Key]
     public Guid Id { get; set; }

@@ -7,23 +7,23 @@ using Microsoft.EntityFrameworkCore;
 
 public class Users : Generic.Repository.Repository<User>, IUsers
 {
-    private readonly VoycarDbContext _context;
+    public Users(VoycarDbContext context) : base(context) {}
 
 
-    public Users(VoycarDbContext context) : base(context)
+    public Task<User?> RetrieveByVerificationToken(string verificationToken)
     {
-        _context = context;
+        return this._context.Users.FirstOrDefaultAsync(
+            member => member.VerificationToken == verificationToken);
     }
-
 
     public Task<User?> Retrieve(string attribute, string? value)
     {
         return attribute switch
         {
-            "email" => this._context.Users.FirstOrDefaultAsync(
+            "email" => this.dbSet.FirstOrDefaultAsync(
                 user => user.Email == value),
 
-            "passwordResetToken" => this._context.Users.FirstOrDefaultAsync(
+            "passwordResetToken" => this.dbSet.FirstOrDefaultAsync(
                 user => user.PasswordResetToken == value),
 
             _ => throw new ArgumentException("Invalid property name", nameof(attribute))

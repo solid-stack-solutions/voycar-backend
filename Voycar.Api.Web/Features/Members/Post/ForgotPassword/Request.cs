@@ -5,5 +5,6 @@ using System.ComponentModel.DataAnnotations;
 
 public class Request
 {
-    [EmailAddress] public string? Email { get; set; }
+    [EmailAddress]
+    public string Email { get; set; }
 }
