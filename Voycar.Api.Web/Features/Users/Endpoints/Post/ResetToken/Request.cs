@@ -1,7 +1,4 @@
-namespace Voycar.Api.Web.Features.Members.Post.ForgotPassword;
-
-using System.ComponentModel.DataAnnotations;
-
+namespace Voycar.Api.Web.Features.Users.Endpoints.Post.ResetToken;
 
 public class Request
 {

@@ -1,9 +1,8 @@
-namespace Voycar.Api.Web.Features.Members.Post.ForgotPassword;
+namespace Voycar.Api.Web.Features.Users.Endpoints.Post.ResetToken;
 
 using System.Security.Cryptography;
 using Repository;
-using Services.EmailService;
-
+using Service;
 
 public class Endpoint : Endpoint<Request, Results<Ok<Response>, BadRequest<ErrorResponse>>>
 {

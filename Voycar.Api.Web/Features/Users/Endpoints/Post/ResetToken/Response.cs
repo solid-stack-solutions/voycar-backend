@@ -1,4 +1,4 @@
-namespace Voycar.Api.Web.Features.Members.Post.ForgotPassword;
+namespace Voycar.Api.Web.Features.Users.Endpoints.Post.ResetToken;
 
 public class Response
 {
