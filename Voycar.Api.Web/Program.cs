@@ -1,15 +1,14 @@
-using FastEndpoints.Security;
 using Microsoft.AspNetCore.Authentication.Cookies;
-using Microsoft.EntityFrameworkCore;
 using Voycar.Api.Web.Context;
 using Voycar.Api.Web.Features.Cars.Repository;
 using Voycar.Api.Web.Features.Cities.Repository;
 using Voycar.Api.Web.Features.Roles.Repository;
 using Voycar.Api.Web.Features.Members.Repository;
-using Voycar.Api.Web.Features.Members.Services.EmailService;
 using Voycar.Api.Web.Features.Plans.Repository;
 using Voycar.Api.Web.Features.Reservation.Repository;
 using Voycar.Api.Web.Features.Stations.Repository;
+using Voycar.Api.Web.Features.Users.Repository;
+using Voycar.Api.Web.Service;
 
 try
 {
