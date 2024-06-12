@@ -4,8 +4,8 @@ using Common;
 using Context;
 using Entities;
 using Microsoft.EntityFrameworkCore;
-using Registration = Features.Members.Post.Registration;
-using Login = Features.Members.Post.Login;
+using Registration = Features.Users.Endpoints.Post.Register;
+using Login = Features.Users.Endpoints.Post.Login;
 
 public static class ClientFactory
 {
