@@ -14,7 +14,5 @@ global using Microsoft.AspNetCore.Http.HttpResults;
 global using Microsoft.EntityFrameworkCore;
 global using System.ComponentModel.DataAnnotations;
 
-
-
 using System.Runtime.CompilerServices;
 [assembly: InternalsVisibleTo("Tests")]
