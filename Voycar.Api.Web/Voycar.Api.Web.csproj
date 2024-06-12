@@ -30,10 +30,4 @@
       <Link>.dockerignore</Link>
     </Content>
   </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="Features\Members\Post\Registration\" />
-    <Folder Include="Features\Members\Post\ResetPassword\" />
-    <Folder Include="Features\Users\Repository\" />
-  </ItemGroup>
 </Project>
