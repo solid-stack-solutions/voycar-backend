@@ -27,11 +27,10 @@ public static class ClientFactory
                     HouseNumber = "...",
                     PostalCode = "...",
                     City = "...",
+                    Country = "...",
                     BirthDate = new DateOnly(2000, 1, 1),
                     BirthPlace = "...",
                     PhoneNumber = "...",
-                    DriversLicenseNumber = "...",
-                    IdCardNumber = "..."
                 }
             );
         var verHttpRsp = await member.GETAsync<Verify.Endpoint, Verify.Request>(new Verify.Request
