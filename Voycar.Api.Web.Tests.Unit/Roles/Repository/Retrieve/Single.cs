@@ -1,6 +1,6 @@
 ﻿namespace Voycar.Api.Web.Tests.Unit.Roles.Endpoints.Get;
 
-using System.Runtime.CompilerServices;
+
 using Entities;
 using FakeItEasy;
 using Features.Roles.Repository;
@@ -18,7 +18,7 @@ public class Single: TestBase<App>
     private readonly Role roleMember = new Role { Id = MemberRoleId, Name = "member" };
 
     [Fact]
-    public async Task GetSingleAdminRoleSuccesful()
+    public async Task GetSingleAdminRoleByIdSuccesful()
     {
         // Arrange
         var fakeRoleRepository = A.Fake<IRoles>();
@@ -31,4 +31,87 @@ public class Single: TestBase<App>
         Assert.NotNull(result);
         Assert.Contains("admin", result.Name);
     }
+
+    [Fact]
+    public async Task GetSingleEmployeeRoleByIdSuccesful()
+    {
+        // Arrange
+        var fakeRoleRepository = A.Fake<IRoles>();
+        A.CallTo(() => fakeRoleRepository.Retrieve(EmployeeRoleId)).Returns(this.roleEmployee);
+
+        // Act
+        var result = fakeRoleRepository.Retrieve(EmployeeRoleId);
+
+        // Assert
+        Assert.NotNull(result);
+        Assert.Contains("employee", result.Name);
+    }
+
+
+    [Fact]
+    public async Task GetSingleMemberRoleByIdSuccesful()
+    {
+        // Arrange
+        var fakeRoleRepository = A.Fake<IRoles>();
+        A.CallTo(() => fakeRoleRepository.Retrieve(MemberRoleId)).Returns(this.roleMember);
+
+        // Act
+        var result = fakeRoleRepository.Retrieve(MemberRoleId);
+
+        // Assert
+        Assert.NotNull(result);
+        Assert.Contains("member", result.Name);
+    }
+
+
+    [Fact]
+    public async Task GetSingleAdminRoleByNameSuccesful()
+    {
+        // Arrange
+        var fakeRoleRepository = A.Fake<IRoles>();
+        A.CallTo(() => fakeRoleRepository.Retrieve(this.roleAdmin.Name)).Returns(this.roleAdmin);
+
+        // Act
+        var result = await fakeRoleRepository.Retrieve(this.roleAdmin.Name);
+
+        // Assert
+        Assert.NotNull(result);
+        Assert.IsAssignableFrom<Role>(result);
+        Assert.Equivalent(this.roleAdmin, result);
+    }
+
+
+    [Fact]
+    public async Task GetSingleEmployeeRoleByNameSuccesful()
+    {
+        // Arrange
+        var fakeRoleRepository = A.Fake<IRoles>();
+        A.CallTo(() => fakeRoleRepository.Retrieve(this.roleEmployee.Name)).Returns(this.roleEmployee);
+
+        // Act
+        var result = await fakeRoleRepository.Retrieve(this.roleEmployee.Name);
+
+        // Assert
+        Assert.NotNull(result);
+        Assert.IsAssignableFrom<Role>(result);
+        Assert.Equivalent(result, this.roleEmployee);
+    }
+
+
+    [Fact]
+    public async Task GetSingleMemberRoleByNameSuccesful()
+    {
+        // Arrange
+        var fakeRoleRepository = A.Fake<IRoles>();
+        A.CallTo(() => fakeRoleRepository.Retrieve(this.roleMember.Name)).Returns(this.roleMember);
+
+        // Act
+        var result = await fakeRoleRepository.Retrieve(this.roleMember.Name);
+
+        // Assert
+        Assert.NotNull(result);
+        Assert.IsAssignableFrom<Role>(result);
+        Assert.Equivalent(result, this.roleMember);
+    }
+
 }
