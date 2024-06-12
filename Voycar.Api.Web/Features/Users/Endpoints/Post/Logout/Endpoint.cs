@@ -1,7 +1,6 @@
-namespace Voycar.Api.Web.Features.Members.Logout;
+namespace Voycar.Api.Web.Features.Users.Endpoints.Post.Logout;
 
 using FastEndpoints.Security;
-
 
 public class Endpoint : EndpointWithoutRequest<Ok>
 {
