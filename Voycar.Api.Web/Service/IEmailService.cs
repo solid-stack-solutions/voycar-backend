@@ -1,7 +1,6 @@
-namespace Voycar.Api.Web.Features.Members.Services.EmailService;
+namespace Voycar.Api.Web.Service;
 
 using Entities;
-
 
 public interface IEmailService
 {

@@ -1,10 +1,9 @@
-namespace Voycar.Api.Web.Features.Members.Services.EmailService;
+namespace Voycar.Api.Web.Service;
 
-using Entities;
 using MailKit.Net.Smtp;
 using MailKit.Security;
 using MimeKit;
-
+using Entities;
 
 /// <summary>
 /// Service for sending verification and password reset emails to users.
