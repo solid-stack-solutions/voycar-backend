@@ -1,4 +1,4 @@
-namespace Voycar.Api.Web.Features.Members.Post.Login;
+namespace Voycar.Api.Web.Features.Users.Endpoints.Post.Login;
 
 public class Validator : Validator<Request>
 {

@@ -1,18 +1,16 @@
-namespace Voycar.Api.Web.Features.Members.Post.Login;
+namespace Voycar.Api.Web.Features.Users.Endpoints.Post.Login;
 
 using Entities;
-using FastEndpoints.Security;
 using Repository;
-using Roles.Repository;
 
 public class Endpoint : Endpoint<Request, Results<Ok, BadRequest<ErrorResponse>>>
 {
     private readonly IUsers _userRepository;
-    private readonly IRoles _rolesRepository;
+    private readonly Roles.Repository.IRoles _rolesRepository;
     private readonly ILogger<Endpoint> _logger;
 
 
-    public Endpoint(IUsers userRepository, IRoles rolesRepository, ILogger<Endpoint> logger)
+    public Endpoint(IUsers userRepository, Roles.Repository.IRoles rolesRepository, ILogger<Endpoint> logger)
     {
         this._userRepository = userRepository;
         this._rolesRepository = rolesRepository;

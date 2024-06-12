@@ -1,7 +1,4 @@
-namespace Voycar.Api.Web.Features.Members.Post.Login;
-
-using System.ComponentModel.DataAnnotations;
-
+namespace Voycar.Api.Web.Features.Users.Endpoints.Post.Login;
 
 public class Request
 {
