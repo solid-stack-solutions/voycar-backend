@@ -1,7 +1,6 @@
-namespace Voycar.Api.Web.Features.Members.Post.Registration;
+namespace Voycar.Api.Web.Features.Users.Endpoints.Post.Register;
 
 using Entities;
-
 
 public class Mapper : Mapper<Request, Response, Member>
 {

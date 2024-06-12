@@ -1,10 +1,9 @@
-namespace Voycar.Api.Web.Features.Members.Post.Registration;
+namespace Voycar.Api.Web.Features.Users.Endpoints.Post.Register;
 
 using System.Security.Cryptography;
 using Entities;
 using Repository;
-using Roles.Repository;
-using Services.EmailService;
+using Service;
 
 /// <summary>
 /// Handles the registration of new members.
@@ -15,14 +14,14 @@ using Services.EmailService;
 public class Endpoint : Endpoint<Request, Results<Ok, BadRequest<ErrorResponse>>, Mapper>
 {
     private readonly IUsers _userRepository;
-    private readonly IMembers _memberRepository;
-    private readonly IRoles _roleRepository;
+    private readonly Members.Repository.IMembers _memberRepository;
+    private readonly Roles.Repository.IRoles _roleRepository;
     private readonly IEmailService _emailService;
     private readonly ILogger<Endpoint> _logger;
 
     private const string MemberRoleName = "member";
 
-    public Endpoint(IUsers userRepository, IMembers memberRepository, IRoles roleRepository,
+    public Endpoint(IUsers userRepository, Members.Repository.IMembers memberRepository, Roles.Repository.IRoles roleRepository,
         IEmailService emailService, ILogger<Endpoint> logger)
     {
         this._userRepository = userRepository;

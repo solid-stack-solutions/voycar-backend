@@ -1,4 +1,4 @@
-namespace Voycar.Api.Web.Features.Members.Post.Registration;
+namespace Voycar.Api.Web.Features.Users.Endpoints.Post.Register;
 
 /// <summary>
 /// Validator class for member registration requests.
