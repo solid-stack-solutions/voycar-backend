@@ -26,7 +26,7 @@ public class VoycarDbContext : DbContext
             .HasOne(u => u.Member) // Each User entity has one Member entity
             .WithOne() // Each Member entity is associated with one User entity
             .HasForeignKey<User>(u => u.MemberId) // The MemberId property in User is a foreign key that references the Member entity
-            .IsRequired();
+            .IsRequired(false);
 
         // Configure the one-to-many relationship between Role and User
         modelBuilder.Entity<User>()
