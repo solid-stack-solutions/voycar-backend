@@ -10,5 +10,11 @@ global using FastEndpoints.Security;
 global using FluentValidation;
 global using Microsoft.AspNetCore.Http.HttpResults;
 
+// EF Core and helper
+global using Microsoft.EntityFrameworkCore;
+global using System.ComponentModel.DataAnnotations;
+
+
+
 using System.Runtime.CompilerServices;
 [assembly: InternalsVisibleTo("Tests")]
