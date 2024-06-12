@@ -1,7 +1,6 @@
-namespace Voycar.Api.Web.Features.Members.Repository;
+namespace Voycar.Api.Web.Features.Users.Repository;
 
 using Entities;
-
 
 public interface IUsers : Generic.Repository.IRepository<User>
 {

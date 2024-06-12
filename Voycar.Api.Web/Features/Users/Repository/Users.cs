@@ -1,9 +1,7 @@
-namespace Voycar.Api.Web.Features.Members.Repository;
+namespace Voycar.Api.Web.Features.Users.Repository;
 
 using Context;
 using Entities;
-using Microsoft.EntityFrameworkCore;
-
 
 public class Users : Generic.Repository.Repository<User>, IUsers
 {
