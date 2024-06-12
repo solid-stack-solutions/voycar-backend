@@ -9,7 +9,6 @@ public class Endpoint : Endpoint<Request, Results<Ok, BadRequest<ErrorResponse>>
     private readonly Roles.Repository.IRoles _rolesRepository;
     private readonly ILogger<Endpoint> _logger;
 
-
     public Endpoint(IUsers userRepository, Roles.Repository.IRoles rolesRepository, ILogger<Endpoint> logger)
     {
         this._userRepository = userRepository;
@@ -17,13 +16,11 @@ public class Endpoint : Endpoint<Request, Results<Ok, BadRequest<ErrorResponse>>
         this._logger = logger;
     }
 
-
     public override void Configure()
     {
         this.Post("auth/login");
         this.AllowAnonymous();
     }
-
 
     public override async Task HandleAsync(Request req, CancellationToken ct)
     {
@@ -42,7 +39,6 @@ public class Endpoint : Endpoint<Request, Results<Ok, BadRequest<ErrorResponse>>
         // Login member
         await this.SignInUserAsync(user!);
     }
-
 
     /// <summary>
     /// Signs in a user with cookie authentication and assigns any possible roles.
