@@ -1,6 +1,7 @@
 namespace Voycar.Api.Web.Tests.Integration.Setup;
 
 using Context;
+using Entities;
 using Microsoft.EntityFrameworkCore;
 using Registration = Features.Members.Post.Registration;
 using Verify = Features.Members.Get.Verify;
@@ -58,7 +59,7 @@ public static class ClientFactory
         }
 
 
-        return await CreateUserWithRoleClient(app, (Guid)roleId, testMail, password);
+        return await CreateUserWithRoleClient(app, context, (Guid)roleId, testMail, password);
     }
 
     public static async Task<HttpClient> CreateAdminClient(AppFixture<Program> app, VoycarDbContext context)
@@ -73,16 +74,37 @@ public static class ClientFactory
             return null; // TODO better error handling
         }
 
-        return await CreateUserWithRoleClient(app, (Guid)roleId, testMail, password);
+        return await CreateUserWithRoleClient(app, context, (Guid)roleId, testMail, password);
     }
 
 
-    private static async Task<HttpClient> CreateUserWithRoleClient(AppFixture<Program> app, Guid roleId, string email,
+    private static async Task<HttpClient> CreateUserWithRoleClient(AppFixture<Program> app, VoycarDbContext context,
+        Guid roleId, string email,
         string password)
     {
-        var user = app.CreateClient();
-        // TODO crate user directly on DB, with according role
-        // TODO login user via POST request
-        return user;
+        // Create user entity
+        var user = new User()
+        {
+            Email = email,
+            PasswordHash = BCrypt.Net.BCrypt.EnhancedHashPassword(password),
+            RoleId = roleId
+        };
+        context.Users.Add(user);
+        var changedAmount = await context.SaveChangesAsync();
+        if (changedAmount < 1)
+        {
+            throw new DbUpdateException("unable to create user in db for integration test");
+        }
+
+        // Login user client
+        var userClient = app.CreateClient();
+        var response = await userClient.POSTAsync<Login.Endpoint, Login.Request>(new Login.Request()
+        {
+            Email = email, Password = password
+        });
+        // Assert login response
+        response.StatusCode.Should().Be(HttpStatusCode.OK);
+
+        return userClient;
     }
 }
