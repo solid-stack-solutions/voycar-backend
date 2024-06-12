@@ -30,13 +30,4 @@
       <Link>.dockerignore</Link>
     </Content>
   </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="Features\Cars\" />
-    <Folder Include="Features\Cities\" />
-    <Folder Include="Features\Members\Get\"/>
-    <Folder Include="Features\Plans\" />
-    <Folder Include="Features\Reservation\" />
-    <Folder Include="Features\Stations\" />
-  </ItemGroup>
 </Project>

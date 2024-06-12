@@ -1,7 +1,6 @@
 namespace Voycar.Api.Web.Features.Members.Repository;
 
 using Entities;
-using Microsoft.EntityFrameworkCore;
 using Context;
 
 
@@ -13,11 +12,5 @@ using Context;
 /// </summary>
 public class Members : Generic.Repository.Repository<Member>, IMembers
 {
-    private readonly VoycarDbContext _context;
-
-
-    public Members(VoycarDbContext context) : base(context)
-    {
-        _context = context;
-    }
+    public Members(VoycarDbContext context) : base(context) {}
 }
