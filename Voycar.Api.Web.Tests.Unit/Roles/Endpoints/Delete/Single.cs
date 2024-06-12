@@ -5,13 +5,12 @@ using FakeItEasy;
 using Features.Roles.Repository;
 using Generic;
 using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Http.HttpResults;
 
 
 public class Single : TestBase<App>
 {
     [Fact]
-    public async Task DeleteRoleSuccess()
+    public async Task DeleteRoleSuccessful()
     {
         // Arrange
         var fakeRole = new Role { Id = new Guid("F2E3156F-BC43-45F5-B8EE-024743E8BD2A"), Name = "fakeRole" };
