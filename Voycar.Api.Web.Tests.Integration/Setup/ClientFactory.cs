@@ -5,20 +5,20 @@ using Context;
 using Entities;
 using Microsoft.EntityFrameworkCore;
 using Registration = Features.Members.Post.Registration;
-using Verify = Features.Members.Get.Verify;
 using Login = Features.Members.Post.Login;
 
 public static class ClientFactory
 {
 
-    public static async Task<HttpClient> CreateMemberClient(AppFixture<Program> app)
+    public static async Task<HttpClient> CreateMemberClient(AppFixture<Program> app, VoycarDbContext context)
     {
-        var member = app.CreateClient();
-
         const string testMail = "member.integration@test.de";
         const string password = "integration";
 
-        var (regHttpRsp, regBodyRes) =
+        var member = app.CreateClient();
+
+        // Register new member, calling endpoint since manually registering member would be too complicated
+        var (registerHttpResponse, registerResponseBody) =
             await member.POSTAsync<Registration.Endpoint, Registration.Request, Registration.Response>(
                 new Registration.Request
                 {
@@ -36,14 +36,10 @@ public static class ClientFactory
                     PhoneNumber = "...",
                 }
             );
-        var verHttpRsp = await member.GETAsync<Verify.Endpoint, Verify.Request>(new Verify.Request
-        {
-            VerificationToken = regBodyRes.VerificationToken
-        });
-        await member.POSTAsync<Login.Endpoint, Login.Request>(new Login.Request
-        {
-            Email = testMail, Password = password
-        });
+        registerHttpResponse.StatusCode.Should().Be(HttpStatusCode.OK);
+
+        VerifyUserInDb(context, testMail);
+        LogInHttpClient(member, testMail, password);
 
         return member;
     }
@@ -84,8 +80,7 @@ public static class ClientFactory
 
 
     private static async Task<HttpClient> CreateUserWithRoleClient(AppFixture<Program> app, VoycarDbContext context,
-        Guid roleId, string email,
-        string password)
+        Guid roleId, string email, string password)
     {
         // Create user entity
         var user = new User()
@@ -101,15 +96,36 @@ public static class ClientFactory
             throw new DbUpdateException("unable to create user in db");
         }
 
-        // Login user client
         var userClient = app.CreateClient();
-        var response = await userClient.POSTAsync<Login.Endpoint, Login.Request>(new Login.Request()
+        LogInHttpClient(userClient, email, password);
+
+        return userClient;
+    }
+
+    private static async void VerifyUserInDb(VoycarDbContext context, string email)
+    {
+        // ToDo register endpoint should return ID, which can then be used to find user
+        var userEntity = await context.Users.FirstOrDefaultAsync(user => user.Email == email);
+        // Assert that user entity exists
+        userEntity.Should().NotBeNull();
+
+        userEntity!.VerifiedAt = DateTime.UtcNow;
+        context.Users.Update(userEntity);
+        var changedAmount = await context.SaveChangesAsync();
+        if (changedAmount < 1)
+        {
+            throw new DbUpdateException("unable to set verification status of user in db");
+        }
+    }
+
+    private static async void LogInHttpClient(HttpClient client, string email, string password)
+    {
+        // Login user client, calling login endpoint since manually handling auth cookies would be too complicated
+        var response = await client.POSTAsync<Login.Endpoint, Login.Request>(new Login.Request()
         {
             Email = email, Password = password
         });
         // Assert login response
         response.StatusCode.Should().Be(HttpStatusCode.OK);
-
-        return userClient;
     }
 }

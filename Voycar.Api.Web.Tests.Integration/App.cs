@@ -53,7 +53,7 @@ public class App : AppFixture<Program>
         await this.Context.Database.EnsureCreatedAsync(); // Populate with Db schema
 
         // Create custom HttpClients to use in tests
-        this.Member = await ClientFactory.CreateMemberClient(this);
+        this.Member = await ClientFactory.CreateMemberClient(this, this.Context);
         this.Employee = await ClientFactory.CreateEmployeeClient(this, this.Context);
         this.Admin = await ClientFactory.CreateAdminClient(this, this.Context);
     }
