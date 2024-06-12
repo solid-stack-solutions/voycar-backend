@@ -9,14 +9,6 @@ using FakeItEasy;
 
 public class All : TestBase<App>
 {
-    private readonly App _app;
-
-    public All(App app)
-    {
-        this._app = app;
-    }
-
-
     [Fact]
     public async Task GetAllRolesSuccessful()
     {
