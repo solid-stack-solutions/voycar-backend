@@ -32,7 +32,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Features\Members\Post\ForgotPassword\" />
-    <Folder Include="Features\Users\" />
+    <Folder Include="Features\Members\Post\Login\" />
+    <Folder Include="Features\Users\Repository\" />
   </ItemGroup>
 </Project>
