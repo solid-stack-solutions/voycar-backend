@@ -6,10 +6,9 @@ namespace Voycar.Api.Web.Tests.Integration.Common;
 /// </summary>
 public abstract class ElementNotInDbException : Exception
 {
-    protected ElementNotInDbException() : base() { }
-    protected ElementNotInDbException(string message) : base(message) { }
-    protected ElementNotInDbException(string message, Exception inner) : base(message, inner) { }
-
+    protected ElementNotInDbException() : base() {}
+    protected ElementNotInDbException(string message) : base(message) {}
+    protected ElementNotInDbException(string message, Exception inner) : base(message, inner) {}
 }
 
 /// <summary>
@@ -18,7 +17,7 @@ public abstract class ElementNotInDbException : Exception
 /// </summary>
 public class RoleNotInDbException : ElementNotInDbException
 {
-    public RoleNotInDbException() { }
-    public RoleNotInDbException(string message) : base(message) { }
-    public RoleNotInDbException(string message, Exception inner) : base(message, inner) { }
+    public RoleNotInDbException() {}
+    public RoleNotInDbException(string message) : base(message) {}
+    public RoleNotInDbException(string message, Exception inner) : base(message, inner) {}
 }

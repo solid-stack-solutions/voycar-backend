@@ -10,12 +10,12 @@ using Login = Features.Users.Endpoints.Post.Login;
 public static class ClientFactory
 {
     /// <summary>
-    /// Creates a new http client which is logged in as a member. The member will be saved in the database
-    /// and verified. The http client will be authorized with the member role.
+    /// Creates a new HTTP client which is logged in as a member. The member will be saved in the database
+    /// and verified. The HTTP client will be authorized with the member role.
     /// </summary>
-    /// <param name="app">The AppFixture to create a new http client with</param>
+    /// <param name="app">The <c>AppFixture</c> to create a new HTTP client with</param>
     /// <param name="context">The context to save the member in the database</param>
-    /// <returns>The created and logged in http member client</returns>
+    /// <returns>The created and logged in HTTP member client</returns>
     public static async Task<HttpClient> CreateMemberClient(AppFixture<Program> app, VoycarDbContext context)
     {
         const string testMail = "member.integration@test.de";
@@ -51,10 +51,10 @@ public static class ClientFactory
     }
 
     /// <summary>
-    /// Creates a new http client which is logged in as an employee. The employee will be saved in the database
-    /// and verified. The http client will be authorized with the employee role.
+    /// Creates a new HTTP client which is logged in as an employee. The employee will be saved in the database
+    /// and verified. The HTTP client will be authorized with the employee role.
     /// </summary>
-    /// <param name="app">The AppFixture to create a new http client with</param>
+    /// <param name="app">The <c>AppFixture</c> to create a new HTTP client with</param>
     /// <param name="context">The context to save the employee in the database</param>
     /// <returns>The created and logged in http employee client</returns>
     /// <exception cref="RoleNotInDbException">If the employee role is not in the database</exception>
@@ -102,16 +102,16 @@ public static class ClientFactory
 
 
     /// <summary>
-    /// Creates a new http client which is logged in as a newly created user. The associated user will be saved
+    /// Creates a new HTTP client which is logged in as a newly created user. The associated user will be saved
     /// in the databse and verified. The user is assigned the given role ID and the client will be authorized with the
     /// according role.
     /// </summary>
-    /// <param name="app">The AppFixture to create a new http client with</param>
+    /// <param name="app">The <c>AppFixture</c> to create a new HTTP client with</param>
     /// <param name="context">The context to save the user in the database</param>
     /// <param name="roleId">The database ID of the role to assign to the user</param>
     /// <param name="email">The email for the user</param>
     /// <param name="password">The password for the user</param>
-    /// <returns>The created and logged in http client</returns>
+    /// <returns>The created and logged in HTTP client</returns>
     /// <exception cref="DbUpdateException">If the user or attributes of the user can't be saved in the
     /// database</exception>
     private static async Task<HttpClient> CreateUserWithRoleClient(AppFixture<Program> app, VoycarDbContext context,
