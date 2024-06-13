@@ -38,9 +38,9 @@ public class Single : TestBase<App>
         var rsp = ep.HttpContext.Response;
 
         // Assert
+        A.CallTo(() => fakeRoleRepository.Retrieve(fakeRole.Id)).MustHaveHappenedOnceExactly();
         Assert.NotNull(rsp);
         Assert.Equal(fakeRole.Name, retrievedRole!.Name);
-        A.CallTo(() => fakeRoleRepository.Retrieve(fakeRole.Id)).MustHaveHappenedOnceExactly();
         Assert.Equal(StatusCodes.Status200OK, rsp.StatusCode);
     }
 
@@ -60,8 +60,8 @@ public class Single : TestBase<App>
         var rsp = ep.HttpContext.Response;
 
         // Assert
-        Assert.NotNull(rsp);
         A.CallTo(() => fakeRoleRepository.Retrieve(fakeRole.Id)).MustHaveHappenedOnceExactly();
+        Assert.NotNull(rsp);
         Assert.Equal(StatusCodes.Status404NotFound, rsp.StatusCode);
     }
 }

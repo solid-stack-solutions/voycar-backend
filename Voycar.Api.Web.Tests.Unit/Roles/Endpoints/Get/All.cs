@@ -44,6 +44,7 @@ public class All : TestBase<App>
         var rsp = ep.HttpContext.Response;
 
         // Assert
+        A.CallTo(() => fakeRoleRepository.RetrieveAll()).MustHaveHappenedOnceExactly();
         Assert.NotNull(rsp);
         Assert.Equal(3, retrievedRoles!.Count());
 
@@ -52,7 +53,6 @@ public class All : TestBase<App>
             Assert.Contains(retrievedRoles!, r => r.Name == expectedRole.Name);
         }
 
-        A.CallTo(() => fakeRoleRepository.RetrieveAll()).MustHaveHappenedOnceExactly();
         Assert.Equal(StatusCodes.Status200OK, rsp.StatusCode);
     }
 }
