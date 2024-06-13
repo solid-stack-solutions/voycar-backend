@@ -46,11 +46,11 @@ public class All : TestBase<App>
         // Assert
         A.CallTo(() => fakeRoleRepository.RetrieveAll()).MustHaveHappenedOnceExactly();
         Assert.NotNull(rsp);
-        Assert.Equal(3, retrievedRoles!.Count());
+        Assert.Equal(3, retrievedRoles.Count());
 
         foreach (var expectedRole in fakeRoles)
         {
-            Assert.Contains(retrievedRoles!, r => r.Name == expectedRole.Name);
+            Assert.Contains(retrievedRoles, r => r.Name == expectedRole.Name);
         }
 
         Assert.Equal(StatusCodes.Status200OK, rsp.StatusCode);

@@ -19,7 +19,11 @@ public class Single : TestBase<App>
     public async Task RetrieveRoleSuccessful()
     {
         // Arrange
-        var fakeRole = new Role { Id = new Guid("4BAB396C-8E26-4DC5-95E4-913F427E42F2"), Name = "fakeRole"};
+        var fakeRole = new Role
+        {
+            Id = new Guid("4BAB396C-8E26-4DC5-95E4-913F427E42F2"),
+            Name = "fakeRole"
+        };
         var fakeRoleRepository = A.Fake<IRoles>();
 
         A.CallTo(() => fakeRoleRepository.Retrieve(fakeRole.Id)).Returns(fakeRole);
@@ -49,7 +53,11 @@ public class Single : TestBase<App>
     public async Task RetrieveRoleFailure()
     {
         // Arrange
-        var fakeRole = new Role { Id = new Guid("4BAB396C-8E26-4DC5-95E4-913F427E42F2"), Name = "fakeRole"};
+        var fakeRole = new Role
+        {
+            Id = new Guid("4BAB396C-8E26-4DC5-95E4-913F427E42F2"),
+            Name = "fakeRole"
+        };
         var fakeRoleRepository = A.Fake<IRoles>();
 
         A.CallTo(() => fakeRoleRepository.Retrieve(fakeRole.Id)).Returns(null);

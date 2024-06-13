@@ -20,7 +20,11 @@ public class SingleUnique : TestBase<App>
     public async Task CreateUniqueSuccessful()
     {
         // Arrange
-        var fakeRole = new Role { Id = new Guid("F2E3156F-BC43-45F5-B8EE-024743E8BD2A"), Name = "fakeRole" };
+        var fakeRole = new Role
+        {
+            Id = new Guid("F2E3156F-BC43-45F5-B8EE-024743E8BD2A"),
+            Name = "fakeRole"
+        };
         var fakeRoleRepository = A.Fake<IRoles>();
 
         A.CallTo(() => fakeRoleRepository.CreateUnique(fakeRole)).Returns(fakeRole.Id);
@@ -48,7 +52,11 @@ public class SingleUnique : TestBase<App>
     public async Task CreateUniqueFailure()
     {
         // Arrange
-        var fakeRole = new Role { Id = new Guid("F2E3156F-BC43-45F5-B8EE-024743E8BD2A"), Name = "fakeRole" };
+        var fakeRole = new Role
+        {
+            Id = new Guid("F2E3156F-BC43-45F5-B8EE-024743E8BD2A"),
+            Name = "fakeRole"
+        };
         var fakeRoleRepository = A.Fake<IRoles>();
 
         A.CallTo(() => fakeRoleRepository.CreateUnique(fakeRole)).Returns(null);
@@ -61,6 +69,6 @@ public class SingleUnique : TestBase<App>
         // Assert
         A.CallTo(() => fakeRoleRepository.CreateUnique(fakeRole)).MustHaveHappenedOnceExactly();
         Assert.NotNull(rsp);
-        Assert.Equal(StatusCodes.Status404NotFound, rsp.StatusCode);
+        Assert.Equal(StatusCodes.Status204NoContent, rsp.StatusCode);
     }
 }

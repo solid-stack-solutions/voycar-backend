@@ -14,7 +14,11 @@ public class Single : TestBase<App>
     public async Task UpdateRoleSuccessful()
     {
         // Arrange
-        var fakeRole = new Role { Id = new Guid("F2E3156F-BC43-45F5-B8EE-024743E8BD2A"), Name = "fakeRole" };
+        var fakeRole = new Role
+        {
+            Id = new Guid("F2E3156F-BC43-45F5-B8EE-024743E8BD2A"),
+            Name = "fakeRole"
+        };
         var fakeRoleRepository = A.Fake<IRoles>();
         A.CallTo(() => fakeRoleRepository.Update(fakeRole)).Returns(true);
 
@@ -37,7 +41,11 @@ public class Single : TestBase<App>
     public async Task UpdateRoleFailure()
     {
         // Arrange
-        var fakeRole = new Role { Id = new Guid("F2E3156F-BC43-45F5-B8EE-024743E8BD2A"), Name = "fakeRole" };
+        var fakeRole = new Role
+        {
+            Id = new Guid("F2E3156F-BC43-45F5-B8EE-024743E8BD2A"),
+            Name = "fakeRole"
+        };
         var fakeRoleRepository = A.Fake<IRoles>();
         A.CallTo(() => fakeRoleRepository.Update(fakeRole)).Returns(false);
 
