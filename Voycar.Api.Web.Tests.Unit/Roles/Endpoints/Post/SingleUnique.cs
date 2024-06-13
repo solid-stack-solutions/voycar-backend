@@ -43,4 +43,24 @@ public class SingleUnique : TestBase<App>
         Assert.Equal(fakeRole.Id, uniqueId.Id);
         Assert.Equal(StatusCodes.Status200OK, rsp.StatusCode);
     }
+
+    [Fact]
+    public async Task CreateUniqueFailure()
+    {
+        // Arrange
+        var fakeRole = new Role { Id = new Guid("F2E3156F-BC43-45F5-B8EE-024743E8BD2A"), Name = "fakeRole" };
+        var fakeRoleRepository = A.Fake<IRoles>();
+
+        A.CallTo(() => fakeRoleRepository.CreateUnique(fakeRole)).Returns(null);
+        var ep = Factory.Create<Features.Roles.Endpoints.Post.SingleUnique>(fakeRoleRepository);
+
+        // Act
+        await ep.HandleAsync(fakeRole, default);
+        var rsp = ep.HttpContext.Response;
+
+        // Assert
+        A.CallTo(() => fakeRoleRepository.CreateUnique(fakeRole)).MustHaveHappenedOnceExactly();
+        Assert.NotNull(rsp);
+        Assert.Equal(StatusCodes.Status404NotFound, rsp.StatusCode);
+    }
 }
