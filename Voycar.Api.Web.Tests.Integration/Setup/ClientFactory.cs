@@ -1,6 +1,6 @@
 namespace Voycar.Api.Web.Tests.Integration.Setup;
 
-using Common;
+using System.Data;
 using Context;
 using Entities;
 using Microsoft.EntityFrameworkCore;
@@ -57,7 +57,7 @@ public static class ClientFactory
     /// <param name="app">The <c>AppFixture</c> to create a new HTTP client with</param>
     /// <param name="context">The context to save the employee in the database</param>
     /// <returns>The created and logged in http employee client</returns>
-    /// <exception cref="RoleNotInDbException">If the employee role is not in the database</exception>
+    /// <exception cref="RowNotInTableException">If the employee role is not in the database</exception>
     public static async Task<HttpClient> CreateEmployeeClient(AppFixture<Program> app, VoycarDbContext context)
     {
         const string EmployeeRoleName = "employee";
@@ -69,7 +69,7 @@ public static class ClientFactory
             role => role.Name == EmployeeRoleName))?.Id;
         if (roleId is null)
         {
-            throw new RoleNotInDbException($"role \"{EmployeeRoleName}\" is not in db");
+            throw new RowNotInTableException($"role \"{EmployeeRoleName}\" is not in db");
         }
 
         return await CreateUserWithRoleClient(app, context, (Guid)roleId, testMail, password);
@@ -82,7 +82,7 @@ public static class ClientFactory
     /// <param name="app">The AppFixture to create a new http client with</param>
     /// <param name="context">The context to save the admin in the database</param>
     /// <returns>The created and logged in http admin client</returns>
-    /// <exception cref="RoleNotInDbException">If the admin role is not in the database</exception>
+    /// <exception cref="RowNotInTableException">If the admin role is not in the database</exception>
     public static async Task<HttpClient> CreateAdminClient(AppFixture<Program> app, VoycarDbContext context)
     {
         const string AdminRoleName = "admin";
@@ -94,7 +94,7 @@ public static class ClientFactory
             role => role.Name == AdminRoleName))?.Id;
         if (roleId is null)
         {
-            throw new RoleNotInDbException($"role \"{AdminRoleName}\" is not in db");
+            throw new RowNotInTableException($"role \"{AdminRoleName}\" is not in db");
         }
 
         return await CreateUserWithRoleClient(app, context, (Guid)roleId, testMail, password);
