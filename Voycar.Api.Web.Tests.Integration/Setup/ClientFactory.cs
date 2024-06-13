@@ -16,6 +16,7 @@ public static class ClientFactory
     /// <param name="app">The <c>AppFixture</c> to create a new HTTP client with</param>
     /// <param name="context">The context to save the member in the database</param>
     /// <returns>The created and logged in HTTP member client</returns>
+    /// <exception cref="HttpRequestException">If the endpoint for creating a member fails</exception>
     public static async Task<HttpClient> CreateMemberClient(AppFixture<Program> app, VoycarDbContext context)
     {
         const string testMail = "member.integration@test.de";
@@ -42,7 +43,10 @@ public static class ClientFactory
                     PhoneNumber = "...",
                 }
             );
-        registerHttpResponse.StatusCode.Should().Be(HttpStatusCode.OK);
+        if (registerHttpResponse.StatusCode != HttpStatusCode.OK)
+        {
+            throw new HttpRequestException("unable to create new member from endpoint");
+        }
 
         await VerifyUserInDb(context, testMail);
         await LogInHttpClient(member, testMail, password);
@@ -142,8 +146,10 @@ public static class ClientFactory
     {
         // ToDo register endpoint should return ID, which can then be used to find user
         var userEntity = await context.Users.FirstOrDefaultAsync(user => user.Email == email);
-        // Assert that user entity exists
-        userEntity.Should().NotBeNull();
+        if (userEntity is null)
+        {
+            throw new RowNotInTableException("user is not in db, unable to verify user");
+        }
 
         userEntity!.VerifiedAt = DateTime.UtcNow;
         context.Users.Update(userEntity);
@@ -161,7 +167,10 @@ public static class ClientFactory
         {
             Email = email, Password = password
         });
-        // Assert login response
-        response.StatusCode.Should().Be(HttpStatusCode.OK);
+
+        if (response.StatusCode != HttpStatusCode.OK)
+        {
+            throw new HttpRequestException("unable to login user with login endpoint");
+        }
     }
 }
