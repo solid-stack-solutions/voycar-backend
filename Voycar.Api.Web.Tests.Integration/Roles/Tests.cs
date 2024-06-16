@@ -89,14 +89,23 @@ public class Tests : TestBase<App, State>
     }
 
     [Fact, Priority(2)]
-    public async Task GetIsValid()
+    public async Task Get_SingleRole_ReturnsOkAndRole()
     {
-        //Arrange
-        var roleRequestData = this.Id;
-        //Act
+        // Arrange
+        var requestID = this._state.Id;
 
-        //Assert
-        httpResponseMessage.StatusCode.Should().Be(HttpStatusCode.OK);
+        // Act
+        var httpResponse = await this._app.Admin.GetAsync($"role/{requestID}");
+
+        // Arrange assertion
+        var responseMessage = await httpResponse.Content.ReadAsStringAsync();
+        var responseEntity = JsonSerializer.Deserialize<Role>(responseMessage, this.Options);
+
+        // Assert
+        httpResponse.StatusCode.Should().Be(HttpStatusCode.OK);
+        responseEntity.Should().NotBeNull();
+        responseEntity!.Id.Should().Be(requestID);
+        responseEntity!.Name.Should().Be(State.RoleName1);
     }
 
     [Fact, Priority(3)]
