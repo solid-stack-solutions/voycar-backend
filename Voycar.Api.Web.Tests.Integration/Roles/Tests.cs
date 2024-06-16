@@ -97,6 +97,24 @@ public class Tests : TestBase<App, State>
         responseEntity.Name.Should().Be(State.RoleName1);
     }
 
+    [Fact, Priority(2)]
+    public async Task Get_AllRoles_ReturnsOkAndRoles()
+    {
+        // Act
+        var (httpResponse, response) = await this._app.Admin.GETAsync<R.Get.All, IEnumerable<Role>>();
+
+        // Arrange assert
+        response = response as Role[] ?? response.ToArray();
+        var expectedRole = new Role { Id = this._state.Id, Name = State.RoleName1 };
+
+        // Assert
+        httpResponse.StatusCode.Should().Be(HttpStatusCode.OK);
+
+        response.Count().Should()
+            .Be(4, "1 Role was added during test, while 3 roles were created at startup");
+        response.Contains(expectedRole).Should().BeTrue();
+    }
+
     [Fact, Priority(3)]
     public async Task Delete_Role_ReturnsOk_And_DeletesInDb()
     {
