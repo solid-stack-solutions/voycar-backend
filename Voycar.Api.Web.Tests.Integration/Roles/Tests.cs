@@ -60,7 +60,7 @@ public class Tests : TestBase<App, State>
         httpResponse.StatusCode.Should().Be(HttpStatusCode.OK);
         responseEntity.Should().NotBeNull();
         responseEntity!.Id.Should().NotBeEmpty();
-        this._state.Id = responseEntity.Id;
+        this._state.Id = responseEntity.Id; // save ID for later tests
 
         roleInDb.Should().NotBeNull();
         roleInDb!.Name.Should().Be(requestName);
