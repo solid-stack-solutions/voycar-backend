@@ -39,16 +39,6 @@ public class Tests : TestBase<App, State>
         this._state = state;
     }
 
-    protected override async Task SetupAsync()
-    {
-        // Place one-time setup code here
-    }
-
-    protected override async Task TearDownAsync()
-    {
-        // Do cleanups here
-    }
-
     [Fact, Priority(0)]
     public async Task Post_NewRole_ReturnsOkAndID_And_SavesInDb()
     {
