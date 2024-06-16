@@ -1,8 +1,8 @@
 namespace Voycar.Api.Web.Tests.Integration.Roles;
 
-using Common;
 using Context;
 using Entities;
+using Generic;
 using Microsoft.EntityFrameworkCore;
 using Xunit.Priority;
 
@@ -42,20 +42,19 @@ public class Tests : TestBase<App, State>
         var roleRequestData = new Role { Name = State.RoleName1 };
 
         // Act
-        var httpResponse = await this._app.Admin.POSTAsync<R.Post.SingleUnique, Role>(roleRequestData);
+        var (httpResponse, response) = await this._app.Admin.POSTAsync<R.Post.SingleUnique, Role, Entity>(roleRequestData);
 
 
         // Arrange assertion
-        var responseEntity = await ResponseResolver.ResolveResponse<Role>(httpResponse);
         var roleInDb = await this._context.Roles.FirstOrDefaultAsync(role => role.Name == roleRequestData.Name);
 
         // Assert
         httpResponse.StatusCode.Should().Be(HttpStatusCode.OK);
-        responseEntity.Id.Should().NotBeEmpty();
-        this._state.Id = responseEntity.Id; // save ID for later tests
+        response.Id.Should().NotBeEmpty();
+        this._state.Id = response.Id; // save ID for later tests
 
         roleInDb.Should().NotBeNull();
-        roleInDb!.Id.Should().Be(responseEntity.Id);
+        roleInDb!.Id.Should().Be(response.Id);
     }
 
     [Fact, Priority(1)]
@@ -80,18 +79,15 @@ public class Tests : TestBase<App, State>
     public async Task Get_SingleRole_ReturnsOkAndRole()
     {
         // Arrange
-        var requestID = this._state.Id;
+        var requestEntityData = new Entity { Id = this._state.Id };
 
         // Act
-        var httpResponse = await this._app.Admin.GetAsync($"role/{requestID}");
-
-        // Arrange assertion
-        var responseEntity = await ResponseResolver.ResolveResponse<Role>(httpResponse);
+        var (httpResponse, response) = await this._app.Admin.GETAsync<R.Get.Single, Entity, Role>(requestEntityData);
 
         // Assert
         httpResponse.StatusCode.Should().Be(HttpStatusCode.OK);
-        responseEntity.Id.Should().Be(requestID);
-        responseEntity.Name.Should().Be(State.RoleName1);
+        response.Id.Should().Be(requestEntityData.Id);
+        response.Name.Should().Be(State.RoleName1);
     }
 
     [Fact, Priority(2)]
