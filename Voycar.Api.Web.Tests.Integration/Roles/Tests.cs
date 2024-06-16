@@ -85,7 +85,7 @@ public class Tests : TestBase<App, State>
         httpResponse.StatusCode.Should().Be(HttpStatusCode.NoContent);
 
         roleInDb.Should().NotBeNull();
-        roleInDb.Should().Be(State.RoleName1);
+        roleInDb!.Name.Should().Be(State.RoleName1);
     }
 
     [Fact, Priority(2)]
