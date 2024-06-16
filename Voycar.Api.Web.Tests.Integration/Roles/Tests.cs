@@ -40,7 +40,8 @@ public class Tests : TestBase<App>
         const string requestName = "JuNiJa(Ke)²";
         var roleRequestData = new Role { Name = requestName };
 
-        id = roleRequestData.Id; //pass down id to be used in other test
+        this.id = roleRequestData.Id; //pass down id to be used in other test
+
         // Act
         var httpResponseMessage = await this._app.Admin.POSTAsync<R.Post.SingleUnique, Role>(roleRequestData);
 
