@@ -109,16 +109,21 @@ public class Tests : TestBase<App, State>
     }
 
     [Fact, Priority(3)]
-    public async Task DeleteIsValid()
+    public async Task Delete_Role_ReturnsOk_And_DeletesInDb()
     {
-        //Arrange
-        var roleRequestData = this.Id;
+        // Arrange
+        var requestID = this._state.Id;
 
-        //Act
-        var httpResponseMessage = await this._app.Client.GETAsync<R.Delete.Single, Guid>(roleRequestData);
+        // Act
+        var httpResponse = await this._app.Admin.DeleteAsync($"role/{requestID}");
 
-        //Assert
-        httpResponseMessage.StatusCode.Should().Be(HttpStatusCode.OK);
+        // Arrange assertion
+        var roleInDb = await this._context.Roles.FirstOrDefaultAsync(role => role.Name == State.RoleName1);
+
+        // Assert
+        httpResponse.StatusCode.Should().Be(HttpStatusCode.OK);
+
+        roleInDb.Should().BeNull();
     }
 
 }
