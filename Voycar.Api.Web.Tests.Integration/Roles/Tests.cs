@@ -11,13 +11,13 @@ using R = Features.Roles.Endpoints;
 
 
 /// <summary>
-/// StateFixture responsible for sharing the role ID between all tests.
+/// StateFixture responsible for sharing the role ID between all tests and
+/// constant values.
 /// </summary>
 public sealed class State : StateFixture
 {
     public Guid Id { get; set; }
-    public const string RoleName1 = "JuNiJa(Ke)²";
-    public const string RoleName2 = "Role2";
+    public const string RoleName = "JuNiJa(Ke)²";
 }
 
 public class Tests : TestBase<App, State>
@@ -39,7 +39,7 @@ public class Tests : TestBase<App, State>
     public async Task Post_NewRole_ReturnsOkAndID_And_SavesInDb()
     {
         // Arrange
-        var roleRequestData = new Role { Name = State.RoleName1 };
+        var roleRequestData = new Role { Name = State.RoleName };
 
         // Act
         var (httpResponse, response) = await this._app.Admin.POSTAsync<R.Post.SingleUnique, Role, Entity>(roleRequestData);
@@ -61,7 +61,7 @@ public class Tests : TestBase<App, State>
     public async Task Post_ExistingRole_ReturnsNoContent_And_IsAlreadyInDb()
     {
         // Arrange
-        var roleRequestData = new Role { Name = State.RoleName1 };
+        var roleRequestData = new Role { Name = State.RoleName };
 
         // Act
         var httpResponse = await this._app.Admin.POSTAsync<R.Post.SingleUnique, Role>(roleRequestData);
@@ -87,7 +87,7 @@ public class Tests : TestBase<App, State>
         // Assert
         httpResponse.StatusCode.Should().Be(HttpStatusCode.OK);
         response.Id.Should().Be(requestEntityData.Id);
-        response.Name.Should().Be(State.RoleName1);
+        response.Name.Should().Be(State.RoleName);
     }
 
     [Fact, Priority(2)]
@@ -98,7 +98,7 @@ public class Tests : TestBase<App, State>
 
         // Arrange assert
         response = response as Role[] ?? response.ToArray();
-        var expectedRole = new Role { Id = this._state.Id, Name = State.RoleName1 };
+        var expectedRole = new Role { Id = this._state.Id, Name = State.RoleName };
 
         // Assert
         httpResponse.StatusCode.Should().Be(HttpStatusCode.OK);
@@ -137,7 +137,7 @@ public class Tests : TestBase<App, State>
         var httpResponse = await this._app.Admin.DeleteAsync($"role/{requestID}");
 
         // Arrange assertion
-        var roleInDb = await this._context.Roles.FirstOrDefaultAsync(role => role.Name == State.RoleName1);
+        var roleInDb = await this._context.Roles.FirstOrDefaultAsync(role => role.Name == State.RoleName);
 
         // Assert
         httpResponse.StatusCode.Should().Be(HttpStatusCode.OK);
