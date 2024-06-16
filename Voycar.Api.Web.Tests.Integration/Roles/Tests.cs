@@ -115,6 +115,25 @@ public class Tests : TestBase<App, State>
         response.Contains(expectedRole).Should().BeTrue();
     }
 
+    [Fact, Priority(2)]
+    public async Task Put_Role_ReturnsOk_And_UpdatesInDb()
+    {
+        // Arrange
+        var roleRequestData = new Role { Id = this._state.Id, Name =  "NewRoleName"};
+
+        // Act
+        var httpResponse = await this._app.Admin.PUTAsync<R.Put.Single, Role>(roleRequestData);
+
+        // Arrange assert
+        var roleInDb = await this._context.Roles.FirstOrDefaultAsync(role => role.Name == roleRequestData.Name);
+
+        // Assert
+        httpResponse.StatusCode.Should().Be(HttpStatusCode.OK);
+
+        roleInDb.Should().NotBeNull();
+        roleInDb!.Id.Should().Be(this._state.Id);
+    }
+
     [Fact, Priority(3)]
     public async Task Delete_Role_ReturnsOk_And_DeletesInDb()
     {
