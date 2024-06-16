@@ -76,14 +76,16 @@ public class Tests : TestBase<App, State>
         var roleRequestData = new Role { Name = State.RoleName1 };
 
         // Act
-        var httpResponseMessage = await this._app.Admin.POSTAsync<R.Post.SingleUnique, Role>(roleRequestData);
+        var httpResponse = await this._app.Admin.POSTAsync<R.Post.SingleUnique, Role>(roleRequestData);
+
+        // Arrange assertion
+        var roleInDb = await this._context.Roles.FirstOrDefaultAsync(role => role.Name == roleRequestData.Name);
 
         // Assert
-        httpResponseMessage.StatusCode.Should().Be(HttpStatusCode.NoContent);
+        httpResponse.StatusCode.Should().Be(HttpStatusCode.NoContent);
 
-        var roleInDb = await this._context.Roles.FirstOrDefaultAsync(role => role.Name == roleRequestData.Name);
         roleInDb.Should().NotBeNull();
-        // ToDo check name in db element
+        roleInDb.Should().Be(State.RoleName1);
     }
 
     [Fact, Priority(2)]
