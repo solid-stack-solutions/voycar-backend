@@ -10,23 +10,33 @@ using Xunit.Priority;
 // Include namespace alias of feature to test here
 using R = Features.Roles.Endpoints;
 
-public class Tests : TestBase<App>
+
+/// <summary>
+/// StateFixture responsible for sharing the role ID between all tests.
+/// </summary>
+public sealed class State : StateFixture
+{
+    public Guid Id { get; set; }
+}
+
+public class Tests : TestBase<App, State>
 {
     // Always DI the app.cs to access methods
     private readonly App _app;
     private readonly VoycarDbContext _context;
+    private readonly State _state;
 
     private readonly JsonSerializerOptions Options = new()
     {
         PropertyNameCaseInsensitive = true
     };
 
-    private Guid Id;
     // Setup request client
-    public Tests(App app)
+    public Tests(App app, State state)
     {
         this._app = app;
         this._context = this._app.Context;
+        this._state = state;
     }
 
     protected override async Task SetupAsync()
@@ -60,6 +70,7 @@ public class Tests : TestBase<App>
         httpResponse.StatusCode.Should().Be(HttpStatusCode.OK);
         responseEntity.Should().NotBeNull();
         responseEntity!.Id.Should().NotBeEmpty();
+        this._state.Id = responseEntity.Id;
 
         roleInDb.Should().NotBeNull();
         roleInDb!.Name.Should().Be(requestName);
