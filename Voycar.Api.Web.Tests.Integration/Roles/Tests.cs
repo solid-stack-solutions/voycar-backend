@@ -49,9 +49,28 @@ public class Tests : TestBase<App>
 
         var roleInDb = await this._context.Roles.FirstOrDefaultAsync(role => role.Name == roleRequestData.Name);
         roleInDb.Should().NotBeNull();
+        // ToDo check name in db element
     }
 
     [Fact, Priority(1)]
+    public async Task Post_ExistingRole_ReturnsNoContent_And_IsAlreadyInDb()
+    {
+        // Arrange
+        const string requestName = "JuNiJa(Ke)²";
+        var roleRequestData = new Role { Name = requestName };
+
+        // Act
+        var httpResponseMessage = await this._app.Admin.POSTAsync<R.Post.SingleUnique, Role>(roleRequestData);
+
+        // Assert
+        httpResponseMessage.StatusCode.Should().Be(HttpStatusCode.NoContent);
+
+        var roleInDb = await this._context.Roles.FirstOrDefaultAsync(role => role.Name == roleRequestData.Name);
+        roleInDb.Should().NotBeNull();
+        // ToDo check name in db element
+    }
+
+    [Fact, Priority(2)]
     public async Task GetIsValid()
     {
         //Arrange
@@ -64,7 +83,7 @@ public class Tests : TestBase<App>
         httpResponseMessage.StatusCode.Should().Be(HttpStatusCode.OK);
     }
 
-    [Fact, Priority(2)]
+    [Fact, Priority(3)]
     public async Task DeleteIsValid()
     {
         //Arrange
