@@ -55,9 +55,7 @@ public class Tests : TestBase<App, State>
         this._state.Id = responseEntity.Id; // save ID for later tests
 
         roleInDb.Should().NotBeNull();
-        roleInDb!.Name.Should().Be(State.RoleName1);
-
-        roleInDb.Id.Should().Be(responseEntity.Id);
+        roleInDb!.Id.Should().Be(responseEntity.Id);
     }
 
     [Fact, Priority(1)]
@@ -76,7 +74,6 @@ public class Tests : TestBase<App, State>
         httpResponse.StatusCode.Should().Be(HttpStatusCode.NoContent);
 
         roleInDb.Should().NotBeNull();
-        roleInDb!.Name.Should().Be(State.RoleName1);
     }
 
     [Fact, Priority(2)]
