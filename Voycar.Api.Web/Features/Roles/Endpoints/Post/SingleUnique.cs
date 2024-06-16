@@ -5,6 +5,6 @@ using Repository;
 
 public class SingleUnique : Generic.Endpoint.Post.SingleUnique<Role>
 {
-    // TODO roles
-    public SingleUnique(IRoles roles) : base(roles, ["admin"]) {}
+    // ToDo roles
+    public SingleUnique(IRoles repository) : base(repository, ["admin"]) {}
 }

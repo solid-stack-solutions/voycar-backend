@@ -14,6 +14,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <PackageReference Include="FakeItEasy" Version="8.2.0" />
     <PackageReference Include="FastEndpoints.Testing" Version="5.26.0"/>
     <PackageReference Include="FluentAssertions" Version="6.12.0"/>
     <PackageReference Include="coverlet.collector" Version="6.0.2">
@@ -28,6 +29,10 @@
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Roles\Endpoints\Get\" />
   </ItemGroup>
 
 </Project>

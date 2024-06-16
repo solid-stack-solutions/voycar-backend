@@ -20,7 +20,7 @@ public class Tests : TestBase<App>
     public Tests(App app)
     {
         this._app = app;
-        this._context = this._app.GetContext();
+        this._context = this._app.Context;
     }
 
     protected override async Task SetupAsync()
@@ -34,7 +34,7 @@ public class Tests : TestBase<App>
     }
 
     [Fact, Priority(0)]
-    public async Task PostIsValid()
+    public async Task Post_NewRole_ReturnsOk_And_SavesInDb()
     {
         // Arrange
         const string requestName = "JuNiJa(Ke)²";
@@ -42,11 +42,12 @@ public class Tests : TestBase<App>
 
         id = roleRequestData.Id; //pass down id to be used in other test
         // Act
-        var httpResponseMessage = await this._app.Client.POSTAsync<R.Post.SingleUnique, Role>(roleRequestData);
-        var roleInDb = await this._context.Roles.FirstOrDefaultAsync(r => r.Name == roleRequestData.Name);
+        var httpResponseMessage = await this._app.Admin.POSTAsync<R.Post.SingleUnique, Role>(roleRequestData);
 
         // Assert
         httpResponseMessage.StatusCode.Should().Be(HttpStatusCode.OK);
+
+        var roleInDb = await this._context.Roles.FirstOrDefaultAsync(role => role.Name == roleRequestData.Name);
         roleInDb.Should().NotBeNull();
     }
 
