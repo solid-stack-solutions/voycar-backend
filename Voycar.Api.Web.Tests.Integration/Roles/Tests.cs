@@ -17,6 +17,8 @@ using R = Features.Roles.Endpoints;
 public sealed class State : StateFixture
 {
     public Guid Id { get; set; }
+    public const string RoleName1 = "JuNiJa(Ke)²";
+    public const string RoleName2 = "Role2";
 }
 
 public class Tests : TestBase<App, State>
@@ -43,8 +45,7 @@ public class Tests : TestBase<App, State>
     public async Task Post_NewRole_ReturnsOkAndID_And_SavesInDb()
     {
         // Arrange
-        const string requestName = "JuNiJa(Ke)²";
-        var roleRequestData = new Role { Name = requestName };
+        var roleRequestData = new Role { Name = State.RoleName1 };
 
         // Act
         var httpResponse = await this._app.Admin.POSTAsync<R.Post.SingleUnique, Role>(roleRequestData);
@@ -63,7 +64,7 @@ public class Tests : TestBase<App, State>
         this._state.Id = responseEntity.Id; // save ID for later tests
 
         roleInDb.Should().NotBeNull();
-        roleInDb!.Name.Should().Be(requestName);
+        roleInDb!.Name.Should().Be(State.RoleName1);
 
         roleInDb.Id.Should().Be(responseEntity.Id);
     }
@@ -72,8 +73,7 @@ public class Tests : TestBase<App, State>
     public async Task Post_ExistingRole_ReturnsNoContent_And_IsAlreadyInDb()
     {
         // Arrange
-        const string requestName = "JuNiJa(Ke)²";
-        var roleRequestData = new Role { Name = requestName };
+        var roleRequestData = new Role { Name = State.RoleName1 };
 
         // Act
         var httpResponseMessage = await this._app.Admin.POSTAsync<R.Post.SingleUnique, Role>(roleRequestData);
