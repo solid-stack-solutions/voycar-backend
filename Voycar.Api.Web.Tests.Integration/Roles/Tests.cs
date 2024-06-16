@@ -1,7 +1,9 @@
 namespace Voycar.Api.Web.Tests.Integration.Roles;
 
+using System.Text.Json;
 using Context;
 using Entities;
+using Generic;
 using Microsoft.EntityFrameworkCore;
 using Xunit.Priority;
 
@@ -13,6 +15,11 @@ public class Tests : TestBase<App>
     // Always DI the app.cs to access methods
     private readonly App _app;
     private readonly VoycarDbContext _context;
+
+    private readonly JsonSerializerOptions Options = new()
+    {
+        PropertyNameCaseInsensitive = true
+    };
 
     private Guid Id;
     // Setup request client
@@ -33,23 +40,31 @@ public class Tests : TestBase<App>
     }
 
     [Fact, Priority(0)]
-    public async Task Post_NewRole_ReturnsOk_And_SavesInDb()
+    public async Task Post_NewRole_ReturnsOkAndID_And_SavesInDb()
     {
         // Arrange
         const string requestName = "JuNiJa(Ke)²";
         var roleRequestData = new Role { Name = requestName };
 
-        this.Id = roleRequestData.Id; //pass down id to be used in other test
-
         // Act
-        var httpResponseMessage = await this._app.Admin.POSTAsync<R.Post.SingleUnique, Role>(roleRequestData);
+        var httpResponse = await this._app.Admin.POSTAsync<R.Post.SingleUnique, Role>(roleRequestData);
 
-        // Assert
-        httpResponseMessage.StatusCode.Should().Be(HttpStatusCode.OK);
+
+        // Arrange assertion
+        var responseMessage = await httpResponse.Content.ReadAsStringAsync();
+        var responseEntity = JsonSerializer.Deserialize<Entity>(responseMessage, this.Options);
 
         var roleInDb = await this._context.Roles.FirstOrDefaultAsync(role => role.Name == roleRequestData.Name);
+
+        // Assert
+        httpResponse.StatusCode.Should().Be(HttpStatusCode.OK);
+        responseEntity.Should().NotBeNull();
+        responseEntity!.Id.Should().NotBeEmpty();
+
         roleInDb.Should().NotBeNull();
-        // ToDo check name in db element
+        roleInDb!.Name.Should().Be(requestName);
+
+        roleInDb.Id.Should().Be(responseEntity.Id);
     }
 
     [Fact, Priority(1)]
