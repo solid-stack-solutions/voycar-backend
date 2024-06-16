@@ -42,7 +42,7 @@ public class Endpoint : Endpoint<Request, Results<Ok, BadRequest<ErrorResponse>>
     public override async Task HandleAsync(Request req, CancellationToken ct)
     {
         // Check for existing users
-        if (await this._userRepository.Retrieve("email", req.Email.ToLowerInvariant()) is not null)
+        if (await this._userRepository.RetrieveByEmail(req.Email.ToLowerInvariant()) is not null)
         {
             this._logger.LogWarning("User {UserMail} already exists.", req.Email);
             await this.SendErrorsAsync(cancellation: ct);
