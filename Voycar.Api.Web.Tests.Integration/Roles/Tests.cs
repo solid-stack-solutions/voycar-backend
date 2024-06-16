@@ -2,7 +2,6 @@ namespace Voycar.Api.Web.Tests.Integration.Roles;
 
 using Context;
 using Entities;
-using Generic;
 using Microsoft.EntityFrameworkCore;
 using Xunit.Priority;
 
@@ -15,7 +14,7 @@ public class Tests : TestBase<App>
     private readonly App _app;
     private readonly VoycarDbContext _context;
 
-    private Guid id;
+    private Guid Id;
     // Setup request client
     public Tests(App app)
     {
@@ -40,7 +39,7 @@ public class Tests : TestBase<App>
         const string requestName = "JuNiJa(Ke)²";
         var roleRequestData = new Role { Name = requestName };
 
-        this.id = roleRequestData.Id; //pass down id to be used in other test
+        this.Id = roleRequestData.Id; //pass down id to be used in other test
 
         // Act
         var httpResponseMessage = await this._app.Admin.POSTAsync<R.Post.SingleUnique, Role>(roleRequestData);
@@ -75,10 +74,8 @@ public class Tests : TestBase<App>
     public async Task GetIsValid()
     {
         //Arrange
-        var id = this.id;
-        var roleRequestData = id;
+        var roleRequestData = this.Id;
         //Act
-        var httpResponseMessage = await this._app.Client.GETAsync<R.Get.Single, Guid>(roleRequestData);
 
         //Assert
         httpResponseMessage.StatusCode.Should().Be(HttpStatusCode.OK);
@@ -88,8 +85,7 @@ public class Tests : TestBase<App>
     public async Task DeleteIsValid()
     {
         //Arrange
-        var id = this.id;
-        var roleRequestData = id;
+        var roleRequestData = this.Id;
 
         //Act
         var httpResponseMessage = await this._app.Client.GETAsync<R.Delete.Single, Guid>(roleRequestData);
