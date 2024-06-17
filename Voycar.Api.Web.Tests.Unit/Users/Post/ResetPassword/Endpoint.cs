@@ -16,7 +16,7 @@ public class Endpoint : TestBase<App>
     {
         // Arrange
         var fakeUserRepository = A.Fake<IUsers>();
-        var fakeLogger = A.Fake<ILogger<Post.Register.Endpoint>>();
+        var fakeLogger = A.Fake<ILogger<Endpoint>>();
 
         var req = new Request{PasswordResetToken = "resetToken", Password = "newPassword"};
         var user = new User
