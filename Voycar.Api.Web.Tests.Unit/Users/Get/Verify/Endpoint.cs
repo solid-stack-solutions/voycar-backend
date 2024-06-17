@@ -48,4 +48,34 @@ public class Endpoint : TestBase<App>
         Assert.NotNull(rsp);
         Assert.Equal(StatusCodes.Status200OK, rsp.StatusCode);
     }
+
+
+    [Fact]
+    public async Task VerifyUserFailure()
+    {
+        // Arrange
+        var fakeUserRepository = A.Fake<IUsers>();
+        var fakeLogger = A.Fake<ILogger<Post.Register.Endpoint>>();
+
+        var req = new Request{VerificationToken = "randomToken"};
+
+        var ep = Factory.Create<Features.Users.Endpoints.Get.Verify.Endpoint>(ctx =>
+        {
+            ctx.AddTestServices(s =>
+            {
+                s.AddSingleton(fakeUserRepository);
+                s.AddSingleton(fakeLogger);
+            });
+        });
+
+        A.CallTo(() => fakeUserRepository.RetrieveByVerificationToken(req.VerificationToken)).Returns((User?)(null));
+
+        // Act
+        await ep.HandleAsync(req, default);
+        var rsp = ep.HttpContext.Response;
+
+        // Assert
+        Assert.NotNull(rsp);
+        Assert.Equal(StatusCodes.Status400BadRequest, rsp.StatusCode);
+    }
 }
