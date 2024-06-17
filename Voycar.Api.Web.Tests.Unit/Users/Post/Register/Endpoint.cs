@@ -69,9 +69,6 @@ public class Endpoint : TestBase<App>
             });
         });
 
-        ep.Map = new Mapper();
-        A.CallTo(() => ep.Map.ToEntity(req)).Returns(mem);
-
         var member = ep.Map.ToEntity(req);
         var user = new User { Email = req.Email, PasswordHash = "hashedPassword"};
 
