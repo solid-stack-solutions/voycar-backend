@@ -48,4 +48,35 @@ public class Endpoint : TestBase<App>
         Assert.NotNull(rsp);
         Assert.Equal(StatusCodes.Status200OK, rsp.StatusCode);
     }
+
+
+    [Fact]
+    public async Task ResetPasswordFailure_InvalidUser()
+    {
+        // Arrange
+        var fakeUserRepository = A.Fake<IUsers>();
+        var fakeLogger = A.Fake<ILogger<Post.Register.Endpoint>>();
+
+        var req = new Request{PasswordResetToken = "resetToken", Password = "newPassword"};
+
+
+        var ep = Factory.Create<Features.Users.Endpoints.Post.ResetPassword.Endpoint>(ctx =>
+        {
+            ctx.AddTestServices(s =>
+            {
+                s.AddSingleton(fakeUserRepository);
+                s.AddSingleton(fakeLogger);
+            });
+        });
+
+        A.CallTo(() => fakeUserRepository.RetrieveByPasswordResetToken(req.PasswordResetToken)).Returns((User?)null);
+
+        // Act
+        await ep.HandleAsync(req, default);
+        var rsp = ep.HttpContext.Response;
+
+        // Assert
+        Assert.NotNull(rsp);
+        Assert.Equal(StatusCodes.Status400BadRequest, rsp.StatusCode);
+    }
 }
