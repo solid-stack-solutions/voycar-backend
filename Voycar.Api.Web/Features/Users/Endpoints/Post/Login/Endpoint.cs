@@ -24,7 +24,7 @@ public class Endpoint : Endpoint<Request, Results<Ok, BadRequest<ErrorResponse>>
 
     public override async Task HandleAsync(Request req, CancellationToken ct)
     {
-        var user = await this._userRepository.Retrieve("email", req.Email!.ToLowerInvariant());
+        var user = await this._userRepository.RetrieveByEmail(req.Email!.ToLowerInvariant());
 
 
         // Check if user entered valid credentials and verified his email

@@ -10,21 +10,16 @@ public class Users : Generic.Repository.Repository<User>, IUsers
 
     public Task<User?> RetrieveByVerificationToken(string verificationToken)
     {
-        return this._context.Users.FirstOrDefaultAsync(
-            member => member.VerificationToken == verificationToken);
+        return this._context.Users.FirstOrDefaultAsync(member => member.VerificationToken == verificationToken);
     }
 
-    public Task<User?> Retrieve(string attribute, string? value)
+    public Task<User?> RetrieveByEmail(string email)
     {
-        return attribute switch
-        {
-            "email" => this.dbSet.FirstOrDefaultAsync(
-                user => user.Email == value),
+        return this.dbSet.FirstOrDefaultAsync(user => user.Email == email);
+    }
 
-            "passwordResetToken" => this.dbSet.FirstOrDefaultAsync(
-                user => user.PasswordResetToken == value),
-
-            _ => throw new ArgumentException("Invalid property name", nameof(attribute))
-        };
+    public Task<User?> RetrieveByPasswordResetToken(string resetToken)
+    {
+        return this.dbSet.FirstOrDefaultAsync(user => user.PasswordResetToken == resetToken);
     }
 }
