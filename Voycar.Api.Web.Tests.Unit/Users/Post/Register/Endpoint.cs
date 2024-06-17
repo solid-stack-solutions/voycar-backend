@@ -42,6 +42,21 @@ public class Endpoint : TestBase<App>
             PhoneNumber = "test"
         };
 
+        var mem = new Member
+        {
+            Id = new Guid("E5180CD2-A399-4EE3-AAE3-D909FA25AFF3"),
+            FirstName = "testFName",
+            LastName = "testLName",
+            Street = "test",
+            HouseNumber = "test",
+            PostalCode = "test",
+            City = "test",
+            Country = "test",
+            BirthDate = new DateOnly(2000, 12, 12),
+            BirthPlace = "test",
+            PhoneNumber = "test"
+        };
+
         var ep = Factory.Create<Features.Users.Endpoints.Post.Register.Endpoint>(ctx =>
         {
             ctx.AddTestServices(s =>
@@ -53,6 +68,9 @@ public class Endpoint : TestBase<App>
                 s.AddSingleton(fakeLogger);
             });
         });
+
+        ep.Map = new Mapper();
+        A.CallTo(() => ep.Map.ToEntity(req)).Returns(mem);
 
         var member = ep.Map.ToEntity(req);
         var user = new User { Email = req.Email, PasswordHash = "hashedPassword"};
@@ -74,7 +92,7 @@ public class Endpoint : TestBase<App>
 
 
     [Fact]
-    public async Task RegisterUserFailure()
+    public async Task RegisterUserFailure_UserAlreadyExists()
     {
         // Arrange
         var fakeMemberRepository = A.Fake<IMembers>();
