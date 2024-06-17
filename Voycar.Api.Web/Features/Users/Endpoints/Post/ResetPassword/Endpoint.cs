@@ -25,7 +25,7 @@ public class Endpoint : Endpoint<Request, Results<Ok, BadRequest<ErrorResponse>>
     public override async Task HandleAsync(Request req, CancellationToken ct)
     {
         // Checks whether there is a user for the request
-        var user = await this._userRepository.Retrieve("passwordResetToken", req.PasswordResetToken);
+        var user = await this._userRepository.RetrieveByPasswordResetToken(req.PasswordResetToken);
 
         if (user is null || user.ResetTokenExpires < DateTime.UtcNow)
         {

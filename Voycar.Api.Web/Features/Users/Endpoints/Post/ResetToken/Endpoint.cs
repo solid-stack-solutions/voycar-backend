@@ -31,7 +31,7 @@ public class Endpoint : Endpoint<Request, Results<Ok<Response>, BadRequest<Error
     public override async Task HandleAsync(Request req, CancellationToken ct)
     {
         // Checks whether there is a user for the request
-        var user = await this._userRepository.Retrieve("email", req.Email.ToLowerInvariant());
+        var user = await this._userRepository.RetrieveByEmail(req.Email.ToLowerInvariant());
 
         if (user is null)
         {
