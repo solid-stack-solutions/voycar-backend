@@ -25,7 +25,7 @@ public class Endpoint : TestBase<App>
             Email = "test@test.de",
             PasswordHash = "passwordHash",
             PasswordResetToken = "resetToken",
-            ResetTokenExpires = new DateTime(DateTime.UtcNow.Ticks)
+            ResetTokenExpires = new DateTime(DateTime.UtcNow.Ticks).AddDays(1)
         };
 
         var ep = Factory.Create<Features.Users.Endpoints.Post.ResetPassword.Endpoint>(ctx =>
@@ -37,7 +37,7 @@ public class Endpoint : TestBase<App>
             });
         });
 
-        A.CallTo(() => fakeUserRepository.RetrieveByVerificationToken(req.PasswordResetToken)).Returns(user);
+        A.CallTo(() => fakeUserRepository.RetrieveByPasswordResetToken(req.PasswordResetToken)).Returns(user);
         A.CallTo(() => fakeUserRepository.Update(user)).Returns(true);
 
         // Act
