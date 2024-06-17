@@ -51,7 +51,7 @@ public class Tests : TestBase<App, State>
         // Assert
         httpResponse.StatusCode.Should().Be(HttpStatusCode.OK);
         response.Id.Should().NotBeEmpty();
-        this._state.Id = response.Id; // save ID for later tests
+        this._state.Id = response.Id; // Save ID for later tests
 
         roleInDb.Should().NotBeNull();
         roleInDb!.Id.Should().Be(response.Id);
