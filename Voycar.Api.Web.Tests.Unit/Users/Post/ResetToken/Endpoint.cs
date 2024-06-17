@@ -52,4 +52,36 @@ public class Endpoint : TestBase<App>
         Assert.NotNull(rsp);
         Assert.Equal(StatusCodes.Status200OK, rsp.StatusCode);
     }
+
+
+    [Fact]
+    public async Task ResetTokenFailure()
+    {
+        // Arrange
+        var fakeUserRepository = A.Fake<IUsers>();
+        var fakeEmailService = A.Fake<IEmailService>();
+        var fakeLogger = A.Fake<ILogger<Endpoint>>();
+
+        var req = new Request { Email = "test@test.de" };
+
+        var ep = Factory.Create<Features.Users.Endpoints.Post.ResetToken.Endpoint>(ctx =>
+        {
+            ctx.AddTestServices(s =>
+            {
+                s.AddSingleton(fakeUserRepository);
+                s.AddSingleton(fakeEmailService);
+                s.AddSingleton(fakeLogger);
+            });
+        });
+
+        A.CallTo(() => fakeUserRepository.RetrieveByEmail(req.Email)).Returns((User?)null);
+
+        // Act
+        await ep.HandleAsync(req, default);
+        var rsp = ep.HttpContext.Response;
+
+        // Assert
+        Assert.NotNull(rsp);
+        Assert.Equal(StatusCodes.Status400BadRequest, rsp.StatusCode);
+    }
 }
