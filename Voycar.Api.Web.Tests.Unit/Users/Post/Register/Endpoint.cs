@@ -20,8 +20,9 @@ public class Endpoint : TestBase<App>
     private readonly ILogger fakeLogger = A.Fake<ILogger<Endpoint>>();
 
 
-    private Features.Users.Endpoints.Post.Register.Endpoint SetupEndpoint() =>
-        Factory.Create<Features.Users.Endpoints.Post.Register.Endpoint>(ctx =>
+    private Features.Users.Endpoints.Post.Register.Endpoint SetupEndpoint()
+    {
+        return Factory.Create<Features.Users.Endpoints.Post.Register.Endpoint>(ctx =>
         {
             ctx.AddTestServices(s =>
             {
@@ -32,6 +33,8 @@ public class Endpoint : TestBase<App>
                 s.AddSingleton(this.fakeLogger);
             });
         });
+    }
+
 
 
     [Fact]
