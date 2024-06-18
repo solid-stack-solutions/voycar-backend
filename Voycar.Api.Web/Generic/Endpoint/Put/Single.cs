@@ -7,18 +7,18 @@ public abstract class Single<TEntity>
     where TEntity : Entity
 {
     protected readonly IRepository<TEntity> _repository;
-    protected readonly string[] roles;
+    protected readonly string[] Roles;
 
     protected Single(IRepository<TEntity> repository, string[] roles)
     {
         this._repository = repository;
-        this.roles = roles;
+        this.Roles = roles;
     }
 
     public override void Configure()
     {
         this.Put(typeof(TEntity).Name.ToLowerInvariant() + "/{id}");
-        this.Roles(this.roles);
+        this.Roles(this.Roles);
         this.Summary(s =>
         {
             s.Summary = $"Update {typeof(TEntity).Name}";

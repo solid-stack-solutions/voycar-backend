@@ -9,11 +9,10 @@ using Microsoft.AspNetCore.Http;
 
 public class All : TestBase<App>
 {
-    private readonly JsonSerializerOptions options = new()
+    private readonly JsonSerializerOptions Options = new()
     {
         PropertyNameCaseInsensitive = true
     };
-
 
     [Fact]
     public async Task RetrieveAllRolesSuccessful()
@@ -40,7 +39,7 @@ public class All : TestBase<App>
         responseBodyStream.Seek(0, SeekOrigin.Begin);
         var responseBodyText = await new StreamReader(responseBodyStream).ReadToEndAsync();
 
-        var retrievedRoles = JsonSerializer.Deserialize<IEnumerable<Role>>(responseBodyText, this.options);
+        var retrievedRoles = JsonSerializer.Deserialize<IEnumerable<Role>>(responseBodyText, this.Options);
         var rsp = ep.HttpContext.Response;
 
         // Assert

@@ -10,7 +10,7 @@ public class Roles : Generic.Repository.Repository<Role>, IRoles
 
     public Task<Role?> Retrieve(string name)
     {
-        return this.dbSet.FirstOrDefaultAsync(
+        return this.DbSet.FirstOrDefaultAsync(
             role => role.Name == name);
     }
 }

@@ -9,8 +9,7 @@ using Microsoft.AspNetCore.Http;
 
 public class Single : TestBase<App>
 {
-
-    private readonly JsonSerializerOptions options = new()
+    private readonly JsonSerializerOptions Options = new()
     {
         PropertyNameCaseInsensitive = true
     };
@@ -38,7 +37,7 @@ public class Single : TestBase<App>
         responseBodyStream.Seek(0, SeekOrigin.Begin);
         var responseBodyText  = await new StreamReader(responseBodyStream).ReadToEndAsync();
 
-        var retrievedRole = JsonSerializer.Deserialize<Role>(responseBodyText, this.options);
+        var retrievedRole = JsonSerializer.Deserialize<Role>(responseBodyText, this.Options);
         var rsp = ep.HttpContext.Response;
 
         // Assert

@@ -15,11 +15,11 @@ public class Users : Generic.Repository.Repository<User>, IUsers
 
     public Task<User?> RetrieveByEmail(string email)
     {
-        return this.dbSet.FirstOrDefaultAsync(user => user.Email == email);
+        return this.DbSet.FirstOrDefaultAsync(user => user.Email == email);
     }
 
     public Task<User?> RetrieveByPasswordResetToken(string resetToken)
     {
-        return this.dbSet.FirstOrDefaultAsync(user => user.PasswordResetToken == resetToken);
+        return this.DbSet.FirstOrDefaultAsync(user => user.PasswordResetToken == resetToken);
     }
 }

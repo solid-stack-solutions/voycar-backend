@@ -7,18 +7,18 @@ public abstract class All<TEntity>
     where TEntity : Entity
 {
     protected readonly IRepository<TEntity> _repository;
-    protected readonly string[] roles;
+    protected readonly string[] Roles;
 
     protected All(IRepository<TEntity> repository, string[] roles)
     {
         this._repository = repository;
-        this.roles = roles;
+        this.Roles = roles;
     }
 
     public override void Configure()
     {
         this.Get(typeof(TEntity).Name.ToLowerInvariant() + "/all");
-        this.Roles(this.roles);
+        this.Roles(this.Roles);
         this.Summary(s =>
         {
             s.Summary = $"Retrieve all {typeof(TEntity).Name}s";
