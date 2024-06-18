@@ -11,14 +11,28 @@ using Microsoft.Extensions.Logging;
 
 public class Endpoint : TestBase<App>
 {
+    private readonly IUsers FakeUserRepository = A.Fake<IUsers>();
+    private readonly ILogger FakeLogger = A.Fake<ILogger<Endpoint>>();
+    private readonly Request Request = new() { PasswordResetToken = "resetToken", Password = "newPassword" };
+
+
+    private Features.Users.Endpoints.Post.ResetPassword.Endpoint SetupEndpoint()
+    {
+        return Factory.Create<Features.Users.Endpoints.Post.ResetPassword.Endpoint>(ctx =>
+        {
+            ctx.AddTestServices(s =>
+            {
+                s.AddSingleton(this.FakeUserRepository);
+                s.AddSingleton(this.FakeLogger);
+            });
+        });
+    }
+
+
     [Fact]
-    public async Task ResetPasswordSuccessful()
+    public async Task Reset_Password_Successful_And_Return_Ok()
     {
         // Arrange
-        var fakeUserRepository = A.Fake<IUsers>();
-        var fakeLogger = A.Fake<ILogger<Endpoint>>();
-
-        var req = new Request{PasswordResetToken = "resetToken", Password = "newPassword"};
         var user = new User
         {
             Id = new Guid("47EB02FB-AA5B-4769-8B34-D23EC48DE506"),
@@ -28,20 +42,14 @@ public class Endpoint : TestBase<App>
             ResetTokenExpires = new DateTime(DateTime.UtcNow.Ticks).AddDays(1)
         };
 
-        var ep = Factory.Create<Features.Users.Endpoints.Post.ResetPassword.Endpoint>(ctx =>
-        {
-            ctx.AddTestServices(s =>
-            {
-                s.AddSingleton(fakeUserRepository);
-                s.AddSingleton(fakeLogger);
-            });
-        });
+        var ep = this.SetupEndpoint();
 
-        A.CallTo(() => fakeUserRepository.RetrieveByPasswordResetToken(req.PasswordResetToken)).Returns(user);
-        A.CallTo(() => fakeUserRepository.Update(user)).Returns(true);
+        A.CallTo(() => this.FakeUserRepository.RetrieveByPasswordResetToken(this.Request.PasswordResetToken))
+            .Returns(user);
+        A.CallTo(() => this.FakeUserRepository.Update(user)).Returns(true);
 
         // Act
-        await ep.HandleAsync(req, default);
+        await ep.HandleAsync(this.Request, default);
         var rsp = ep.HttpContext.Response;
 
         // Assert
@@ -51,28 +59,16 @@ public class Endpoint : TestBase<App>
 
 
     [Fact]
-    public async Task ResetPasswordFailure_InvalidUser()
+    public async Task Reset_Password_For_Invalid_User_Fails_And_Return_BadRequest()
     {
         // Arrange
-        var fakeUserRepository = A.Fake<IUsers>();
-        var fakeLogger = A.Fake<ILogger<Post.Register.Endpoint>>();
+        var ep = this.SetupEndpoint();
 
-        var req = new Request{PasswordResetToken = "resetToken", Password = "newPassword"};
-
-
-        var ep = Factory.Create<Features.Users.Endpoints.Post.ResetPassword.Endpoint>(ctx =>
-        {
-            ctx.AddTestServices(s =>
-            {
-                s.AddSingleton(fakeUserRepository);
-                s.AddSingleton(fakeLogger);
-            });
-        });
-
-        A.CallTo(() => fakeUserRepository.RetrieveByPasswordResetToken(req.PasswordResetToken)).Returns((User?)null);
+        A.CallTo(() => this.FakeUserRepository.RetrieveByPasswordResetToken(this.Request.PasswordResetToken))
+            .Returns((User?)null);
 
         // Act
-        await ep.HandleAsync(req, default);
+        await ep.HandleAsync(this.Request, default);
         var rsp = ep.HttpContext.Response;
 
         // Assert
@@ -82,35 +78,25 @@ public class Endpoint : TestBase<App>
 
 
     [Fact]
-    public async Task ResetPasswordFailure_ResetResetToken()
+    public async Task Reset_Password_For_Invalid_Reset_Token_Fails_And_Return_BadRequest()
     {
         // Arrange
-        var fakeUserRepository = A.Fake<IUsers>();
-        var fakeLogger = A.Fake<ILogger<Post.Register.Endpoint>>();
-
-        var req = new Request{PasswordResetToken = "resetToken", Password = "newPassword"};
         var user = new User
         {
             Id = new Guid("47EB02FB-AA5B-4769-8B34-D23EC48DE506"),
             Email = "test@test.de",
             PasswordHash = "passwordHash",
             PasswordResetToken = "resetToken",
-            ResetTokenExpires = new DateTime(2023,12,12)
+            ResetTokenExpires = new DateTime(2023, 12, 12)
         };
 
-        var ep = Factory.Create<Features.Users.Endpoints.Post.ResetPassword.Endpoint>(ctx =>
-        {
-            ctx.AddTestServices(s =>
-            {
-                s.AddSingleton(fakeUserRepository);
-                s.AddSingleton(fakeLogger);
-            });
-        });
+        var ep = this.SetupEndpoint();
 
-        A.CallTo(() => fakeUserRepository.RetrieveByPasswordResetToken(req.PasswordResetToken)).Returns(user);
+        A.CallTo(() => this.FakeUserRepository.RetrieveByPasswordResetToken(this.Request.PasswordResetToken))
+            .Returns(user);
 
         // Act
-        await ep.HandleAsync(req, default);
+        await ep.HandleAsync(this.Request, default);
         var rsp = ep.HttpContext.Response;
 
         // Assert
