@@ -11,20 +11,22 @@ using Voycar.Api.Web.Features.Users.Endpoints.Post.Register;
 using Voycar.Api.Web.Features.Users.Repository;
 using Service;
 
+
 public class Endpoint : TestBase<App>
 {
-    private readonly IMembers fakeMemberRepository = A.Fake<IMembers>();
-    private readonly IUsers fakeUserRepository = A.Fake<IUsers>();
-    private readonly IRoles fakeRoleRepository = A.Fake<IRoles>();
-    private readonly IEmailService fakeEmailService = A.Fake<IEmailService>();
-    private readonly ILogger fakeLogger = A.Fake<ILogger<Endpoint>>();
+    private readonly IMembers FakeMemberRepository = A.Fake<IMembers>();
+    private readonly IUsers FakeUserRepository = A.Fake<IUsers>();
+    private readonly IRoles FakeRoleRepository = A.Fake<IRoles>();
+    private readonly IEmailService FakeEmailService = A.Fake<IEmailService>();
+    private readonly ILogger FakeLogger = A.Fake<ILogger<Endpoint>>();
 
-    private readonly Request request = new()
+    private readonly Request Request = new()
     {
         Email = "test@test.de",
         Password = "notsafe987",
         BirthDate = new DateOnly(2000, 12, 12),
     };
+
 
     private Features.Users.Endpoints.Post.Register.Endpoint SetupEndpoint()
     {
@@ -32,11 +34,11 @@ public class Endpoint : TestBase<App>
         {
             ctx.AddTestServices(s =>
             {
-                s.AddSingleton(this.fakeUserRepository);
-                s.AddSingleton(this.fakeMemberRepository);
-                s.AddSingleton(this.fakeRoleRepository);
-                s.AddSingleton(this.fakeEmailService);
-                s.AddSingleton(this.fakeLogger);
+                s.AddSingleton(this.FakeUserRepository);
+                s.AddSingleton(this.FakeMemberRepository);
+                s.AddSingleton(this.FakeRoleRepository);
+                s.AddSingleton(this.FakeEmailService);
+                s.AddSingleton(this.FakeLogger);
             });
         });
     }
@@ -50,17 +52,17 @@ public class Endpoint : TestBase<App>
 
         var ep = this.SetupEndpoint();
 
-        var member = ep.Map.ToEntity(this.request);
-        var user = new User { Email = this.request.Email, PasswordHash = "hashedPassword" };
+        var member = ep.Map.ToEntity(this.Request);
+        var user = new User { Email = this.Request.Email, PasswordHash = "hashedPassword" };
 
-        A.CallTo(() => this.fakeUserRepository.RetrieveByEmail(this.request.Email)).Returns((User?)null);
-        A.CallTo(() => this.fakeRoleRepository.Retrieve(fakeRole.Name)).Returns(fakeRole);
-        A.CallTo(() => this.fakeMemberRepository.Create(member)).Returns(member.Id);
-        A.CallTo(() => this.fakeUserRepository.Create(user)).Returns(user.Id);
-        A.CallTo(() => this.fakeEmailService.SendVerificationEmail(user)).DoesNothing();
+        A.CallTo(() => this.FakeUserRepository.RetrieveByEmail(this.Request.Email)).Returns((User?)null);
+        A.CallTo(() => this.FakeRoleRepository.Retrieve(fakeRole.Name)).Returns(fakeRole);
+        A.CallTo(() => this.FakeMemberRepository.Create(member)).Returns(member.Id);
+        A.CallTo(() => this.FakeUserRepository.Create(user)).Returns(user.Id);
+        A.CallTo(() => this.FakeEmailService.SendVerificationEmail(user)).DoesNothing();
 
         // Act
-        await ep.HandleAsync(this.request, default);
+        await ep.HandleAsync(this.Request, default);
         var rsp = ep.HttpContext.Response;
 
         // Assert
@@ -74,12 +76,12 @@ public class Endpoint : TestBase<App>
     {
         // Arrange
         var ep = this.SetupEndpoint();
-        var user = new User { Email = this.request.Email, PasswordHash = "hashedPassword" };
+        var user = new User { Email = this.Request.Email, PasswordHash = "hashedPassword" };
 
-        A.CallTo(() => this.fakeUserRepository.RetrieveByEmail(this.request.Email)).Returns(user);
+        A.CallTo(() => this.FakeUserRepository.RetrieveByEmail(this.Request.Email)).Returns(user);
 
         // Act
-        await ep.HandleAsync(this.request, default);
+        await ep.HandleAsync(this.Request, default);
         var rsp = ep.HttpContext.Response;
 
         // Assert
