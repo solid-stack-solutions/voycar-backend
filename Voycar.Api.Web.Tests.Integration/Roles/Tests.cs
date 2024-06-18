@@ -24,15 +24,16 @@ public class Tests : TestBase<App, State>
 {
     // Always DI the app.cs to access methods
     private readonly App _app;
-    private readonly VoycarDbContext _context;
     private readonly State _state;
+
+    private readonly VoycarDbContext Context;
 
     // Setup request client
     public Tests(App app, State state)
     {
         this._app = app;
-        this._context = this._app.Context;
         this._state = state;
+        this.Context = this._app.Context;
     }
 
     [Fact, Priority(0)]
@@ -46,7 +47,7 @@ public class Tests : TestBase<App, State>
 
 
         // Arrange assertion
-        var roleInDb = await this._context.Roles.FirstOrDefaultAsync(role => role.Name == roleRequestData.Name);
+        var roleInDb = await this.Context.Roles.FirstOrDefaultAsync(role => role.Name == roleRequestData.Name);
 
         // Assert
         httpResponse.StatusCode.Should().Be(HttpStatusCode.OK);
@@ -67,7 +68,7 @@ public class Tests : TestBase<App, State>
         var httpResponse = await this._app.Admin.POSTAsync<R.Post.SingleUnique, Role>(roleRequestData);
 
         // Arrange assertion
-        var roleInDb = await this._context.Roles.FirstOrDefaultAsync(role => role.Name == roleRequestData.Name);
+        var roleInDb = await this.Context.Roles.FirstOrDefaultAsync(role => role.Name == roleRequestData.Name);
 
         // Assert
         httpResponse.StatusCode.Should().Be(HttpStatusCode.NoContent);
@@ -118,7 +119,7 @@ public class Tests : TestBase<App, State>
         var httpResponse = await this._app.Admin.PUTAsync<R.Put.Single, Role>(roleRequestData);
 
         // Arrange assert
-        var roleInDb = await this._context.Roles.FirstOrDefaultAsync(role => role.Name == roleRequestData.Name);
+        var roleInDb = await this.Context.Roles.FirstOrDefaultAsync(role => role.Name == roleRequestData.Name);
 
         // Assert
         httpResponse.StatusCode.Should().Be(HttpStatusCode.OK);
@@ -137,7 +138,7 @@ public class Tests : TestBase<App, State>
         var httpResponse = await this._app.Admin.DeleteAsync($"role/{requestID}");
 
         // Arrange assertion
-        var roleInDb = await this._context.Roles.FirstOrDefaultAsync(role => role.Name == State.RoleName);
+        var roleInDb = await this.Context.Roles.FirstOrDefaultAsync(role => role.Name == State.RoleName);
 
         // Assert
         httpResponse.StatusCode.Should().Be(HttpStatusCode.OK);

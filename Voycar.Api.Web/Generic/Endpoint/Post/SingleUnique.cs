@@ -15,7 +15,7 @@ public abstract class SingleUnique<TEntity>
     public override void Configure()
     {
         this.Post(typeof(TEntity).Name.ToLowerInvariant());
-        this.Roles(this.roles);
+        this.Roles(this.Roles);
         this.Summary(s =>
         {
             s.Summary = $"Create unique {typeof(TEntity).Name}";

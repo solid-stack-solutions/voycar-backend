@@ -7,12 +7,12 @@ using Context;
 public class Repository<TEntity> : IRepository<TEntity> where TEntity : Entity
 {
     protected readonly VoycarDbContext _context;
-    protected readonly DbSet<TEntity> dbSet;
+    protected readonly DbSet<TEntity> DbSet;
 
     protected Repository(VoycarDbContext context)
     {
         this._context = context;
-        this.dbSet = this._context.Set<TEntity>();
+        this.DbSet = this._context.Set<TEntity>();
     }
 
     /// <summary>
@@ -39,13 +39,13 @@ public class Repository<TEntity> : IRepository<TEntity> where TEntity : Entity
     /// </returns>
     public Guid? Create(TEntity entity)
     {
-        this.dbSet.Add(entity);
+        this.DbSet.Add(entity);
         return this.SaveChanges() ? entity.Id : null;
     }
 
     public TEntity? Retrieve(Guid id)
     {
-        return this.dbSet.Find(id);
+        return this.DbSet.Find(id);
     }
 
     /// <returns>
@@ -53,7 +53,7 @@ public class Repository<TEntity> : IRepository<TEntity> where TEntity : Entity
     /// </returns>
     public bool Update(TEntity entity)
     {
-        this.dbSet.Update(entity);
+        this.DbSet.Update(entity);
         return this.SaveChanges();
     }
 
@@ -68,13 +68,13 @@ public class Repository<TEntity> : IRepository<TEntity> where TEntity : Entity
             return false;
         }
 
-        this.dbSet.Remove(entity);
+        this.DbSet.Remove(entity);
         return this.SaveChanges();
     }
 
     public IEnumerable<TEntity> RetrieveAll()
     {
-        return this.dbSet.ToList();
+        return this.DbSet.ToList();
     }
 
     /// <summary>
@@ -108,7 +108,7 @@ public class Repository<TEntity> : IRepository<TEntity> where TEntity : Entity
         // AsEnumerable() is necessary for explicit client evaluation,
         // as Any() has no server-side translation.
         // https://learn.microsoft.com/en-us/ef/core/querying/client-eval
-        if (this.dbSet.AsEnumerable().Any(e => EntitiesAreEqual(e, entity)))
+        if (this.DbSet.AsEnumerable().Any(e => EntitiesAreEqual(e, entity)))
         {
             return null;
         }

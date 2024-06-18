@@ -6,12 +6,11 @@ using FakeItEasy;
 using Features.Roles.Repository;
 using Generic;
 using Microsoft.AspNetCore.Http;
-using Microsoft.VisualBasic;
 
 
 public class SingleUnique : TestBase<App>
 {
-    private readonly JsonSerializerOptions options = new()
+    private readonly JsonSerializerOptions Options = new()
     {
         PropertyNameCaseInsensitive = true
     };
@@ -38,7 +37,7 @@ public class SingleUnique : TestBase<App>
 
         responseBodyStream.Seek(0, SeekOrigin.Begin);
         var responseBodyText = await new StreamReader(responseBodyStream).ReadToEndAsync();
-        var uniqueId = JsonSerializer.Deserialize<Entity>(responseBodyText, this.options);
+        var uniqueId = JsonSerializer.Deserialize<Entity>(responseBodyText, this.Options);
         var rsp = ep.HttpContext.Response;
 
         // Assert

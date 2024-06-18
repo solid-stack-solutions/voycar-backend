@@ -3,7 +3,6 @@ namespace Voycar.Api.Web.Tests.Unit.Roles.Endpoints.Delete;
 using Entities;
 using FakeItEasy;
 using Features.Roles.Repository;
-using Generic;
 using Microsoft.AspNetCore.Http;
 
 
