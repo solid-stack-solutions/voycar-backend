@@ -36,7 +36,6 @@ public class Endpoint : TestBase<App>
     }
 
 
-
     [Fact]
     public async Task Register_New_User_Successful_And_Return_Ok()
     {
