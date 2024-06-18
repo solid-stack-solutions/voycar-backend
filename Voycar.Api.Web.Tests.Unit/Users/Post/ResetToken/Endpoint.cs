@@ -13,15 +13,30 @@ using Service;
 
 public class Endpoint : TestBase<App>
 {
+    private readonly IUsers FakeUserRepository = A.Fake<IUsers>();
+    private readonly IEmailService FakeEmailService = A.Fake<IEmailService>();
+    private readonly ILogger FakeLogger = A.Fake<ILogger<Endpoint>>();
+    private readonly Request Request = new() { Email = "test@test.de" };
+
+
+    private Features.Users.Endpoints.Post.ResetToken.Endpoint SetupEndpoint()
+    {
+        return Factory.Create<Features.Users.Endpoints.Post.ResetToken.Endpoint>(ctx =>
+        {
+            ctx.AddTestServices(s =>
+            {
+                s.AddSingleton(this.FakeUserRepository);
+                s.AddSingleton(this.FakeEmailService);
+                s.AddSingleton(this.FakeLogger);
+            });
+        });
+    }
+
+
     [Fact]
-    public async Task ResetTokenSuccessful()
+    public async Task Create_ResetToken_Successful_And_Return_Ok()
     {
         // Arrange
-        var fakeUserRepository = A.Fake<IUsers>();
-        var fakeEmailService = A.Fake<IEmailService>();
-        var fakeLogger = A.Fake<ILogger<Endpoint>>();
-
-        var req = new Request { Email = "test@test.de" };
         var user = new User
         {
             Id = new Guid("47EB02FB-AA5B-4769-8B34-D23EC48DE506"),
@@ -31,21 +46,13 @@ public class Endpoint : TestBase<App>
             ResetTokenExpires = new DateTime(DateTime.UtcNow.Ticks).AddDays(1)
         };
 
-        var ep = Factory.Create<Features.Users.Endpoints.Post.ResetToken.Endpoint>(ctx =>
-        {
-            ctx.AddTestServices(s =>
-            {
-                s.AddSingleton(fakeUserRepository);
-                s.AddSingleton(fakeEmailService);
-                s.AddSingleton(fakeLogger);
-            });
-        });
+        var ep = this.SetupEndpoint();
 
-        A.CallTo(() => fakeUserRepository.RetrieveByEmail(req.Email)).Returns(user);
-        A.CallTo(() => fakeUserRepository.Update(user)).Returns(true);
+        A.CallTo(() => this.FakeUserRepository.RetrieveByEmail(this.Request.Email)).Returns(user);
+        A.CallTo(() => this.FakeUserRepository.Update(user)).Returns(true);
 
         // Act
-        await ep.HandleAsync(req, default);
+        await ep.HandleAsync(this.Request, default);
         var rsp = ep.HttpContext.Response;
 
         // Assert
@@ -55,29 +62,15 @@ public class Endpoint : TestBase<App>
 
 
     [Fact]
-    public async Task ResetTokenFailure()
+    public async Task Create_ResetToken_Fails_And_Returns_BadRequest()
     {
         // Arrange
-        var fakeUserRepository = A.Fake<IUsers>();
-        var fakeEmailService = A.Fake<IEmailService>();
-        var fakeLogger = A.Fake<ILogger<Endpoint>>();
+        var ep = this.SetupEndpoint();
 
-        var req = new Request { Email = "test@test.de" };
-
-        var ep = Factory.Create<Features.Users.Endpoints.Post.ResetToken.Endpoint>(ctx =>
-        {
-            ctx.AddTestServices(s =>
-            {
-                s.AddSingleton(fakeUserRepository);
-                s.AddSingleton(fakeEmailService);
-                s.AddSingleton(fakeLogger);
-            });
-        });
-
-        A.CallTo(() => fakeUserRepository.RetrieveByEmail(req.Email)).Returns((User?)null);
+        A.CallTo(() => this.FakeUserRepository.RetrieveByEmail(this.Request.Email)).Returns((User?)null);
 
         // Act
-        await ep.HandleAsync(req, default);
+        await ep.HandleAsync(this.Request, default);
         var rsp = ep.HttpContext.Response;
 
         // Assert
