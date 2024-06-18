@@ -64,7 +64,7 @@ public class Endpoint : TestBase<App>
         // Arrange
         var ep = this.SetupEndpoint();
         A.CallTo(() => this.FakeUserRepository.RetrieveByVerificationToken(this.Request.VerificationToken))
-            .Returns((User?)(null));
+            .Returns((User?)null);
 
         // Act
         await ep.HandleAsync(this.Request, default);
