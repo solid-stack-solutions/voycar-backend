@@ -12,6 +12,10 @@ using Voycar.Api.Web.Service;
 
 try
 {
+    // Load .env file from current directory
+    // If there is none: search parent directories
+    DotNetEnv.Env.TraversePath().Load();
+
     var builder = WebApplication.CreateBuilder(args);
 
     builder.Host.UseSerilog((context, configuration) =>
