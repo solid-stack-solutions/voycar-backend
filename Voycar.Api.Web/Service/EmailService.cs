@@ -12,9 +12,9 @@ using Entities;
 /// </summary>
 public class EmailService : IEmailService
 {
-    private readonly string? SmtpEmail  = Environment.GetEnvironmentVariable("SmtpEmail");
     private readonly string? SmtpAppPassword = Environment.GetEnvironmentVariable("SmtpAppPassword");
 
+    private const string SmtpEmail = "voycar.dev@gmail.com";
     private const string SmtpHostAddress = "smtp.gmail.com";
     private const int SmtpPort = 587;
 
@@ -50,13 +50,13 @@ public class EmailService : IEmailService
 
     private void ConfigureSmtpClient(SmtpClient smtpClient)
     {
-        if (string.IsNullOrEmpty(this.SmtpEmail) || string.IsNullOrEmpty(this.SmtpAppPassword))
+        if (string.IsNullOrEmpty(SmtpEmail) || string.IsNullOrEmpty(this.SmtpAppPassword))
         {
             throw new InvalidOperationException("SMTP email or password environment variables are not set.");
         }
 
         smtpClient.Connect(SmtpHostAddress, SmtpPort, SecureSocketOptions.StartTls);
-        smtpClient.Authenticate(this.SmtpEmail, this.SmtpAppPassword);
+        smtpClient.Authenticate(SmtpEmail, this.SmtpAppPassword);
     }
 
 
@@ -77,7 +77,7 @@ public class EmailService : IEmailService
     private MimeMessage CreateVerificationEmail(User user, string verificationLink)
     {
         var email = new MimeMessage();
-        email.From.Add(MailboxAddress.Parse(this.SmtpEmail));
+        email.From.Add(MailboxAddress.Parse(SmtpEmail));
         email.To.Add(MailboxAddress.Parse(user.Email));
         email.Subject = "Voycar-Konto-Verifizierung";
 
@@ -98,7 +98,7 @@ public class EmailService : IEmailService
     private MimeMessage CreatePasswordResetEmail(User user, string passwordResetLink)
     {
         var email = new MimeMessage();
-        email.From.Add(MailboxAddress.Parse(this.SmtpEmail));
+        email.From.Add(MailboxAddress.Parse(SmtpEmail));
         email.To.Add(MailboxAddress.Parse(user.Email));
         email.Subject = "Voycar-Passwort-Reset";
 
