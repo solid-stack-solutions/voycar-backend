@@ -7,7 +7,7 @@ public abstract class All<TEntity>
     where TEntity : Entity
 {
     protected readonly IRepository<TEntity> _repository;
-    protected readonly string[] Roles;
+    protected new readonly string[] Roles;
 
     protected All(IRepository<TEntity> repository, string[] roles)
     {

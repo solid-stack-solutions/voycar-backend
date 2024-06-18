@@ -7,7 +7,7 @@ public abstract class Single<TEntity>
     where TEntity : Entity
 {
     protected readonly IRepository<TEntity> _repository;
-    protected readonly string[] Roles;
+    protected new readonly string[] Roles;
 
     protected Single(IRepository<TEntity> repository, string[] roles)
     {
