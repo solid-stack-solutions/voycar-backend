@@ -3,7 +3,6 @@ namespace Voycar.Api.Web.Tests.Unit.Users.Post.Register;
 using FakeItEasy;
 using Features.Members.Repository;
 using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Entities;
@@ -15,71 +14,55 @@ using Service;
 
 public class Endpoint : TestBase<App>
 {
-    [Fact]
-    public async Task RegisterUserSuccessful()
+    private readonly IMembers FakeMemberRepository = A.Fake<IMembers>();
+    private readonly IUsers FakeUserRepository = A.Fake<IUsers>();
+    private readonly IRoles FakeRoleRepository = A.Fake<IRoles>();
+    private readonly IEmailService FakeEmailService = A.Fake<IEmailService>();
+    private readonly ILogger FakeLogger = A.Fake<ILogger<Endpoint>>();
+
+    private readonly Request Request = new()
     {
-        // Arrange
-        var fakeMemberRepository = A.Fake<IMembers>();
-        var fakeUserRepository = A.Fake<IUsers>();
-        var fakeRoleRepository = A.Fake<IRoles>();
-        var fakeEmailService = A.Fake<IEmailService>();
-        var fakeLogger = A.Fake<ILogger<Endpoint>>();
+        Email = "test@test.de",
+        Password = "notsafe987",
+        BirthDate = new DateOnly(2000, 12, 12),
+    };
 
-        var fakeRole = new Role { Id = new Guid("4ECB35CC-906C-46D7-AB3B-EDB468E1DD51"), Name = "member" };
-        var req = new Request
-        {
-            Email = "test@test.de",
-            Password = "notsafe987",
-            FirstName = "testFName",
-            LastName = "testLName",
-            Street = "test",
-            HouseNumber = "test",
-            PostalCode = "test",
-            City = "test",
-            Country = "test",
-            BirthDate = new DateOnly(2000, 12, 12),
-            BirthPlace = "test",
-            PhoneNumber = "test"
-        };
 
-        var mem = new Member
-        {
-            Id = new Guid("E5180CD2-A399-4EE3-AAE3-D909FA25AFF3"),
-            FirstName = "testFName",
-            LastName = "testLName",
-            Street = "test",
-            HouseNumber = "test",
-            PostalCode = "test",
-            City = "test",
-            Country = "test",
-            BirthDate = new DateOnly(2000, 12, 12),
-            BirthPlace = "test",
-            PhoneNumber = "test"
-        };
-
-        var ep = Factory.Create<Features.Users.Endpoints.Post.Register.Endpoint>(ctx =>
+    private Features.Users.Endpoints.Post.Register.Endpoint SetupEndpoint()
+    {
+        return Factory.Create<Features.Users.Endpoints.Post.Register.Endpoint>(ctx =>
         {
             ctx.AddTestServices(s =>
             {
-                s.AddSingleton(fakeUserRepository);
-                s.AddSingleton(fakeMemberRepository);
-                s.AddSingleton(fakeRoleRepository);
-                s.AddSingleton(fakeEmailService);
-                s.AddSingleton(fakeLogger);
+                s.AddSingleton(this.FakeUserRepository);
+                s.AddSingleton(this.FakeMemberRepository);
+                s.AddSingleton(this.FakeRoleRepository);
+                s.AddSingleton(this.FakeEmailService);
+                s.AddSingleton(this.FakeLogger);
             });
         });
+    }
 
-        var member = ep.Map.ToEntity(req);
-        var user = new User { Email = req.Email, PasswordHash = "hashedPassword"};
 
-        A.CallTo(() => fakeUserRepository.RetrieveByEmail(req.Email.ToLowerInvariant())).Returns((User?)null);
-        A.CallTo(() => fakeRoleRepository.Retrieve(fakeRole.Name)).Returns(fakeRole);
-        A.CallTo(() => fakeMemberRepository.Create(member)).Returns(member.Id);
-        A.CallTo(() => fakeUserRepository.Create(user)).Returns(user.Id);
-        A.CallTo(() => fakeEmailService.SendVerificationEmail(user)).DoesNothing();
+    [Fact]
+    public async Task Register_New_User_Successful_And_Return_Ok()
+    {
+        // Arrange
+        var fakeRole = new Role { Id = new Guid("4ECB35CC-906C-46D7-AB3B-EDB468E1DD51"), Name = "member" };
+
+        var ep = this.SetupEndpoint();
+
+        var member = ep.Map.ToEntity(this.Request);
+        var user = new User { Email = this.Request.Email, PasswordHash = "hashedPassword" };
+
+        A.CallTo(() => this.FakeUserRepository.RetrieveByEmail(this.Request.Email)).Returns((User?)null);
+        A.CallTo(() => this.FakeRoleRepository.Retrieve(fakeRole.Name)).Returns(fakeRole);
+        A.CallTo(() => this.FakeMemberRepository.Create(member)).Returns(member.Id);
+        A.CallTo(() => this.FakeUserRepository.Create(user)).Returns(user.Id);
+        A.CallTo(() => this.FakeEmailService.SendVerificationEmail(user)).DoesNothing();
 
         // Act
-        await ep.HandleAsync(req, default);
+        await ep.HandleAsync(this.Request, default);
         var rsp = ep.HttpContext.Response;
 
         // Assert
@@ -89,50 +72,16 @@ public class Endpoint : TestBase<App>
 
 
     [Fact]
-    public async Task RegisterUserFailure_UserAlreadyExists()
+    public async Task Register_ExistingUser_Returns_BadRequest()
     {
         // Arrange
-        var fakeMemberRepository = A.Fake<IMembers>();
-        var fakeUserRepository = A.Fake<IUsers>();
-        var fakeRoleRepository = A.Fake<IRoles>();
-        var fakeEmailService = A.Fake<IEmailService>();
-        var fakeLogger = A.Fake<ILogger<Endpoint>>();
+        var ep = this.SetupEndpoint();
+        var user = new User { Email = this.Request.Email, PasswordHash = "hashedPassword" };
 
-        var req = new Request
-        {
-            Email = "test@test.de",
-            Password = "notsafe987",
-            FirstName = "testFName",
-            LastName = "testLName",
-            Street = "test",
-            HouseNumber = "test",
-            PostalCode = "test",
-            City = "test",
-            Country = "test",
-            BirthDate = new DateOnly(2000, 12, 12),
-            BirthPlace = "test",
-            PhoneNumber = "test"
-        };
-
-
-        var ep = Factory.Create<Features.Users.Endpoints.Post.Register.Endpoint>(ctx =>
-        {
-            ctx.AddTestServices(s =>
-            {
-                s.AddSingleton(fakeUserRepository);
-                s.AddSingleton(fakeMemberRepository);
-                s.AddSingleton(fakeRoleRepository);
-                s.AddSingleton(fakeEmailService);
-                s.AddSingleton(fakeLogger);
-            });
-        });
-
-        var user = new User { Email = req.Email, PasswordHash = "hashedPassword" };
-
-        A.CallTo(() => fakeUserRepository.RetrieveByEmail(req.Email.ToLowerInvariant())).Returns(user);
+        A.CallTo(() => this.FakeUserRepository.RetrieveByEmail(this.Request.Email)).Returns(user);
 
         // Act
-        await ep.HandleAsync(req, default);
+        await ep.HandleAsync(this.Request, default);
         var rsp = ep.HttpContext.Response;
 
         // Assert
