@@ -16,7 +16,7 @@ using Service;
 public class Endpoint : TestBase<App>
 {
     [Fact]
-    public async Task RegisterUserSuccessful()
+    public async Task Register_New_User_Successful_And_Return_Ok()
     {
         // Arrange
         var fakeMemberRepository = A.Fake<IMembers>();
@@ -89,7 +89,7 @@ public class Endpoint : TestBase<App>
 
 
     [Fact]
-    public async Task RegisterUserFailure_UserAlreadyExists()
+    public async Task Register_ExistingUser_Returns_BadRequest()
     {
         // Arrange
         var fakeMemberRepository = A.Fake<IMembers>();
