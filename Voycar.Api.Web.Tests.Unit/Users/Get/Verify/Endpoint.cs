@@ -11,14 +11,28 @@ using Microsoft.Extensions.Logging;
 
 public class Endpoint : TestBase<App>
 {
+    private readonly IUsers FakeUserRepository = A.Fake<IUsers>();
+    private readonly ILogger FakeLogger = A.Fake<ILogger<Endpoint>>();
+    private readonly Request Request = new() { VerificationToken = "randomToken" };
+
+
+    private Features.Users.Endpoints.Get.Verify.Endpoint SetupEndpoint()
+    {
+        return Factory.Create<Features.Users.Endpoints.Get.Verify.Endpoint>(ctx =>
+        {
+            ctx.AddTestServices(s =>
+            {
+                s.AddSingleton(this.FakeUserRepository);
+                s.AddSingleton(this.FakeLogger);
+            });
+        });
+    }
+
+
     [Fact]
-    public async Task VerifyUserSuccessful()
+    public async Task Verify_User_Successful_And_Return_Ok()
     {
         // Arrange
-        var fakeUserRepository = A.Fake<IUsers>();
-        var fakeLogger = A.Fake<ILogger<Endpoint>>();
-
-        var req = new Request{VerificationToken = "randomToken"};
         var user = new User
         {
             Id = new Guid("47EB02FB-AA5B-4769-8B34-D23EC48DE506"),
@@ -28,20 +42,14 @@ public class Endpoint : TestBase<App>
             VerifiedAt = null,
         };
 
-        var ep = Factory.Create<Features.Users.Endpoints.Get.Verify.Endpoint>(ctx =>
-        {
-            ctx.AddTestServices(s =>
-            {
-                s.AddSingleton(fakeUserRepository);
-                s.AddSingleton(fakeLogger);
-            });
-        });
+        var ep = this.SetupEndpoint();
 
-        A.CallTo(() => fakeUserRepository.RetrieveByVerificationToken(req.VerificationToken)).Returns(user);
-        A.CallTo(() => fakeUserRepository.Update(user)).Returns(true);
+        A.CallTo(() => this.FakeUserRepository.RetrieveByVerificationToken(this.Request.VerificationToken))
+            .Returns(user);
+        A.CallTo(() => this.FakeUserRepository.Update(user)).Returns(true);
 
         // Act
-        await ep.HandleAsync(req, default);
+        await ep.HandleAsync(this.Request, default);
         var rsp = ep.HttpContext.Response;
 
         // Assert
@@ -51,27 +59,15 @@ public class Endpoint : TestBase<App>
 
 
     [Fact]
-    public async Task VerifyUserFailure()
+    public async Task Verify_User_Fails_And_Returns_BadRequest()
     {
         // Arrange
-        var fakeUserRepository = A.Fake<IUsers>();
-        var fakeLogger = A.Fake<ILogger<Post.Register.Endpoint>>();
-
-        var req = new Request{VerificationToken = "randomToken"};
-
-        var ep = Factory.Create<Features.Users.Endpoints.Get.Verify.Endpoint>(ctx =>
-        {
-            ctx.AddTestServices(s =>
-            {
-                s.AddSingleton(fakeUserRepository);
-                s.AddSingleton(fakeLogger);
-            });
-        });
-
-        A.CallTo(() => fakeUserRepository.RetrieveByVerificationToken(req.VerificationToken)).Returns((User?)(null));
+        var ep = this.SetupEndpoint();
+        A.CallTo(() => this.FakeUserRepository.RetrieveByVerificationToken(this.Request.VerificationToken))
+            .Returns((User?)(null));
 
         // Act
-        await ep.HandleAsync(req, default);
+        await ep.HandleAsync(this.Request, default);
         var rsp = ep.HttpContext.Response;
 
         // Assert
