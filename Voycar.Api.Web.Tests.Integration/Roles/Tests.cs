@@ -104,8 +104,9 @@ public class Tests : TestBase<App, State>
         // Assert
         httpResponse.StatusCode.Should().Be(HttpStatusCode.OK);
 
-        response.Count().Should()
-            .Be(4, "1 Role was added during test, while 3 roles were created at startup");
+        response.Should().HaveCount(4,
+            "1 Role was added during test, while 3 roles were created at startup"
+        );
         response.Contains(expectedRole).Should().BeTrue();
     }
 
