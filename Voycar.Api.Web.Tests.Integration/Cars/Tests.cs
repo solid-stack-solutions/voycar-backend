@@ -49,7 +49,8 @@ public class Tests : TestBase<App, State>
         );
 
         // Act
-        var (httpResponse, response) = await this._app.Admin.GETAsync<C.Get.Available.Endpoint, C.Get.Available.Request, IEnumerable<Car>>(requestData);
+        var (httpResponse, response) = await this._app.Admin
+            .GETAsync<C.Get.Available.Endpoint, C.Get.Available.Request, IEnumerable<Car>>(requestData);
 
         // Assert
         httpResponse.StatusCode.Should().Be(HttpStatusCode.BadRequest);
@@ -67,7 +68,8 @@ public class Tests : TestBase<App, State>
         );
 
         // Act
-        var (httpResponse, response) = await this._app.Admin.GETAsync<C.Get.Available.Endpoint, C.Get.Available.Request, IEnumerable<Car>>(requestData);
+        var (httpResponse, response) = await this._app.Admin
+            .GETAsync<C.Get.Available.Endpoint, C.Get.Available.Request, IEnumerable<Car>>(requestData);
 
         // Assert
         httpResponse.StatusCode.Should().Be(HttpStatusCode.BadRequest);
@@ -85,7 +87,8 @@ public class Tests : TestBase<App, State>
         );
 
         // Act
-        var (httpResponse, response) = await this._app.Admin.GETAsync<C.Get.Available.Endpoint, C.Get.Available.Request, IEnumerable<Car>>(requestData);
+        var (httpResponse, response) = await this._app.Admin
+            .GETAsync<C.Get.Available.Endpoint, C.Get.Available.Request, IEnumerable<Car>>(requestData);
 
         // Assert
         httpResponse.StatusCode.Should().Be(HttpStatusCode.BadRequest);
@@ -102,7 +105,8 @@ public class Tests : TestBase<App, State>
         );
 
         // Act
-        var (httpResponse, response) = await this._app.Admin.GETAsync<C.Get.Available.Endpoint, C.Get.Available.Request, IEnumerable<Car>>(requestData);
+        var (httpResponse, response) = await this._app.Admin
+            .GETAsync<C.Get.Available.Endpoint, C.Get.Available.Request, IEnumerable<Car>>(requestData);
 
         // Arrange assertion
         var expectedCars = this.Context.Cars.Where(car => car.StationId == this._state.StationId);
@@ -136,7 +140,8 @@ public class Tests : TestBase<App, State>
         await this.Context.SaveChangesAsync();
 
         // Act
-        var (httpResponse, response) = await this._app.Admin.GETAsync<C.Get.Available.Endpoint, C.Get.Available.Request, IEnumerable<Car>>(requestData);
+        var (httpResponse, response) = await this._app.Admin
+            .GETAsync<C.Get.Available.Endpoint, C.Get.Available.Request, IEnumerable<Car>>(requestData);
 
         // Arrange assertion
         var expectedCars = this.Context.Cars.Where(car =>
