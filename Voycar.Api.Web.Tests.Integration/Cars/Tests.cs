@@ -122,8 +122,8 @@ public class Tests : TestBase<App, State>
             "2000-01-01T08:00:00.000Z",
             "2000-01-01T18:00:00.000Z"
         );
-        // Pick random car to reserve
-        var reservedCar = this.Context.Cars.First();
+        // Pick random car at station to reserve
+        var reservedCar = this.Context.Cars.First(car => car.StationId == this._state.StationId);
         var reservation = new Reservation
         {
             Id = Guid.NewGuid(),
@@ -138,10 +138,17 @@ public class Tests : TestBase<App, State>
         // Act
         var (httpResponse, response) = await this._app.Admin.GETAsync<C.Get.Available.Endpoint, C.Get.Available.Request, IEnumerable<Car>>(requestData);
 
+        // Arrange assertion
+        var expectedCars = this.Context.Cars.Where(car =>
+            car.StationId == this._state.StationId && car.Id != reservedCar.Id);
+
         // Assert
-        this.Context.Reservations.Should().HaveCount(1, "Reservation table should contain only the one created in this test");
+        this.Context.Cars.Where(car => car.StationId == this._state.StationId)
+            .Should().HaveCountGreaterOrEqualTo(1, "Station needs to have at least one car");
+        this.Context.Reservations.Should()
+            .HaveCount(1, "Reservation table should contain only the one created in this test");
         httpResponse.StatusCode.Should().Be(HttpStatusCode.OK);
-        response.Should().BeEquivalentTo(this.Context.Cars.Where(car => car.Id != reservedCar.Id));
+        response.Should().BeEquivalentTo(expectedCars);
 
         // Cleanup
         this.Context.Reservations.Remove(reservation);
