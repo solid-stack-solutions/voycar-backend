@@ -63,13 +63,26 @@ public class VoycarDbContext : DbContext
             .HasForeignKey(c => c.StationId)
             .IsRequired();
 
-        // Add default data to role table
+        // Add default data
+
+        var city = new City { Id = Guid.NewGuid(), Country = "germany", Name = "bremen" };
+        modelBuilder.Entity<City>().HasData(city);
+
+        var station = new Station {
+            Id = Guid.NewGuid(), Name = "bahnhof", Longitude = 53.085, Latitude = 8.8153, CityId = city.Id };
+        modelBuilder.Entity<Station>().HasData(station);
+
+        // ToDo populate with actual cars
+        modelBuilder.Entity<Car>().HasData(
+            new Car { Id = Guid.NewGuid(), LicensePlate = "", PS = 0, Brand = "", Model = "", BuildYear = 0, Type = "", Seats = 0, StationId = station.Id },
+            new Car { Id = Guid.NewGuid(), LicensePlate = "", PS = 0, Brand = "", Model = "", BuildYear = 0, Type = "", Seats = 0, StationId = station.Id },
+            new Car { Id = Guid.NewGuid(), LicensePlate = "", PS = 0, Brand = "", Model = "", BuildYear = 0, Type = "", Seats = 0, StationId = station.Id });
+
         modelBuilder.Entity<Role>().HasData(
             new Role { Id = Guid.NewGuid(), Name = "admin" },
             new Role { Id = Guid.NewGuid(), Name = "employee" },
             new Role { Id = Guid.NewGuid(), Name = "member" });
 
-        // Add default data to plan table
         modelBuilder.Entity<Plan>().HasData(
             new Plan { Id = Guid.NewGuid(), Name = "basic",     MonthlyPrice = 10.0f, HourlyPrice = 15.0f },
             new Plan { Id = Guid.NewGuid(), Name = "reduced",   MonthlyPrice = 20.0f, HourlyPrice = 12.5f },
