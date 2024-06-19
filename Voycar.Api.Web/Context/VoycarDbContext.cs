@@ -65,19 +65,20 @@ public class VoycarDbContext : DbContext
 
         // Add default data
 
-        var city = new City { Id = Guid.NewGuid(), Country = "Germany", Name = "Bremen" };
-        modelBuilder.Entity<City>().HasData(city);
+        var bremenCity = new City { Id = Guid.NewGuid(), Country = "Germany", Name = "Bremen" };
+        modelBuilder.Entity<City>().HasData(bremenCity);
 
-        var station = new Station {
-            Id = Guid.NewGuid(), Name = "Bahnhof", Longitude = 53.085, Latitude = 8.8153, CityId = city.Id };
-        modelBuilder.Entity<Station>().HasData(station);
+        // Two stations are useful for some tests, e.g. checking for available cars at a station
+        var trainStationStation = new Station { Id = Guid.NewGuid(), Name = "Bahnhof",   Latitude = 53.0850, Longitude = 8.8153, CityId = bremenCity.Id };
+        var airportStation      = new Station { Id = Guid.NewGuid(), Name = "Flughafen", Latitude = 53.0547, Longitude = 8.7849, CityId = bremenCity.Id };
+        modelBuilder.Entity<Station>().HasData(trainStationStation, airportStation);
 
         modelBuilder.Entity<Car>().HasData(
-            new Car { Id = Guid.NewGuid(), LicensePlate = "HB KA 437",  PS = 510, Brand = "Porsche", Model = "911 GT3",            BuildYear = 2024, Type = "Sportscar", Seats = 2, StationId = station.Id },
-            new Car { Id = Guid.NewGuid(), LicensePlate = "HB JB 217",  PS = 570, Brand = "Nissan",  Model = "Mk4 GTR",            BuildYear = 2016, Type = "Sportscar", Seats = 2, StationId = station.Id },
-            new Car { Id = Guid.NewGuid(), LicensePlate = "HB NR 6385", PS = 258, Brand = "Toyota",  Model = "GR Supra",           BuildYear = 2019, Type = "Sportscar", Seats = 2, StationId = station.Id },
-            new Car { Id = Guid.NewGuid(), LicensePlate = "HB KL 12",   PS = 570, Brand = "Audi",    Model = "R8 4S",              BuildYear = 2020, Type = "Sportscar", Seats = 2, StationId = station.Id },
-            new Car { Id = Guid.NewGuid(), LicensePlate = "HB JH 420",  PS = 808, Brand = "Dodge",   Model = "SRT Hellcat Redeye", BuildYear = 2023, Type = "Musclecar", Seats = 4, StationId = station.Id });
+            new Car { Id = Guid.NewGuid(), LicensePlate = "HB KA 437",  PS = 510, Brand = "Porsche", Model = "911 GT3",            BuildYear = 2024, Type = "Sportscar", Seats = 2, StationId = trainStationStation.Id },
+            new Car { Id = Guid.NewGuid(), LicensePlate = "HB JB 217",  PS = 570, Brand = "Nissan",  Model = "Mk4 GTR",            BuildYear = 2016, Type = "Sportscar", Seats = 2, StationId = airportStation.Id      },
+            new Car { Id = Guid.NewGuid(), LicensePlate = "HB NR 6385", PS = 258, Brand = "Toyota",  Model = "GR Supra",           BuildYear = 2019, Type = "Sportscar", Seats = 2, StationId = trainStationStation.Id },
+            new Car { Id = Guid.NewGuid(), LicensePlate = "HB KL 12",   PS = 570, Brand = "Audi",    Model = "R8 4S",              BuildYear = 2020, Type = "Sportscar", Seats = 2, StationId = trainStationStation.Id },
+            new Car { Id = Guid.NewGuid(), LicensePlate = "HB JH 420",  PS = 808, Brand = "Dodge",   Model = "SRT Hellcat Redeye", BuildYear = 2023, Type = "Musclecar", Seats = 4, StationId = trainStationStation.Id });
 
         modelBuilder.Entity<Role>().HasData(
             new Role { Id = Guid.NewGuid(), Name = "admin" },
