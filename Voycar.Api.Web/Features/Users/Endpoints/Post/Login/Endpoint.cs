@@ -52,6 +52,7 @@ public class Endpoint : Endpoint<Request, Results<Ok, BadRequest<ErrorResponse>>
         await CookieAuth.SignInAsync(privileges =>
         {
             privileges.Roles.Add(role!.Name);
+            privileges["UserId"] = user.Id.ToString();
         });
 
         this._logger.LogInformation("User logged in successfully with ID: {UserId}", user.Id);
