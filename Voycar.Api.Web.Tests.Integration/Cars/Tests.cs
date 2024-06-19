@@ -104,10 +104,13 @@ public class Tests : TestBase<App, State>
         // Act
         var (httpResponse, response) = await this._app.Admin.GETAsync<C.Get.Available.Endpoint, C.Get.Available.Request, IEnumerable<Car>>(requestData);
 
+        // Arrange assertion
+        var expectedCars = this.Context.Cars.Where(car => car.StationId == this._state.StationId);
+
         // Assert
         this.Context.Reservations.Should().BeEmpty("Reservation table needs to be empty for this test");
         httpResponse.StatusCode.Should().Be(HttpStatusCode.OK);
-        response.Should().BeEquivalentTo(this.Context.Cars);
+        response.Should().BeEquivalentTo(expectedCars);
     }
 
     [Fact]
