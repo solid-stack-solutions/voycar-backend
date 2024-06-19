@@ -90,4 +90,23 @@ public class Tests : TestBase<App, State>
         // Assert
         httpResponse.StatusCode.Should().Be(HttpStatusCode.BadRequest);
     }
+
+    [Fact]
+    public async Task Get_Available_ReturnsOkAndAllCars()
+    {
+        // Arrange
+        var requestData = ConstructAvailableRequest(
+            this._state.StationId,
+            "2000-01-01T08:00:00.000Z",
+            "2000-01-01T18:00:00.000Z"
+        );
+
+        // Act
+        var (httpResponse, response) = await this._app.Admin.GETAsync<C.Get.Available.Endpoint, C.Get.Available.Request, IEnumerable<Car>>(requestData);
+
+        // Assert
+        this.Context.Reservations.Should().BeEmpty("Reservation table needs to be empty for this test");
+        httpResponse.StatusCode.Should().Be(HttpStatusCode.OK);
+        response.Should().BeEquivalentTo(this.Context.Cars);
+    }
 }

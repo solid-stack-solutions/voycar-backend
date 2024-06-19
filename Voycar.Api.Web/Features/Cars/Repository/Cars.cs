@@ -16,6 +16,6 @@ public class Cars : Generic.Repository.Repository<Car>, ICars
     {
         this._logger.LogDebug($"Timespan: {end - begin}");
         // ToDo
-        return [];
+        return this.RetrieveAll();
     }
 }
