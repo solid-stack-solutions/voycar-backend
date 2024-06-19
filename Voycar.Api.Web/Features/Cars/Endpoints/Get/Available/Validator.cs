@@ -6,7 +6,7 @@ public class Validator : Validator<Request>
 {
     public Validator()
     {
-        this.RuleFor(req => req.End.Subtract(req.Begin))
+        this.RuleFor(req => req.End - req.Begin)
             .GreaterThan(TimeSpan.Zero)
             .WithMessage("End-time is not after begin-time");
         this.RuleFor(req => this.Resolve<IStations>().Retrieve(req.StationId))
