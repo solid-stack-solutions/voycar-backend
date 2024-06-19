@@ -21,7 +21,7 @@ public class Endpoint : Endpoint<Request, Results<Ok<Response>, BadRequest<strin
             summary.Summary = "Get Email of logged in user";
             summary.Description = "Get the Email of the user who is logged in according to the request cookie";
             summary.Responses[200] = "If user is found";
-            summary.Responses[400] = "If somehow the user is logged in but can't be found";
+            summary.Responses[400] = "If the user somehow can't be found";
         });
     }
 
