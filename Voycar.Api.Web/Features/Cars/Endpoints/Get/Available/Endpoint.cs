@@ -15,10 +15,7 @@ public class Endpoint : Endpoint<Request, IEnumerable<Car>>
     public override void Configure()
     {
         this.Get(nameof(Car).ToLowerInvariant() + "/available");
-        // ToDo remove before merging (useful for debugging)
-        this.AllowAnonymous();
-        // ToDo roles
-        //this.Roles(["admin"]);
+        this.Roles(["admin", "employee", "member"]);
         this.Summary(s =>
         {
             s.Summary = $"Retrieve available {nameof(Car)}s";
