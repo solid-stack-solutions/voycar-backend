@@ -53,9 +53,9 @@ public class Tests : TestBase<App, State>
     }
 
     /// <summary>
-    /// Creates and returns new <see cref="Reservation"/> with <c>MemberId</c> and <c>CarId</c> from <see cref="State"/>
+    /// Creates and returns new <see cref="Reservation"/> with <see cref="State.MemberId"/> and given <c>carId</c>
     /// </summary>
-    private Reservation ConstructReservation(string begin, string end)
+    private Reservation ConstructReservation(string begin, string end, Guid carId)
     {
         return new Reservation
         {
@@ -63,8 +63,16 @@ public class Tests : TestBase<App, State>
             Begin = DateTime.Parse(begin, CultureInfo.InvariantCulture).ToUniversalTime(),
             End = DateTime.Parse(end, CultureInfo.InvariantCulture).ToUniversalTime(),
             MemberId = this._state.MemberId,
-            CarId = this._state.CarId
+            CarId = carId
         };
+    }
+
+    /// <summary>
+    /// Creates and returns new <see cref="Reservation"/> with <see cref="State.MemberId"/> and <see cref="State.CarId"/>
+    /// </summary>
+    private Reservation ConstructReservation(string begin, string end)
+    {
+        return this.ConstructReservation(begin, end, this._state.CarId);
     }
 
     /// <summary>
@@ -145,13 +153,10 @@ public class Tests : TestBase<App, State>
         var (httpResponse, response) = await this._app.Admin
             .GETAsync<C.Get.Available.Endpoint, C.Get.Available.Request, IEnumerable<Car>>(requestData);
 
-        // Arrange assertion
-        var expectedCars = this.CarsAtStation();
-
         // Assert
         this.Context.Reservations.Should().BeEmpty("Reservation table needs to be empty for this test");
         httpResponse.StatusCode.Should().Be(HttpStatusCode.OK);
-        response.Should().BeEquivalentTo(expectedCars);
+        response.Should().BeEquivalentTo(this.CarsAtStation());
     }
 
     [Fact]
