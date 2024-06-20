@@ -320,7 +320,6 @@ dotnet_naming_rule.stylecop_instance_fields_must_be_private_rule.symbols        
 dotnet_naming_rule.stylecop_instance_fields_must_be_private_rule.style                 = disallowed_style
 dotnet_naming_rule.stylecop_instance_fields_must_be_private_rule.severity              = error
 
-# ToDo  change to with leading underscore
 # Private fields must be camelCase and should start with a leading underscore
 # https://github.com/DotNetAnalyzers/StyleCopAnalyzers/blob/master/documentation/SA1306.md
 dotnet_naming_symbols.stylecop_private_fields_group.applicable_accessibilities = private
