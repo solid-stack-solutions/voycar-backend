@@ -22,8 +22,8 @@ public class Member : Entity
 
     // Plan information foreign key
     [ForeignKey("Plan")]
-    public Guid? PlanId { get; set; }
+    public Guid PlanId { get; set; }
     [JsonIgnore]
-    public Plan? Plan { get; set; }
+    public Plan Plan { get; set; }
 
 }
