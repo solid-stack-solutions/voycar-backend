@@ -2,6 +2,7 @@ namespace Voycar.Api.Web.Entities;
 
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Text.Json.Serialization;
 using Generic;
 
 
@@ -23,10 +24,12 @@ public class User : Entity
     // User role foreign key
     [ForeignKey("Role")]
     public Guid RoleId { get; set; }
+    [JsonIgnore]
     public Role Role { get; set; }
 
     // Member information foreign key
     [ForeignKey("Member")]
     public Guid? MemberId { get; set; }
+    [JsonIgnore]
     public Member? Member { get; set; }
 }
