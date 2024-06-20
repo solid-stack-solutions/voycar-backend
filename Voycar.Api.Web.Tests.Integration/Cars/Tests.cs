@@ -211,7 +211,7 @@ public class Tests : TestBase<App, State>
     }
 
     [Fact]
-    public async Task Get_Available_ReturnsOkAndAllCars_WithSurroundingReservations()
+    public async Task Get_Available_ReturnsOkAndAllCars_WithCloselySurroundingReservations()
     {
         await this.RunGetAvailableTest(
             this.ConstructAvailableRequest("2000-01-01T08:00:00.000Z", "2000-01-01T18:00:00.000Z"),
@@ -223,13 +223,67 @@ public class Tests : TestBase<App, State>
         );
     }
 
+    [Fact]
+    public async Task Get_Available_ReturnsOkAndAllCars_WithLooselySurroundingReservations()
+    {
+        await this.RunGetAvailableTest(
+            this.ConstructAvailableRequest("2000-01-01T08:00:00.000Z", "2000-01-01T18:00:00.000Z"),
+            [
+                this.ConstructReservation("2000-01-01T06:00:00.000Z", "2000-01-01T07:00:00.000Z"),
+                this.ConstructReservation("2000-01-01T19:00:00.000Z", "2000-01-01T20:00:00.000Z")
+            ],
+            this.CarsAtStation()
+        );
+    }
 
     [Fact]
-    public async Task Get_Available_ReturnsOkAndAvailableCars()
+    public async Task Get_Available_ReturnsOkAndAvailableCars_WithReservationInMiddle()
     {
         await this.RunGetAvailableTest(
             this.ConstructAvailableRequest("2000-01-01T08:00:00.000Z", "2000-01-01T18:00:00.000Z"),
             [this.ConstructReservation("2000-01-01T10:00:00.000Z", "2000-01-01T12:00:00.000Z")],
+            this.CarsAtStation().Where(car => car.Id != this._state.CarId)
+        );
+    }
+
+    [Fact]
+    public async Task Get_Available_ReturnsOkAndAvailableCars_WithReservationAtBegin()
+    {
+        await this.RunGetAvailableTest(
+            this.ConstructAvailableRequest("2000-01-01T08:00:00.000Z", "2000-01-01T18:00:00.000Z"),
+            [this.ConstructReservation("2000-01-01T07:00:00.000Z", "2000-01-01T09:00:00.000Z")],
+            this.CarsAtStation().Where(car => car.Id != this._state.CarId)
+        );
+    }
+
+    [Fact]
+    public async Task Get_Available_ReturnsOkAndAvailableCars_WithReservationAtEnd()
+    {
+        await this.RunGetAvailableTest(
+            this.ConstructAvailableRequest("2000-01-01T08:00:00.000Z", "2000-01-01T18:00:00.000Z"),
+            [this.ConstructReservation("2000-01-01T17:00:00.000Z", "2000-01-01T19:00:00.000Z")],
+            this.CarsAtStation().Where(car => car.Id != this._state.CarId)
+        );
+    }
+
+    [Fact]
+    public async Task Get_Available_ReturnsOkAndAvailableCars_WithOverlappingReservation()
+    {
+        await this.RunGetAvailableTest(
+            this.ConstructAvailableRequest("2000-01-01T08:00:00.000Z", "2000-01-01T18:00:00.000Z"),
+            [this.ConstructReservation("2000-01-01T07:00:00.000Z", "2000-01-01T19:00:00.000Z")],
+            this.CarsAtStation().Where(car => car.Id != this._state.CarId)
+        );
+    }
+
+    [Fact]
+    public async Task Get_Available_ReturnsOkAndAvailableCars_WithExactlyOverlappingReservation()
+    {
+        const string begin = "2000-01-01T08:00:00.000Z";
+        const string end   = "2000-01-01T18:00:00.000Z";
+        await this.RunGetAvailableTest(
+            this.ConstructAvailableRequest(begin, end),
+            [this.ConstructReservation(begin, end)],
             this.CarsAtStation().Where(car => car.Id != this._state.CarId)
         );
     }
