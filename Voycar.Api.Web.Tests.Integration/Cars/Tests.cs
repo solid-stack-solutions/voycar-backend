@@ -53,6 +53,14 @@ public class Tests : TestBase<App, State>
     }
 
     /// <summary>
+    /// <see cref="ConstructAvailableRequest(System.Guid,string,string)"/>, but using <see cref="State.StationId"/> as <c>id</c>
+    /// </summary>
+    private C.Get.Available.Request ConstructAvailableRequest(string begin, string end)
+    {
+        return ConstructAvailableRequest(this._state.StationId, begin, end);
+    }
+
+    /// <summary>
     /// Creates and returns new <see cref="Reservation"/> with <see cref="State.MemberId"/> and given <c>carId</c>
     /// </summary>
     private Reservation ConstructReservation(string begin, string end, Guid carId)
@@ -78,9 +86,40 @@ public class Tests : TestBase<App, State>
     /// <summary>
     /// <see cref="Car"/>s at <see cref="State.StationId"/>
     /// </summary>
-    private IQueryable<Car> CarsAtStation()
+    private IEnumerable<Car> CarsAtStation()
     {
         return this.Context.Cars.Where(car => car.StationId == this._state.StationId);
+    }
+
+    /// <summary>
+    /// Send the given request to <see cref="Voycar.Api.Web.Features.Cars.Endpoints.Get.Available.Endpoint"/>
+    /// after adding the given <see cref="Reservation"/>s to the database.
+    /// Assert that <see cref="HttpStatusCode.OK"/> and the given <c>expectedAvailableCars</c> were received.
+    /// Then remove the given <see cref="Reservation"/>s from the database again.
+    /// </summary>
+    private async Task RunGetAvailableTest(
+        C.Get.Available.Request requestData,
+        Reservation[] reservations,
+        IEnumerable<Car> expectedAvailableCars)
+    {
+        // Arrange
+        await this.Context.Reservations.AddRangeAsync(reservations);
+        await this.Context.SaveChangesAsync();
+
+        // Act
+        var (httpResponse, response) = await this._app.Admin
+            .GETAsync<C.Get.Available.Endpoint, C.Get.Available.Request, IEnumerable<Car>>(requestData);
+
+        // Assert
+        this.Context.Reservations.Should()
+            .HaveCount(reservations.Length, "Reservation table should only contain the ones created in this test");
+        httpResponse.StatusCode.Should().Be(HttpStatusCode.OK);
+        response.Should().BeEquivalentTo(expectedAvailableCars);
+
+        // Cleanup
+        this.Context.Reservations.RemoveRange(reservations);
+        await this.Context.SaveChangesAsync();
+        this.Context.Reservations.Should().BeEmpty();
     }
 
     [Fact]
@@ -154,7 +193,7 @@ public class Tests : TestBase<App, State>
             .GETAsync<C.Get.Available.Endpoint, C.Get.Available.Request, IEnumerable<Car>>(requestData);
 
         // Assert
-        this.Context.Reservations.Should().BeEmpty("Reservation table needs to be empty for this test");
+        this.Context.Reservations.Should().BeEmpty("Reservation table should be empty");
         httpResponse.StatusCode.Should().Be(HttpStatusCode.OK);
         response.Should().BeEquivalentTo(this.CarsAtStation());
     }
@@ -162,98 +201,36 @@ public class Tests : TestBase<App, State>
     [Fact]
     public async Task Get_Available_ReturnsOkAndAllCars_WithOtherReservation()
     {
-        // Arrange
-        var requestData = ConstructAvailableRequest(
-            this._state.StationId,
-            "2000-01-01T08:00:00.000Z",
-            "2000-01-01T18:00:00.000Z"
-        );
         // Reserve car from different station
         var reservedCarId = this.Context.Cars.First(car => car.StationId != this._state.StationId).Id;
-        var reservation = this.ConstructReservation("2000-01-01T10:00:00.000Z", "2000-01-01T12:00:00.000Z", reservedCarId);
-        this.Context.Reservations.Add(reservation);
-        await this.Context.SaveChangesAsync();
-
-        // Act
-        var (httpResponse, response) = await this._app.Admin
-            .GETAsync<C.Get.Available.Endpoint, C.Get.Available.Request, IEnumerable<Car>>(requestData);
-
-        // Assert
-        this.Context.Reservations.Should()
-            .HaveCount(1, "Reservation table should contain only the one created in this test");
-        httpResponse.StatusCode.Should().Be(HttpStatusCode.OK);
-        response.Should().BeEquivalentTo(this.CarsAtStation());
-
-        // Cleanup
-        this.Context.Reservations.Remove(reservation);
-        await this.Context.SaveChangesAsync();
-        this.Context.Reservations.Should().BeEmpty();
+        await this.RunGetAvailableTest(
+            this.ConstructAvailableRequest("2000-01-01T08:00:00.000Z", "2000-01-01T18:00:00.000Z"),
+            [this.ConstructReservation("2000-01-01T10:00:00.000Z", "2000-01-01T12:00:00.000Z", reservedCarId)],
+            this.CarsAtStation()
+        );
     }
 
     [Fact]
     public async Task Get_Available_ReturnsOkAndAllCars_WithSurroundingReservations()
     {
-        // Arrange
-        var requestData = ConstructAvailableRequest(
-            this._state.StationId,
-            "2000-01-01T08:00:00.000Z",
-            "2000-01-01T18:00:00.000Z"
+        await this.RunGetAvailableTest(
+            this.ConstructAvailableRequest("2000-01-01T08:00:00.000Z", "2000-01-01T18:00:00.000Z"),
+            [
+                this.ConstructReservation("2000-01-01T06:00:00.000Z", "2000-01-01T08:00:00.000Z"),
+                this.ConstructReservation("2000-01-01T18:00:00.000Z", "2000-01-01T20:00:00.000Z")
+            ],
+            this.CarsAtStation()
         );
-        var reservation1 = this.ConstructReservation("2000-01-01T06:00:00.000Z", "2000-01-01T08:00:00.000Z");
-        var reservation2 = this.ConstructReservation("2000-01-01T18:00:00.000Z", "2000-01-01T20:00:00.000Z");
-        this.Context.Reservations.Add(reservation1);
-        this.Context.Reservations.Add(reservation2);
-        await this.Context.SaveChangesAsync();
-
-        // Act
-        var (httpResponse, response) = await this._app.Admin
-            .GETAsync<C.Get.Available.Endpoint, C.Get.Available.Request, IEnumerable<Car>>(requestData);
-
-        // Assert
-        this.Context.Reservations.Should()
-            .HaveCount(2, "Reservation table should contain only the two created in this test");
-        httpResponse.StatusCode.Should().Be(HttpStatusCode.OK);
-        response.Should().BeEquivalentTo(this.CarsAtStation());
-
-        // Cleanup
-        this.Context.Reservations.Remove(reservation1);
-        this.Context.Reservations.Remove(reservation2);
-        await this.Context.SaveChangesAsync();
-        this.Context.Reservations.Should().BeEmpty();
     }
 
 
     [Fact]
     public async Task Get_Available_ReturnsOkAndAvailableCars()
     {
-        // Arrange
-        var requestData = ConstructAvailableRequest(
-            this._state.StationId,
-            "2000-01-01T08:00:00.000Z",
-            "2000-01-01T18:00:00.000Z"
+        await this.RunGetAvailableTest(
+            this.ConstructAvailableRequest("2000-01-01T08:00:00.000Z", "2000-01-01T18:00:00.000Z"),
+            [this.ConstructReservation("2000-01-01T10:00:00.000Z", "2000-01-01T12:00:00.000Z")],
+            this.CarsAtStation().Where(car => car.Id != this._state.CarId)
         );
-        var reservation = this.ConstructReservation("2000-01-01T10:00:00.000Z", "2000-01-01T12:00:00.000Z");
-        this.Context.Reservations.Add(reservation);
-        await this.Context.SaveChangesAsync();
-
-        // Act
-        var (httpResponse, response) = await this._app.Admin
-            .GETAsync<C.Get.Available.Endpoint, C.Get.Available.Request, IEnumerable<Car>>(requestData);
-
-        // Arrange assertion
-        var expectedCars = this.CarsAtStation().Where(car => car.Id != this._state.CarId);
-
-        // Assert
-        this.CarsAtStation().Should()
-            .HaveCountGreaterOrEqualTo(1, "Station needs to have at least one car");
-        this.Context.Reservations.Should()
-            .HaveCount(1, "Reservation table should contain only the one created in this test");
-        httpResponse.StatusCode.Should().Be(HttpStatusCode.OK);
-        response.Should().BeEquivalentTo(expectedCars);
-
-        // Cleanup
-        this.Context.Reservations.Remove(reservation);
-        await this.Context.SaveChangesAsync();
-        this.Context.Reservations.Should().BeEmpty();
     }
 }
