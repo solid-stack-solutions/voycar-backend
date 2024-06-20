@@ -1,5 +1,6 @@
 namespace Voycar.Api.Web.Entities;
 
+using System.ComponentModel.DataAnnotations.Schema;
 using Generic;
 
 public class Member : Entity
@@ -17,4 +18,10 @@ public class Member : Entity
 
     // Contact information
     public string? PhoneNumber { get; set; }
+
+    // Plan information foreign key
+    [ForeignKey("Plan")]
+    public Guid? PlanId { get; set; }
+    public Plan? Plan { get; set; }
+
 }
