@@ -57,6 +57,8 @@ dotnet_analyzer_diagnostic.severity = warning
 dotnet_diagnostic.CA1848.severity = silent
 # Identifier contains type name
 dotnet_diagnostic.CA1720.severity = silent
+# Identifier contains type name in namespace
+dotnet_diagnostic.CA1716.severity = silent
 
 ##########################################
 # Language Rules
