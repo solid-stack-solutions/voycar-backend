@@ -6,12 +6,12 @@ public abstract class Single<TEntity>
     : Endpoint<Entity, Results<Ok<TEntity>, NotFound>>
     where TEntity : Entity
 {
-    protected readonly IRepository<TEntity> _repository;
+    protected readonly IRepository<TEntity> repository;
     protected new readonly string[] Roles;
 
     protected Single(IRepository<TEntity> repository, string[] roles)
     {
-        this._repository = repository;
+        this.repository = repository;
         this.Roles = roles;
     }
 
@@ -31,7 +31,7 @@ public abstract class Single<TEntity>
 
     public override async Task HandleAsync(Entity req, CancellationToken ct)
     {
-        var retrieved = this._repository.Retrieve(req.Id);
+        var retrieved = this.repository.Retrieve(req.Id);
 
         if (retrieved is not null)
         {
