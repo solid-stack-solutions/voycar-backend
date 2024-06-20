@@ -63,13 +63,28 @@ public class VoycarDbContext : DbContext
             .HasForeignKey(c => c.StationId)
             .IsRequired();
 
-        // Add default data to role table
+        // Add default data
+
+        var bremenCity = new City { Id = Guid.NewGuid(), Country = "Germany", Name = "Bremen" };
+        modelBuilder.Entity<City>().HasData(bremenCity);
+
+        // Two stations are useful for some tests, e.g. checking for available cars at a station
+        var trainStationStation = new Station { Id = Guid.NewGuid(), Name = "Bahnhof",   Latitude = 53.0850, Longitude = 8.8153, CityId = bremenCity.Id };
+        var airportStation      = new Station { Id = Guid.NewGuid(), Name = "Flughafen", Latitude = 53.0547, Longitude = 8.7849, CityId = bremenCity.Id };
+        modelBuilder.Entity<Station>().HasData(trainStationStation, airportStation);
+
+        modelBuilder.Entity<Car>().HasData(
+            new Car { Id = Guid.NewGuid(), LicensePlate = "HB KA 437",  PS = 510, Brand = "Porsche", Model = "911 GT3",            BuildYear = 2024, Type = "Sportscar", Seats = 2, StationId = trainStationStation.Id },
+            new Car { Id = Guid.NewGuid(), LicensePlate = "HB JB 217",  PS = 570, Brand = "Nissan",  Model = "Mk4 GTR",            BuildYear = 2016, Type = "Sportscar", Seats = 2, StationId = airportStation.Id      },
+            new Car { Id = Guid.NewGuid(), LicensePlate = "HB NR 6385", PS = 258, Brand = "Toyota",  Model = "GR Supra",           BuildYear = 2019, Type = "Sportscar", Seats = 2, StationId = trainStationStation.Id },
+            new Car { Id = Guid.NewGuid(), LicensePlate = "HB KL 12",   PS = 570, Brand = "Audi",    Model = "R8 4S",              BuildYear = 2020, Type = "Sportscar", Seats = 2, StationId = trainStationStation.Id },
+            new Car { Id = Guid.NewGuid(), LicensePlate = "HB JH 420",  PS = 808, Brand = "Dodge",   Model = "SRT Hellcat Redeye", BuildYear = 2023, Type = "Musclecar", Seats = 4, StationId = trainStationStation.Id });
+
         modelBuilder.Entity<Role>().HasData(
             new Role { Id = Guid.NewGuid(), Name = "admin" },
             new Role { Id = Guid.NewGuid(), Name = "employee" },
             new Role { Id = Guid.NewGuid(), Name = "member" });
 
-        // Add default data to plan table
         modelBuilder.Entity<Plan>().HasData(
             new Plan { Id = Guid.NewGuid(), Name = "basic",     MonthlyPrice = 10.0f, HourlyPrice = 15.0f },
             new Plan { Id = Guid.NewGuid(), Name = "reduced",   MonthlyPrice = 20.0f, HourlyPrice = 12.5f },
