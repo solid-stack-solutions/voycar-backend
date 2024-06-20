@@ -8,7 +8,18 @@ using C = Features.Cars.Endpoints;
 
 public sealed class State : StateFixture
 {
+    /// <summary>
+    /// ID of <see cref="Station"/> associated with <see cref="CarId"/>
+    /// </summary>
     public Guid StationId { get; set; }
+    /// <summary>
+    /// ID of first <see cref="Car"/> (to be reserved in reservations)
+    /// </summary>
+    public Guid CarId { get; set; }
+    /// <summary>
+    /// ID of first <see cref="Member"/>
+    /// </summary>
+    public Guid MemberId { get; set; }
 }
 
 public class Tests : TestBase<App, State>
@@ -25,7 +36,10 @@ public class Tests : TestBase<App, State>
         this._state = state;
         this.Context = this._app.Context;
 
-        this._state.StationId = this.Context.Stations.First().Id;
+        var car = this.Context.Cars.First();
+        this._state.CarId     = car.Id;
+        this._state.StationId = car.StationId;
+        this._state.MemberId = this.Context.Members.First().Id;
     }
 
     private static C.Get.Available.Request ConstructAvailableRequest(Guid id, string begin, string end)
@@ -33,9 +47,32 @@ public class Tests : TestBase<App, State>
         return new C.Get.Available.Request
         {
             StationId = id,
-            Begin = DateTime.Parse(begin, CultureInfo.InvariantCulture),
-            End = DateTime.Parse(end, CultureInfo.InvariantCulture)
+            Begin = DateTime.Parse(begin, CultureInfo.InvariantCulture).ToUniversalTime(),
+            End = DateTime.Parse(end, CultureInfo.InvariantCulture).ToUniversalTime()
         };
+    }
+
+    /// <summary>
+    /// Creates and returns new <see cref="Reservation"/> with <c>MemberId</c> and <c>CarId</c> from <see cref="State"/>
+    /// </summary>
+    private Reservation ConstructReservation(string begin, string end)
+    {
+        return new Reservation
+        {
+            Id = Guid.NewGuid(),
+            Begin = DateTime.Parse(begin, CultureInfo.InvariantCulture).ToUniversalTime(),
+            End = DateTime.Parse(end, CultureInfo.InvariantCulture).ToUniversalTime(),
+            MemberId = this._state.MemberId,
+            CarId = this._state.CarId
+        };
+    }
+
+    /// <summary>
+    /// <see cref="Car"/>s at <see cref="State.StationId"/>
+    /// </summary>
+    private IQueryable<Car> CarsAtStation()
+    {
+        return this.Context.Cars.Where(car => car.StationId == this._state.StationId);
     }
 
     [Fact]
@@ -109,7 +146,7 @@ public class Tests : TestBase<App, State>
             .GETAsync<C.Get.Available.Endpoint, C.Get.Available.Request, IEnumerable<Car>>(requestData);
 
         // Arrange assertion
-        var expectedCars = this.Context.Cars.Where(car => car.StationId == this._state.StationId);
+        var expectedCars = this.CarsAtStation();
 
         // Assert
         this.Context.Reservations.Should().BeEmpty("Reservation table needs to be empty for this test");
@@ -126,16 +163,7 @@ public class Tests : TestBase<App, State>
             "2000-01-01T08:00:00.000Z",
             "2000-01-01T18:00:00.000Z"
         );
-        // Pick random car at station to reserve
-        var reservedCar = this.Context.Cars.First(car => car.StationId == this._state.StationId);
-        var reservation = new Reservation
-        {
-            Id = Guid.NewGuid(),
-            Begin = DateTime.Parse("2000-01-01T10:00:00.000Z", CultureInfo.InvariantCulture).ToUniversalTime(),
-            End = DateTime.Parse("2000-01-01T12:00:00.000Z", CultureInfo.InvariantCulture).ToUniversalTime(),
-            MemberId = this.Context.Members.First().Id,
-            CarId = reservedCar.Id
-        };
+        var reservation = this.ConstructReservation("2000-01-01T10:00:00.000Z", "2000-01-01T12:00:00.000Z");
         this.Context.Reservations.Add(reservation);
         await this.Context.SaveChangesAsync();
 
@@ -144,12 +172,11 @@ public class Tests : TestBase<App, State>
             .GETAsync<C.Get.Available.Endpoint, C.Get.Available.Request, IEnumerable<Car>>(requestData);
 
         // Arrange assertion
-        var expectedCars = this.Context.Cars.Where(car =>
-            car.StationId == this._state.StationId && car.Id != reservedCar.Id);
+        var expectedCars = this.CarsAtStation().Where(car => car.Id != this._state.CarId);
 
         // Assert
-        this.Context.Cars.Where(car => car.StationId == this._state.StationId)
-            .Should().HaveCountGreaterOrEqualTo(1, "Station needs to have at least one car");
+        this.CarsAtStation().Should()
+            .HaveCountGreaterOrEqualTo(1, "Station needs to have at least one car");
         this.Context.Reservations.Should()
             .HaveCount(1, "Reservation table should contain only the one created in this test");
         httpResponse.StatusCode.Should().Be(HttpStatusCode.OK);
