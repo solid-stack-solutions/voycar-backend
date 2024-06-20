@@ -20,6 +20,7 @@ public class Mapper : Mapper<Request, Response, Member>
             BirthDate = r.BirthDate,
             BirthPlace = r.BirthPlace,
             PhoneNumber = r.PhoneNumber,
+            PlanId = r.PlanId
         };
     }
 }

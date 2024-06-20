@@ -18,4 +18,5 @@ public class Request
     public DateOnly BirthDate { get; set; }
     public string BirthPlace { get; set; }
     public string PhoneNumber { get; set; }
+    public Guid PlanId { get; set; }
 }
