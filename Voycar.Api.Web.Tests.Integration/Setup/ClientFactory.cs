@@ -7,6 +7,7 @@ using Microsoft.EntityFrameworkCore;
 using Registration = Features.Users.Endpoints.Post.Register;
 using Login = Features.Users.Endpoints.Post.Login;
 
+
 public static class ClientFactory
 {
     /// <summary>
@@ -21,9 +22,15 @@ public static class ClientFactory
     {
         const string testMail = "member.integration@test.de";
         const string password = "integration";
+        const string planName = "basic";
 
         var member = app.CreateClient();
-
+        var planId = (await context.Plans.FirstOrDefaultAsync(
+            plan => plan.Name == planName))?.Id;
+        if (planId is null)
+        {
+            throw new RowNotInTableException($"plan \"{planId}\" is not in db");
+        }
         // Register new member, calling endpoint since manually registering member would be too complicated
         var (registerHttpResponse, registerResponseBody) =
             await member.POSTAsync<Registration.Endpoint, Registration.Request, Registration.Response>(
@@ -38,9 +45,12 @@ public static class ClientFactory
                     PostalCode = "...",
                     City = "...",
                     Country = "...",
-                    BirthDate = new DateOnly(2000, 1, 1),
+                    BirthDate = new DateOnly(2000,
+                        1,
+                        1),
                     BirthPlace = "...",
                     PhoneNumber = "...",
+                    PlanId = (Guid)planId
                 }
             );
         if (registerHttpResponse.StatusCode != HttpStatusCode.OK)
@@ -53,6 +63,7 @@ public static class ClientFactory
 
         return member;
     }
+
 
     /// <summary>
     /// Creates a new HTTP client which is logged in as an employee. The employee will be saved in the database
@@ -78,6 +89,7 @@ public static class ClientFactory
 
         return await CreateUserWithRoleClient(app, context, (Guid)roleId, testMail, password);
     }
+
 
     /// <summary>
     /// Creates a new http client which is logged in as an admin. The admin will be saved in the database and verified.
@@ -124,9 +136,7 @@ public static class ClientFactory
         // Create user entity
         var user = new User()
         {
-            Email = email,
-            PasswordHash = BCrypt.Net.BCrypt.EnhancedHashPassword(password),
-            RoleId = roleId
+            Email = email, PasswordHash = BCrypt.Net.BCrypt.EnhancedHashPassword(password), RoleId = roleId
         };
         context.Users.Add(user);
         var changedAmount = await context.SaveChangesAsync();
@@ -141,6 +151,7 @@ public static class ClientFactory
 
         return userClient;
     }
+
 
     private static async Task VerifyUserInDb(VoycarDbContext context, string email)
     {
@@ -159,6 +170,7 @@ public static class ClientFactory
             throw new DbUpdateException("unable to set verification status of user in db");
         }
     }
+
 
     private static async Task LogInHttpClient(HttpClient client, string email, string password)
     {
