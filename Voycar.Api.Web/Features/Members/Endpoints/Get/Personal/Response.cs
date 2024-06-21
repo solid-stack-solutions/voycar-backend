@@ -1,10 +1,6 @@
-namespace Voycar.Api.Web.Entities;
+namespace Voycar.Api.Web.Features.Members.Endpoints.Get.Personal;
 
-using System.ComponentModel.DataAnnotations.Schema;
-using System.Text.Json.Serialization;
-using Generic;
-
-public class Member : Entity
+public class Response
 {
     // Personal information
     public string FirstName { get; set; }
@@ -19,11 +15,8 @@ public class Member : Entity
 
     // Contact information
     public string PhoneNumber { get; set; }
+    public string Email { get; set; }
 
-    // Plan information foreign key
-    [ForeignKey("Plan")]
-    public Guid PlanId { get; set; }
-    [JsonIgnore]
-    public Plan Plan { get; set; }
-
+    // Plan information
+    public string PlanName { get; set; }
 }
