@@ -39,6 +39,6 @@ public class Endpoint : Endpoint<Request, Results<Ok<Response>, BadRequest<NotFo
         }
 
         var member = this._memberRepository.Retrieve(user.MemberId.Value);
-        await this.SendResultAsync(TypedResults.Ok(this.Map.FromEntity(member!)));
+        await this.SendResultAsync(TypedResults.Ok(this.Map.FromEntities(member!, user)));
     }
 }

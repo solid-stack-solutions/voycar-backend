@@ -14,6 +14,7 @@ public class Response
     public string BirthPlace { get; set; }
 
     // Contact information
+    public string Email { get; set; }
     public string PhoneNumber { get; set; }
 
     // Plan information

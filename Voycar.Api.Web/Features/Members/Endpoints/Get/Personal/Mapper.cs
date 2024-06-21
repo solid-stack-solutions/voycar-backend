@@ -2,34 +2,36 @@ namespace Voycar.Api.Web.Features.Members.Endpoints.Get.Personal;
 
 using Entities;
 using Plans.Repository;
+using Users.Repository;
 
 
 public class Mapper : ResponseMapper<Response, Member>
 {
-    private readonly IPlans _repository;
+    private readonly IPlans _planRepository;
 
 
-    public Mapper(IPlans repository)
+    public Mapper(IPlans planRepository, IUsers userRepository)
     {
-        this._repository = repository;
+        this._planRepository = planRepository;
     }
 
 
-    public override Response FromEntity(Member e)
+    public Response FromEntities(Member member, User user)
     {
         return new Response
         {
-            FirstName = e.FirstName,
-            LastName = e.LastName,
-            Street = e.Street,
-            HouseNumber = e.HouseNumber,
-            PostalCode = e.PostalCode,
-            City = e.City,
-            Country = e.Country,
-            BirthDate = e.BirthDate,
-            BirthPlace = e.BirthPlace,
-            PhoneNumber = e.PhoneNumber,
-            PlanName = this._repository.Retrieve(e.PlanId)!.Name
+            FirstName = member.FirstName,
+            LastName = member.LastName,
+            Street = member.Street,
+            HouseNumber = member.HouseNumber,
+            PostalCode = member.PostalCode,
+            City = member.City,
+            Country = member.Country,
+            BirthDate = member.BirthDate,
+            BirthPlace = member.BirthPlace,
+            PhoneNumber = member.PhoneNumber,
+            Email = user.Email,
+            PlanName = this._planRepository.Retrieve(member.PlanId)!.Name
         };
     }
 }
