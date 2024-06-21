@@ -29,7 +29,7 @@ public static class ClientFactory
             plan => plan.Name == planName))?.Id;
         if (planId is null)
         {
-            throw new RowNotInTableException($"plan \"{planId}\" is not in db");
+            throw new RowNotInTableException($"plan \"{planName}\" is not in db");
         }
         // Register new member, calling endpoint since manually registering member would be too complicated
         var (registerHttpResponse, registerResponseBody) =
