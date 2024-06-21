@@ -10,7 +10,7 @@ public class Mapper : ResponseMapper<Response, Member>
     private readonly IPlans _planRepository;
 
 
-    public Mapper(IPlans planRepository, IUsers userRepository)
+    public Mapper(IPlans planRepository)
     {
         this._planRepository = planRepository;
     }
