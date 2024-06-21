@@ -4,7 +4,7 @@ using Repository;
 using Users.Repository;
 
 
-public class Endpoint : Endpoint<Request, Results<Ok<Response>, BadRequest<NotFound>>, Mapper>
+public class Endpoint : Endpoint<Request, Results<Ok<Response>, BadRequest<BadRequest>>, Mapper>
 {
     private readonly IUsers _userRepository;
     private readonly IMembers _memberRepository;
@@ -38,7 +38,7 @@ public class Endpoint : Endpoint<Request, Results<Ok<Response>, BadRequest<NotFo
             return;
         }
 
-        var member = this._memberRepository.Retrieve(user.MemberId.Value);
+        var member = this._memberRepository.Retrieve(user.MemberId!.Value);
         await this.SendResultAsync(TypedResults.Ok(this.Map.FromEntities(member!, user)));
     }
 }
