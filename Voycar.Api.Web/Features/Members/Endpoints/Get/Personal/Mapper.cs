@@ -2,7 +2,6 @@ namespace Voycar.Api.Web.Features.Members.Endpoints.Get.Personal;
 
 using Entities;
 using Plans.Repository;
-using Users.Repository;
 
 
 public class Mapper : ResponseMapper<Response, Member>
