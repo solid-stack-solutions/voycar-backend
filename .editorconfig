@@ -59,6 +59,10 @@ dotnet_diagnostic.CA1848.severity = silent
 dotnet_diagnostic.CA1720.severity = silent
 # Identifier contains type name in namespace
 dotnet_diagnostic.CA1716.severity = silent
+# Underscore in tests
+dotnet_diagnostic.CA1707.severity = silent
+# Visible private fields
+dotnet_diagnostic.CA1051.severity = silent
 
 ##########################################
 # Language Rules
