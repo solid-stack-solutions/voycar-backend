@@ -25,7 +25,7 @@ public class Endpoint : Endpoint<Request, Results<Ok<Response>, BadRequest<BadRe
             summary.Summary = "Get personal details of logged in member";
             summary.Description = "Get the personal details of the member who is logged in according to the request cookie";
             summary.Responses[200] = "If member is found";
-            summary.Responses[400] = "If the member somehow can't be found";
+            summary.Responses[400] = "If the member somehow can't be found or the user is not a member.";
         });
     }
 
