@@ -37,6 +37,11 @@ public class Endpoint : Endpoint<Request, Results<Ok<Response>, BadRequest<strin
             await this.SendResultAsync(TypedResults.BadRequest("User does not exist"));
             return;
         }
+        if (user.MemberId is null)
+        {
+            await this.SendResultAsync(TypedResults.BadRequest("Member does not exist"));
+            return;
+        }
 
         var member = this._memberRepository.Retrieve(user.MemberId.Value);
         if (member is null)
@@ -45,6 +50,6 @@ public class Endpoint : Endpoint<Request, Results<Ok<Response>, BadRequest<strin
             return;
         }
 
-        await this.SendResultAsync(TypedResults.Ok(this.Map.FromEntities(member!, user)));
+        await this.SendResultAsync(TypedResults.Ok(this.Map.FromEntities(member, user)));
     }
 }
