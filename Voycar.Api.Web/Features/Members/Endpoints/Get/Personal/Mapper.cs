@@ -19,6 +19,7 @@ public class Mapper : ResponseMapper<Response, Member>
     {
         return new Response
         {
+            MemberId = member.Id,
             FirstName = member.FirstName,
             LastName = member.LastName,
             Street = member.Street,
