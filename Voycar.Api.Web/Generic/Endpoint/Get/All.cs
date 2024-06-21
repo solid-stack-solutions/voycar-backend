@@ -6,12 +6,12 @@ public abstract class All<TEntity>
     : EndpointWithoutRequest<IEnumerable<TEntity>>
     where TEntity : Entity
 {
-    protected readonly IRepository<TEntity> repository;
+    protected readonly IRepository<TEntity> _repository;
     protected new readonly string[] Roles;
 
     protected All(IRepository<TEntity> repository, string[] roles)
     {
-        this.repository = repository;
+        this._repository = repository;
         this.Roles = roles;
     }
 
@@ -29,6 +29,6 @@ public abstract class All<TEntity>
 
     public override async Task HandleAsync(CancellationToken ct)
     {
-        await this.SendResultAsync(TypedResults.Ok(this.repository.RetrieveAll()));
+        await this.SendResultAsync(TypedResults.Ok(this._repository.RetrieveAll()));
     }
 }

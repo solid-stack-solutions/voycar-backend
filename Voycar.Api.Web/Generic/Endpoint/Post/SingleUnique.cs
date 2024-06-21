@@ -28,7 +28,7 @@ public abstract class SingleUnique<TEntity>
 
     public override async Task HandleAsync(TEntity req, CancellationToken ct)
     {
-        var guid = this.repository.CreateUnique(req);
+        var guid = this._repository.CreateUnique(req);
 
         if (guid is not null)
         {
