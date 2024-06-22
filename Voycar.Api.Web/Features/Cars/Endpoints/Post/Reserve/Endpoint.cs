@@ -30,14 +30,21 @@ public class Endpoint : Endpoint<Request, Results<Ok<Guid>, Conflict>>
 
     public override async Task HandleAsync(Request req, CancellationToken ct)
     {
-        var reservationId = this._resRepository.Create(req.CarId, req.MemberId, req.Begin, req.End);
+        var reservation = new Reservation
+        {
+            Id = Guid.NewGuid(),
+            Begin = req.Begin,
+            End = req.End,
+            MemberId = req.MemberId,
+            CarId = req.CarId
+        };
 
-        if (reservationId is null)
+        if (this._resRepository.HasConflicts(reservation))
         {
             await this.SendResultAsync(TypedResults.Conflict());
             return;
         }
 
-        await this.SendResultAsync(TypedResults.Ok(reservationId));
+        await this.SendResultAsync(TypedResults.Ok(this._resRepository.Create(reservation)));
     }
 }

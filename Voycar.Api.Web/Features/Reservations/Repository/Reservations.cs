@@ -8,33 +8,19 @@ public class Reservations : Generic.Repository.Repository<Reservation>, IReserva
 {
     public Reservations(VoycarDbContext context) : base(context) {}
 
-    public Guid? Create(Guid carId, Guid memberId, DateTime begin, DateTime end)
+    public bool HasConflicts(Reservation reservation)
     {
-        var noConflicts = this.DbSet
+        return !this.DbSet
             // Reservations for the same car
-            .Where(res => res.CarId == carId)
+            .Where(res => res.CarId == reservation.CarId)
             // Reservations with conflicting timespans
             .Where(res =>
                 // res.Begin is in given timespan
-                (res.Begin >= begin && res.Begin < end) ||
+                (res.Begin >= reservation.Begin && res.Begin <  reservation.End) ||
                 // res.End is in given timespan
-                (res.End > begin && res.End <= end) ||
+                (res.End   >  reservation.Begin && res.End   <= reservation.End) ||
                 // Whole given timespan overlaps with reservation
-                (res.Begin < begin && res.End > end))
+                (res.Begin <  reservation.Begin && res.End   >  reservation.End))
             .IsNullOrEmpty();
-
-        if (!noConflicts)
-        {
-            return null;
-        }
-
-        return this.Create(new Reservation
-        {
-            Id = Guid.NewGuid(),
-            Begin = begin,
-            End = end,
-            CarId = carId,
-            MemberId = memberId
-        });
     }
 }
