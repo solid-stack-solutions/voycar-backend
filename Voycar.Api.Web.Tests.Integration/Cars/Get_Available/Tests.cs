@@ -1,10 +1,9 @@
-namespace Voycar.Api.Web.Tests.Integration.Cars;
+namespace Voycar.Api.Web.Tests.Integration.Cars.Get_Available;
 
 using System.Globalization;
 using Context;
 using Entities;
-
-using C = Features.Cars.Endpoints;
+using A = Features.Cars.Endpoints.Get.Available;
 
 public sealed class State : StateFixture
 {
@@ -42,9 +41,9 @@ public class Tests : TestBase<App, State>
         this._state.MemberId = this.Context.Members.First().Id;
     }
 
-    private static C.Get.Available.Request ConstructAvailableRequest(Guid id, string begin, string end)
+    private static A.Request CreateRequest(Guid id, string begin, string end)
     {
-        return new C.Get.Available.Request
+        return new A.Request
         {
             StationId = id,
             Begin = DateTime.Parse(begin, CultureInfo.InvariantCulture).ToUniversalTime(),
@@ -53,17 +52,17 @@ public class Tests : TestBase<App, State>
     }
 
     /// <summary>
-    /// <see cref="ConstructAvailableRequest(System.Guid,string,string)"/>, but using <see cref="State.StationId"/> as <c>id</c>
+    /// <see cref="CreateRequest(System.Guid,string,string)"/> but using <see cref="State.StationId"/> as <c>id</c>
     /// </summary>
-    private C.Get.Available.Request ConstructAvailableRequest(string begin, string end)
+    private A.Request CreateRequest(string begin, string end)
     {
-        return ConstructAvailableRequest(this._state.StationId, begin, end);
+        return CreateRequest(this._state.StationId, begin, end);
     }
 
     /// <summary>
     /// Creates and returns new <see cref="Reservation"/> with <see cref="State.MemberId"/> and given <c>carId</c>
     /// </summary>
-    private Reservation ConstructReservation(string begin, string end, Guid carId)
+    private Reservation CreateReservation(string begin, string end, Guid carId)
     {
         return new Reservation
         {
@@ -78,9 +77,9 @@ public class Tests : TestBase<App, State>
     /// <summary>
     /// Creates and returns new <see cref="Reservation"/> with <see cref="State.MemberId"/> and <see cref="State.CarId"/>
     /// </summary>
-    private Reservation ConstructReservation(string begin, string end)
+    private Reservation CreateReservation(string begin, string end)
     {
-        return this.ConstructReservation(begin, end, this._state.CarId);
+        return this.CreateReservation(begin, end, this._state.CarId);
     }
 
     /// <summary>
@@ -97,8 +96,8 @@ public class Tests : TestBase<App, State>
     /// Assert that <see cref="HttpStatusCode.OK"/> and the given <c>expectedAvailableCars</c> were received.
     /// Then remove the given <see cref="Reservation"/>s from the database again.
     /// </summary>
-    private async Task RunGetAvailableTest(
-        C.Get.Available.Request requestData,
+    private async Task RunTest(
+        A.Request requestData,
         Reservation[] reservations,
         IEnumerable<Car> expectedAvailableCars)
     {
@@ -108,7 +107,7 @@ public class Tests : TestBase<App, State>
 
         // Act
         var (httpResponse, response) = await this._app.Admin
-            .GETAsync<C.Get.Available.Endpoint, C.Get.Available.Request, IEnumerable<Car>>(requestData);
+            .GETAsync<A.Endpoint, A.Request, IEnumerable<Car>>(requestData);
 
         // Assert
         this.Context.Reservations.Should()
@@ -126,15 +125,15 @@ public class Tests : TestBase<App, State>
     public async Task Get_Available_ReturnsBadRequest_DueToGuid()
     {
         // Arrange
-        var requestData = ConstructAvailableRequest(
+        var requestData = CreateRequest(
             new Guid(), // Just zeros, should not exist in database
             "2000-01-01T08:00:00.000Z",
             "2000-01-01T18:00:00.000Z"
         );
 
         // Act
-        var (httpResponse, response) = await this._app.Admin
-            .GETAsync<C.Get.Available.Endpoint, C.Get.Available.Request, IEnumerable<Car>>(requestData);
+        var (httpResponse, _) = await this._app.Admin
+            .GETAsync<A.Endpoint, A.Request, IEnumerable<Car>>(requestData);
 
         // Assert
         httpResponse.StatusCode.Should().Be(HttpStatusCode.BadRequest);
@@ -144,7 +143,7 @@ public class Tests : TestBase<App, State>
     public async Task Get_Available_ReturnsBadRequest_DueToNegativeTime()
     {
         // Arrange
-        var requestData = ConstructAvailableRequest(
+        var requestData = CreateRequest(
             this._state.StationId,
             // Begin is later than end => "negative" time
             "2000-01-01T08:00:00.000Z",
@@ -152,8 +151,8 @@ public class Tests : TestBase<App, State>
         );
 
         // Act
-        var (httpResponse, response) = await this._app.Admin
-            .GETAsync<C.Get.Available.Endpoint, C.Get.Available.Request, IEnumerable<Car>>(requestData);
+        var (httpResponse, _) = await this._app.Admin
+            .GETAsync<A.Endpoint, A.Request, IEnumerable<Car>>(requestData);
 
         // Assert
         httpResponse.StatusCode.Should().Be(HttpStatusCode.BadRequest);
@@ -163,7 +162,7 @@ public class Tests : TestBase<App, State>
     public async Task Get_Available_ReturnsBadRequest_DueToZeroTime()
     {
         // Arrange
-        var requestData = ConstructAvailableRequest(
+        var requestData = CreateRequest(
             this._state.StationId,
             // Begin equal to end => "zero" time
             "2000-01-01T08:00:00.000Z",
@@ -171,8 +170,8 @@ public class Tests : TestBase<App, State>
         );
 
         // Act
-        var (httpResponse, response) = await this._app.Admin
-            .GETAsync<C.Get.Available.Endpoint, C.Get.Available.Request, IEnumerable<Car>>(requestData);
+        var (httpResponse, _) = await this._app.Admin
+            .GETAsync<A.Endpoint, A.Request, IEnumerable<Car>>(requestData);
 
         // Assert
         httpResponse.StatusCode.Should().Be(HttpStatusCode.BadRequest);
@@ -182,7 +181,7 @@ public class Tests : TestBase<App, State>
     public async Task Get_Available_ReturnsOkAndAllCars()
     {
         // Arrange
-        var requestData = ConstructAvailableRequest(
+        var requestData = CreateRequest(
             this._state.StationId,
             "2000-01-01T08:00:00.000Z",
             "2000-01-01T18:00:00.000Z"
@@ -190,7 +189,7 @@ public class Tests : TestBase<App, State>
 
         // Act
         var (httpResponse, response) = await this._app.Admin
-            .GETAsync<C.Get.Available.Endpoint, C.Get.Available.Request, IEnumerable<Car>>(requestData);
+            .GETAsync<A.Endpoint, A.Request, IEnumerable<Car>>(requestData);
 
         // Assert
         this.Context.Reservations.Should().BeEmpty("Reservation table should be empty");
@@ -203,9 +202,9 @@ public class Tests : TestBase<App, State>
     {
         // Reserve car from different station
         var reservedCarId = this.Context.Cars.First(car => car.StationId != this._state.StationId).Id;
-        await this.RunGetAvailableTest(
-            this.ConstructAvailableRequest("2000-01-01T08:00:00.000Z", "2000-01-01T18:00:00.000Z"),
-            [this.ConstructReservation("2000-01-01T10:00:00.000Z", "2000-01-01T12:00:00.000Z", reservedCarId)],
+        await this.RunTest(
+            this.CreateRequest("2000-01-01T08:00:00.000Z", "2000-01-01T18:00:00.000Z"),
+            [this.CreateReservation("2000-01-01T10:00:00.000Z", "2000-01-01T12:00:00.000Z", reservedCarId)],
             this.CarsAtStation()
         );
     }
@@ -213,11 +212,11 @@ public class Tests : TestBase<App, State>
     [Fact]
     public async Task Get_Available_ReturnsOkAndAllCars_WithCloselySurroundingReservations()
     {
-        await this.RunGetAvailableTest(
-            this.ConstructAvailableRequest("2000-01-01T08:00:00.000Z", "2000-01-01T18:00:00.000Z"),
+        await this.RunTest(
+            this.CreateRequest("2000-01-01T08:00:00.000Z", "2000-01-01T18:00:00.000Z"),
             [
-                this.ConstructReservation("2000-01-01T06:00:00.000Z", "2000-01-01T08:00:00.000Z"),
-                this.ConstructReservation("2000-01-01T18:00:00.000Z", "2000-01-01T20:00:00.000Z")
+                this.CreateReservation("2000-01-01T06:00:00.000Z", "2000-01-01T08:00:00.000Z"),
+                this.CreateReservation("2000-01-01T18:00:00.000Z", "2000-01-01T20:00:00.000Z")
             ],
             this.CarsAtStation()
         );
@@ -226,11 +225,11 @@ public class Tests : TestBase<App, State>
     [Fact]
     public async Task Get_Available_ReturnsOkAndAllCars_WithLooselySurroundingReservations()
     {
-        await this.RunGetAvailableTest(
-            this.ConstructAvailableRequest("2000-01-01T08:00:00.000Z", "2000-01-01T18:00:00.000Z"),
+        await this.RunTest(
+            this.CreateRequest("2000-01-01T08:00:00.000Z", "2000-01-01T18:00:00.000Z"),
             [
-                this.ConstructReservation("2000-01-01T06:00:00.000Z", "2000-01-01T07:00:00.000Z"),
-                this.ConstructReservation("2000-01-01T19:00:00.000Z", "2000-01-01T20:00:00.000Z")
+                this.CreateReservation("2000-01-01T06:00:00.000Z", "2000-01-01T07:00:00.000Z"),
+                this.CreateReservation("2000-01-01T19:00:00.000Z", "2000-01-01T20:00:00.000Z")
             ],
             this.CarsAtStation()
         );
@@ -239,9 +238,9 @@ public class Tests : TestBase<App, State>
     [Fact]
     public async Task Get_Available_ReturnsOkAndAvailableCars_WithReservationInMiddle()
     {
-        await this.RunGetAvailableTest(
-            this.ConstructAvailableRequest("2000-01-01T08:00:00.000Z", "2000-01-01T18:00:00.000Z"),
-            [this.ConstructReservation("2000-01-01T10:00:00.000Z", "2000-01-01T12:00:00.000Z")],
+        await this.RunTest(
+            this.CreateRequest("2000-01-01T08:00:00.000Z", "2000-01-01T18:00:00.000Z"),
+            [this.CreateReservation("2000-01-01T10:00:00.000Z", "2000-01-01T12:00:00.000Z")],
             this.CarsAtStation().Where(car => car.Id != this._state.CarId)
         );
     }
@@ -249,9 +248,9 @@ public class Tests : TestBase<App, State>
     [Fact]
     public async Task Get_Available_ReturnsOkAndAvailableCars_WithReservationAtBegin()
     {
-        await this.RunGetAvailableTest(
-            this.ConstructAvailableRequest("2000-01-01T08:00:00.000Z", "2000-01-01T18:00:00.000Z"),
-            [this.ConstructReservation("2000-01-01T07:00:00.000Z", "2000-01-01T09:00:00.000Z")],
+        await this.RunTest(
+            this.CreateRequest("2000-01-01T08:00:00.000Z", "2000-01-01T18:00:00.000Z"),
+            [this.CreateReservation("2000-01-01T07:00:00.000Z", "2000-01-01T09:00:00.000Z")],
             this.CarsAtStation().Where(car => car.Id != this._state.CarId)
         );
     }
@@ -259,9 +258,9 @@ public class Tests : TestBase<App, State>
     [Fact]
     public async Task Get_Available_ReturnsOkAndAvailableCars_WithReservationAtEnd()
     {
-        await this.RunGetAvailableTest(
-            this.ConstructAvailableRequest("2000-01-01T08:00:00.000Z", "2000-01-01T18:00:00.000Z"),
-            [this.ConstructReservation("2000-01-01T17:00:00.000Z", "2000-01-01T19:00:00.000Z")],
+        await this.RunTest(
+            this.CreateRequest("2000-01-01T08:00:00.000Z", "2000-01-01T18:00:00.000Z"),
+            [this.CreateReservation("2000-01-01T17:00:00.000Z", "2000-01-01T19:00:00.000Z")],
             this.CarsAtStation().Where(car => car.Id != this._state.CarId)
         );
     }
@@ -269,9 +268,9 @@ public class Tests : TestBase<App, State>
     [Fact]
     public async Task Get_Available_ReturnsOkAndAvailableCars_WithOverlappingReservation()
     {
-        await this.RunGetAvailableTest(
-            this.ConstructAvailableRequest("2000-01-01T08:00:00.000Z", "2000-01-01T18:00:00.000Z"),
-            [this.ConstructReservation("2000-01-01T07:00:00.000Z", "2000-01-01T19:00:00.000Z")],
+        await this.RunTest(
+            this.CreateRequest("2000-01-01T08:00:00.000Z", "2000-01-01T18:00:00.000Z"),
+            [this.CreateReservation("2000-01-01T07:00:00.000Z", "2000-01-01T19:00:00.000Z")],
             this.CarsAtStation().Where(car => car.Id != this._state.CarId)
         );
     }
@@ -281,9 +280,9 @@ public class Tests : TestBase<App, State>
     {
         const string begin = "2000-01-01T08:00:00.000Z";
         const string end   = "2000-01-01T18:00:00.000Z";
-        await this.RunGetAvailableTest(
-            this.ConstructAvailableRequest(begin, end),
-            [this.ConstructReservation(begin, end)],
+        await this.RunTest(
+            this.CreateRequest(begin, end),
+            [this.CreateReservation(begin, end)],
             this.CarsAtStation().Where(car => car.Id != this._state.CarId)
         );
     }
