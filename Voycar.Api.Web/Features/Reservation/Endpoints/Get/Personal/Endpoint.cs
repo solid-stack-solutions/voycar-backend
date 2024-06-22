@@ -20,7 +20,7 @@ public class Endpoint : Endpoint<Request, Results<Ok<Response>, BadRequest<strin
 
     public override void Configure()
     {
-        this.Get("reservation/personal");
+        this.Get(nameof(Reservation).ToLowerInvariant() + "/personal");
         this.Roles("member");
         this.Summary(summary =>
         {
