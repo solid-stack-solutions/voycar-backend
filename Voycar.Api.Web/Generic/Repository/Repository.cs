@@ -53,7 +53,11 @@ public class Repository<TEntity> : IRepository<TEntity> where TEntity : Entity
     /// </returns>
     public bool Update(TEntity entity)
     {
-        this.DbSet.Update(entity);
+        var existingEntity = this.DbSet.Find(entity.Id);
+        if (existingEntity != null)
+        {
+            this.DbSet.Entry(existingEntity).CurrentValues.SetValues(entity);
+        }
         return this.SaveChanges();
     }
 
