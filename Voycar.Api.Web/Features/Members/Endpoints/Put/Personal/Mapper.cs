@@ -3,7 +3,7 @@ namespace Voycar.Api.Web.Features.Members.Endpoints.Put.Personal;
 using Entities;
 
 
-public class Mapper : ResponseMapper<Request, Member>
+public class Mapper : RequestMapper<Request, Member>
 {
     public Member ToEntity(Request r, Member member)
     {
