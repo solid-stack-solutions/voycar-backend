@@ -3,6 +3,7 @@
 using System.Globalization;
 using Context;
 using Entities;
+using Generic;
 
 using R = Features.Cars.Endpoints.Post.Reserve;
 
@@ -96,7 +97,7 @@ public class Tests : TestBase<App, State>
 
         // Act
         var (httpResponse, response) = await this._app.Admin
-            .POSTAsync<R.Endpoint, R.Request, Guid>(requestData);
+            .POSTAsync<R.Endpoint, R.Request, Entity>(requestData);
 
         // Assert
         if (expectConflict)
@@ -107,7 +108,7 @@ public class Tests : TestBase<App, State>
         else
         {
             httpResponse.StatusCode.Should().Be(HttpStatusCode.OK);
-            response.Should().NotBe(new Guid());
+            response.Id.Should().NotBe(new Guid());
             this.Context.Reservations.Should().HaveCount(reservations.Length + 1, "Reservations table should only contain the ones created in this test");
         }
 
@@ -130,7 +131,7 @@ public class Tests : TestBase<App, State>
 
         // Act
         var (httpResponse, _) = await this._app.Admin
-            .POSTAsync<R.Endpoint, R.Request, Guid>(requestData);
+            .POSTAsync<R.Endpoint, R.Request, Entity>(requestData);
 
         // Assert
         httpResponse.StatusCode.Should().Be(HttpStatusCode.BadRequest);
@@ -149,7 +150,7 @@ public class Tests : TestBase<App, State>
 
         // Act
         var (httpResponse, _) = await this._app.Admin
-            .POSTAsync<R.Endpoint, R.Request, Guid>(requestData);
+            .POSTAsync<R.Endpoint, R.Request, Entity>(requestData);
 
         // Assert
         httpResponse.StatusCode.Should().Be(HttpStatusCode.BadRequest);
@@ -167,7 +168,7 @@ public class Tests : TestBase<App, State>
 
         // Act
         var (httpResponse, _) = await this._app.Admin
-            .POSTAsync<R.Endpoint, R.Request, Guid>(requestData);
+            .POSTAsync<R.Endpoint, R.Request, Entity>(requestData);
 
         // Assert
         httpResponse.StatusCode.Should().Be(HttpStatusCode.BadRequest);
@@ -185,7 +186,7 @@ public class Tests : TestBase<App, State>
 
         // Act
         var (httpResponse, _) = await this._app.Admin
-            .POSTAsync<R.Endpoint, R.Request, Guid>(requestData);
+            .POSTAsync<R.Endpoint, R.Request, Entity>(requestData);
 
         // Assert
         httpResponse.StatusCode.Should().Be(HttpStatusCode.BadRequest);

@@ -1,9 +1,10 @@
 ﻿namespace Voycar.Api.Web.Features.Cars.Endpoints.Post.Reserve;
 
 using Entities;
+using Generic;
 using Reservations.Repository;
 
-public class Endpoint : Endpoint<Request, Results<Ok<Guid>, Conflict>>
+public class Endpoint : Endpoint<Request, Results<Ok<Entity>, Conflict>>
 {
     private readonly IReservations _resRepository;
 
@@ -25,6 +26,7 @@ public class Endpoint : Endpoint<Request, Results<Ok<Guid>, Conflict>>
             s.Responses[200] = "Generated ID of created reservation";
             s.Responses[400] = "If end-time is not after begin-time or no station or member with the given ID exists";
             s.Responses[409] = $"If {nameof(Car)} could not be reserved due to conflicts with other reservations";
+            s.ResponseExamples = new Dictionary<int, object> {{ 200, new Entity { Id = Guid.NewGuid() }}};
         });
     }
 
@@ -45,6 +47,7 @@ public class Endpoint : Endpoint<Request, Results<Ok<Guid>, Conflict>>
             return;
         }
 
-        await this.SendResultAsync(TypedResults.Ok(this._resRepository.Create(reservation)));
+        var guid = this._resRepository.Create(reservation);
+        await this.SendResultAsync(TypedResults.Ok(new Entity { Id = guid!.Value }));
     }
 }
