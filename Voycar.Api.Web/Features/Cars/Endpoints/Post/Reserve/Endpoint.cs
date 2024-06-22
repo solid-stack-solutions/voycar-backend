@@ -1,7 +1,7 @@
 ﻿namespace Voycar.Api.Web.Features.Cars.Endpoints.Post.Reserve;
 
 using Entities;
-using Reservation.Repository;
+using Reservations.Repository;
 
 public class Endpoint : Endpoint<Request, Results<Ok<Guid>, Conflict>>
 {
