@@ -1,4 +1,4 @@
-namespace Voycar.Api.Web.Features.Reservation.Endpoints.Get.Personal;
+namespace Voycar.Api.Web.Features.Reservations.Endpoints.Get.Personal;
 
 public class Request
 {
