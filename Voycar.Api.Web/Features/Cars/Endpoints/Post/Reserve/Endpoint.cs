@@ -14,7 +14,7 @@ public class Endpoint : Endpoint<Request, Results<Ok<Guid>, Conflict>>
 
     public override void Configure()
     {
-        this.Get(nameof(Car).ToLowerInvariant() + "/reserve");
+        this.Post(nameof(Car).ToLowerInvariant() + "/reserve");
         // ToDo remove before merging (useful for debugging)
         this.AllowAnonymous();
         //this.Roles(["admin", "employee", "member"]);
