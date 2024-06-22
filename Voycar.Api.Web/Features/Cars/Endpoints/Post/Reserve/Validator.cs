@@ -1,7 +1,7 @@
 ﻿namespace Voycar.Api.Web.Features.Cars.Endpoints.Post.Reserve;
 
-using Members.Repository;
 using Repository;
+using Users.Repository;
 
 public class Validator : Validator<Request>
 {
@@ -9,12 +9,15 @@ public class Validator : Validator<Request>
     {
         this.RuleFor(req => req.End - req.Begin)
             .GreaterThan(TimeSpan.Zero)
-            .WithMessage("End-time is not after begin-time");
+            .WithMessage("End-time is not after begin-time")
+            .WithName("generalErrors");
         this.RuleFor(req => this.Resolve<ICars>().Retrieve(req.CarId))
             .NotNull()
-            .WithMessage("There is no car with the given ID");
-        this.RuleFor(req => this.Resolve<IMembers>().Retrieve(req.MemberId))
+            .WithMessage("There is no car with the given ID")
+            .WithName("generalErrors");
+        this.RuleFor(req => this.Resolve<IUsers>().Retrieve(req.UserId))
             .NotNull()
-            .WithMessage("There is no member with the given ID");
+            .WithMessage("There is no user with the given ID")
+            .WithName("generalErrors");
     }
 }

@@ -60,23 +60,22 @@ public class Tests : TestBase<App, State>
         return this.CreateReservation(begin, end, this._state.CarId);
     }
 
-    private static R.Request CreateRequest(Guid carId, Guid memberId, string begin, string end)
+    private static R.Request CreateRequest(Guid carId, string begin, string end)
     {
         return new R.Request
         {
             CarId = carId,
-            MemberId = memberId,
             Begin = DateTime.Parse(begin, CultureInfo.InvariantCulture).ToUniversalTime(),
             End = DateTime.Parse(end, CultureInfo.InvariantCulture).ToUniversalTime()
         };
     }
 
     /// <summary>
-    /// <see cref="CreateRequest(System.Guid,System.Guid,string,string)"/> but using <see cref="State.CarId"/> and <see cref="State.MemberId"/>
+    /// <see cref="CreateRequest(System.Guid,string,string)"/> but using <see cref="State.CarId"/>
     /// </summary>
     private R.Request CreateRequest(string begin, string end)
     {
-        return CreateRequest(this._state.CarId, this._state.MemberId, begin, end);
+        return CreateRequest(this._state.CarId, begin, end);
     }
 
     /// <summary>
@@ -96,7 +95,7 @@ public class Tests : TestBase<App, State>
         await this.Context.SaveChangesAsync();
 
         // Act
-        var (httpResponse, response) = await this._app.Admin
+        var (httpResponse, response) = await this._app.Member
             .POSTAsync<R.Endpoint, R.Request, Entity>(requestData);
 
         // Assert
@@ -124,32 +123,12 @@ public class Tests : TestBase<App, State>
         // Arrange
         var requestData = CreateRequest(
             new Guid(), // Just zeros, should not exist in database
-            this._state.MemberId,
             "2000-01-01T08:00:00.000Z",
             "2000-01-01T18:00:00.000Z"
         );
 
         // Act
-        var (httpResponse, _) = await this._app.Admin
-            .POSTAsync<R.Endpoint, R.Request, Entity>(requestData);
-
-        // Assert
-        httpResponse.StatusCode.Should().Be(HttpStatusCode.BadRequest);
-    }
-
-    [Fact]
-    public async Task Post_Reserve_ReturnsBadRequest_DueToMemberId()
-    {
-        // Arrange
-        var requestData = CreateRequest(
-            this._state.CarId,
-            new Guid(), // Just zeros, should not exist in database
-            "2000-01-01T08:00:00.000Z",
-            "2000-01-01T18:00:00.000Z"
-        );
-
-        // Act
-        var (httpResponse, _) = await this._app.Admin
+        var (httpResponse, _) = await this._app.Member
             .POSTAsync<R.Endpoint, R.Request, Entity>(requestData);
 
         // Assert
@@ -167,7 +146,7 @@ public class Tests : TestBase<App, State>
         );
 
         // Act
-        var (httpResponse, _) = await this._app.Admin
+        var (httpResponse, _) = await this._app.Member
             .POSTAsync<R.Endpoint, R.Request, Entity>(requestData);
 
         // Assert
@@ -185,7 +164,7 @@ public class Tests : TestBase<App, State>
         );
 
         // Act
-        var (httpResponse, _) = await this._app.Admin
+        var (httpResponse, _) = await this._app.Member
             .POSTAsync<R.Endpoint, R.Request, Entity>(requestData);
 
         // Assert
