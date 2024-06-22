@@ -3,6 +3,7 @@ namespace Voycar.Api.Web.Features.Members.Endpoints.Get.Personal;
 public class Response
 {
     // Personal information
+    public Guid MemberId { get; set; }
     public string FirstName { get; set; }
     public string LastName { get; set; }
     public string Street { get; set; }
