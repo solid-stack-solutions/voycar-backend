@@ -1,7 +1,7 @@
-namespace Voycar.Api.Web.Features.Reservation.Endpoints.Get;
+namespace Voycar.Api.Web.Features.Reservations.Endpoints.Get;
 
-using Entities;
 using Repository;
+using Entities;
 
 public class Single : Generic.Endpoint.Get.Single<Reservation>
 {

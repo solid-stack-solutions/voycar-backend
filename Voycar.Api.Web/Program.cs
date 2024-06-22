@@ -5,7 +5,7 @@ using Voycar.Api.Web.Features.Cities.Repository;
 using Voycar.Api.Web.Features.Roles.Repository;
 using Voycar.Api.Web.Features.Members.Repository;
 using Voycar.Api.Web.Features.Plans.Repository;
-using Voycar.Api.Web.Features.Reservation.Repository;
+using Voycar.Api.Web.Features.Reservations.Repository;
 using Voycar.Api.Web.Features.Stations.Repository;
 using Voycar.Api.Web.Features.Users.Repository;
 using Voycar.Api.Web.Service;

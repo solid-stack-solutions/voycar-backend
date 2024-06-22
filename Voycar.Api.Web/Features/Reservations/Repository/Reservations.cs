@@ -1,4 +1,4 @@
-namespace Voycar.Api.Web.Features.Reservation.Repository;
+namespace Voycar.Api.Web.Features.Reservations.Repository;
 
 using Context;
 using Entities;
