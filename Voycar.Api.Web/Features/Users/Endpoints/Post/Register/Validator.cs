@@ -19,11 +19,11 @@ public class Validator : Validator<Request>
 
         this.RuleFor(request => request.FirstName)
             .NotEmpty().WithMessage("Your firstname is required!")
-            .Length(2, 250).WithMessage("Your name is too short or too long!");
+            .Length(2, 250).WithMessage("Your firstname is too short or too long!");
 
         this.RuleFor(request => request.LastName)
-            .NotEmpty().WithMessage("Your firstname is required!")
-            .Length(2, 250).WithMessage("Your name is too short or too long!");
+            .NotEmpty().WithMessage("Your lastname is required!")
+            .Length(2, 250).WithMessage("Your lastname is too short or too long!");
 
         this.RuleFor(request => request.Street)
             .NotEmpty().WithMessage("Your street is required!");
