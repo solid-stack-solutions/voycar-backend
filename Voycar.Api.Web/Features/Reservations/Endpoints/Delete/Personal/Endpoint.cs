@@ -1,7 +1,6 @@
 namespace Voycar.Api.Web.Features.Reservations.Endpoints.Delete.Personal;
 
 using Entities;
-using Members.Repository;
 using Repository;
 using Users.Repository;
 
