@@ -1,7 +1,7 @@
-namespace Voycar.Api.Web.Features.Reservation.Endpoints.Delete;
+namespace Voycar.Api.Web.Features.Reservations.Endpoints.Delete;
 
-using Entities;
 using Repository;
+using Entities;
 
 public class Single : Generic.Endpoint.Delete.Single<Reservation>
 {

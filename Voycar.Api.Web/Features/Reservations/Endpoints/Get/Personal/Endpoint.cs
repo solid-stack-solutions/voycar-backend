@@ -1,9 +1,8 @@
-namespace Voycar.Api.Web.Features.Reservation.Endpoints.Get.Personal;
+namespace Voycar.Api.Web.Features.Reservations.Endpoints.Get.Personal;
 
-using Entities;
 using Repository;
-using Users.Repository;
-
+using Entities;
+using Voycar.Api.Web.Features.Users.Repository;
 
 public class Endpoint : Endpoint<Request, Results<Ok<Response>, BadRequest<string>>>
 {

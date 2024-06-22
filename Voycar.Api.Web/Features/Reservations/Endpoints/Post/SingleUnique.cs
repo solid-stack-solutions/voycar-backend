@@ -1,7 +1,7 @@
-namespace Voycar.Api.Web.Features.Reservation.Endpoints.Post;
+namespace Voycar.Api.Web.Features.Reservations.Endpoints.Post;
 
-using Entities;
 using Repository;
+using Entities;
 
 public class SingleUnique : Generic.Endpoint.Post.SingleUnique<Reservation>
 {

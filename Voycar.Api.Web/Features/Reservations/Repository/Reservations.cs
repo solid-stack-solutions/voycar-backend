@@ -1,7 +1,7 @@
-namespace Voycar.Api.Web.Features.Reservation.Repository;
+namespace Voycar.Api.Web.Features.Reservations.Repository;
 
-using Context;
-using Entities;
+using Voycar.Api.Web.Context;
+using Voycar.Api.Web.Entities;
 
 public class Reservations : Generic.Repository.Repository<Reservation>, IReservations
 {

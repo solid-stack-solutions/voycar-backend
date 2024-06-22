@@ -1,7 +1,7 @@
-namespace Voycar.Api.Web.Features.Reservation.Endpoints.Put;
+namespace Voycar.Api.Web.Features.Reservations.Endpoints.Put;
 
-using Entities;
 using Repository;
+using Entities;
 
 public class Single : Generic.Endpoint.Put.Single<Reservation>
 {
