@@ -2,6 +2,7 @@ namespace Voycar.Api.Web.Features.Members.Endpoints.Put.Personal;
 
 using Entities;
 using FluentValidation.Results;
+using Org.BouncyCastle.Crypto.Digests;
 using Repository;
 using Users.Repository;
 
@@ -31,23 +32,11 @@ public class Endpoint : Endpoint<Request, Results<Ok, BadRequest<string>>, Mappe
             summary.Responses[200] = "If member is found";
             summary.Responses[400] = "If the user somehow can't be found or the user is not a member";
         });
-        this.DontThrowIfValidationFails();
     }
 
 
     public override async Task HandleAsync(Request req, CancellationToken ct)
     {
-        if (this.ValidationFailed)
-        {
-            var errorMessages = new List<string>();
-            foreach (var failure in this.ValidationFailures)
-            {
-                errorMessages.Add(failure.ErrorMessage);
-            }
-
-            await this.SendResultAsync(TypedResults.BadRequest(errorMessages));
-        }
-
         var user = this._userRepository.Retrieve(req.UserId);
         if (user is null)
         {
@@ -74,6 +63,7 @@ public class Endpoint : Endpoint<Request, Results<Ok, BadRequest<string>>, Mappe
             await this.SendResultAsync(TypedResults.BadRequest("Failed to update member data"));
             return;
         }
+
 
         await this.SendResultAsync(TypedResults.Ok());
     }
