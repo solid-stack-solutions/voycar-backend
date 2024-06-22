@@ -36,6 +36,29 @@ public class Tests : TestBase<App, State>
         this._state.MemberId = this.Context.Members.First().Id;
     }
 
+    /// <summary>
+    /// Creates and returns new <see cref="Reservation"/> with <see cref="State.MemberId"/> and given <c>carId</c>
+    /// </summary>
+    private Reservation CreateReservation(string begin, string end, Guid carId)
+    {
+        return new Reservation
+        {
+            Id = Guid.NewGuid(),
+            Begin = DateTime.Parse(begin, CultureInfo.InvariantCulture).ToUniversalTime(),
+            End = DateTime.Parse(end, CultureInfo.InvariantCulture).ToUniversalTime(),
+            MemberId = this._state.MemberId,
+            CarId = carId
+        };
+    }
+
+    /// <summary>
+    /// Creates and returns new <see cref="Reservation"/> with <see cref="State.MemberId"/> and <see cref="State.CarId"/>
+    /// </summary>
+    private Reservation CreateReservation(string begin, string end)
+    {
+        return this.CreateReservation(begin, end, this._state.CarId);
+    }
+
     private static R.Request CreateRequest(Guid carId, Guid memberId, string begin, string end)
     {
         return new R.Request
@@ -55,6 +78,45 @@ public class Tests : TestBase<App, State>
         return CreateRequest(this._state.CarId, this._state.MemberId, begin, end);
     }
 
+    /// <summary>
+    /// Send the given request to <see cref="Voycar.Api.Web.Features.Cars.Endpoints.Post.Reserve.Endpoint"/>
+    /// after adding the given <see cref="Reservation"/>s to the database.
+    /// Use assertions corresponding to the value of <c>expectConflict</c>, either expecting
+    /// <see cref="HttpStatusCode.Conflict"/> or <see cref="HttpStatusCode.OK"/>.
+    /// Then removes all rows of the <c>Reservations</c> table in the database.
+    /// </summary>
+    private async Task RunTest(
+        R.Request requestData,
+        Reservation[] reservations,
+        bool expectConflict)
+    {
+        // Arrange
+        await this.Context.Reservations.AddRangeAsync(reservations);
+        await this.Context.SaveChangesAsync();
+
+        // Act
+        var (httpResponse, response) = await this._app.Admin
+            .POSTAsync<R.Endpoint, R.Request, Guid>(requestData);
+
+        // Assert
+        if (expectConflict)
+        {
+            httpResponse.StatusCode.Should().Be(HttpStatusCode.Conflict);
+            this.Context.Reservations.Should().HaveCount(reservations.Length, "Reservations table should only contain the ones created in this test");
+        }
+        else
+        {
+            httpResponse.StatusCode.Should().Be(HttpStatusCode.OK);
+            response.Should().NotBe(new Guid());
+            this.Context.Reservations.Should().HaveCount(reservations.Length + 1, "Reservations table should only contain the ones created in this test");
+        }
+
+        // Cleanup
+        this.Context.Reservations.RemoveRange(this.Context.Reservations);
+        await this.Context.SaveChangesAsync();
+        this.Context.Reservations.Should().BeEmpty();
+    }
+
     [Fact]
     public async Task Post_Reserve_ReturnsBadRequest_DueToCarId()
     {
@@ -68,7 +130,7 @@ public class Tests : TestBase<App, State>
 
         // Act
         var (httpResponse, _) = await this._app.Admin
-            .GETAsync<R.Endpoint, R.Request, Guid>(requestData);
+            .POSTAsync<R.Endpoint, R.Request, Guid>(requestData);
 
         // Assert
         httpResponse.StatusCode.Should().Be(HttpStatusCode.BadRequest);
@@ -87,7 +149,7 @@ public class Tests : TestBase<App, State>
 
         // Act
         var (httpResponse, _) = await this._app.Admin
-            .GETAsync<R.Endpoint, R.Request, Guid>(requestData);
+            .POSTAsync<R.Endpoint, R.Request, Guid>(requestData);
 
         // Assert
         httpResponse.StatusCode.Should().Be(HttpStatusCode.BadRequest);
@@ -105,7 +167,7 @@ public class Tests : TestBase<App, State>
 
         // Act
         var (httpResponse, _) = await this._app.Admin
-            .GETAsync<R.Endpoint, R.Request, Guid>(requestData);
+            .POSTAsync<R.Endpoint, R.Request, Guid>(requestData);
 
         // Assert
         httpResponse.StatusCode.Should().Be(HttpStatusCode.BadRequest);
@@ -123,28 +185,109 @@ public class Tests : TestBase<App, State>
 
         // Act
         var (httpResponse, _) = await this._app.Admin
-            .GETAsync<R.Endpoint, R.Request, Guid>(requestData);
+            .POSTAsync<R.Endpoint, R.Request, Guid>(requestData);
 
         // Assert
         httpResponse.StatusCode.Should().Be(HttpStatusCode.BadRequest);
     }
 
     [Fact]
-    public async Task Post_Reserve_ReturnsOkAndGuid()
+    public async Task Post_Reserve_ReturnsOkAndGuid_WithNoReservations()
     {
-        // Arrange
-        var requestData = this.CreateRequest(
-            "2000-01-01T08:00:00.000Z",
-            "2000-01-01T18:00:00.000Z"
+        await this.RunTest(
+            this.CreateRequest("2000-01-01T08:00:00.000Z", "2000-01-01T18:00:00.000Z"),
+            [],
+            false
         );
+    }
 
-        // Act
-        var (httpResponse, response) = await this._app.Admin
-            .GETAsync<R.Endpoint, R.Request, Guid>(requestData);
+    [Fact]
+    public async Task Post_Reserve_ReturnsOkAndGuid_WithOtherReservation()
+    {
+        // Reserve different car
+        var reservedCarId = this.Context.Cars.First(car => car.Id != this._state.CarId).Id;
+        await this.RunTest(
+            this.CreateRequest("2000-01-01T08:00:00.000Z", "2000-01-01T18:00:00.000Z"),
+            [this.CreateReservation("2000-01-01T10:00:00.000Z", "2000-01-01T12:00:00.000Z", reservedCarId)],
+            false
+        );
+    }
 
-        // Assert
-        this.Context.Reservations.Should().HaveCount(1, "Reservations table should only contain the ones created in this test");
-        httpResponse.StatusCode.Should().Be(HttpStatusCode.OK);
-        response.Should().NotBe(new Guid());
+    [Fact]
+    public async Task Post_Reserve_ReturnsOkAndGuid_WithCloselySurroundingReservations()
+    {
+        await this.RunTest(
+            this.CreateRequest("2000-01-01T08:00:00.000Z", "2000-01-01T18:00:00.000Z"),
+            [
+                this.CreateReservation("2000-01-01T06:00:00.000Z", "2000-01-01T08:00:00.000Z"),
+                this.CreateReservation("2000-01-01T18:00:00.000Z", "2000-01-01T20:00:00.000Z")
+            ],
+            false
+        );
+    }
+
+    [Fact]
+    public async Task Post_Reserve_ReturnsOkAndGuid_WithLooselySurroundingReservations()
+    {
+        await this.RunTest(
+            this.CreateRequest("2000-01-01T08:00:00.000Z", "2000-01-01T18:00:00.000Z"),
+            [
+                this.CreateReservation("2000-01-01T06:00:00.000Z", "2000-01-01T07:00:00.000Z"),
+                this.CreateReservation("2000-01-01T19:00:00.000Z", "2000-01-01T20:00:00.000Z")
+            ],
+            false
+        );
+    }
+
+    [Fact]
+    public async Task Post_Reserve_ReturnsConflict_WithReservationInMiddle()
+    {
+        await this.RunTest(
+            this.CreateRequest("2000-01-01T08:00:00.000Z", "2000-01-01T18:00:00.000Z"),
+            [this.CreateReservation("2000-01-01T10:00:00.000Z", "2000-01-01T12:00:00.000Z")],
+            true
+        );
+    }
+
+    [Fact]
+    public async Task Post_Reserve_ReturnsConflict_WithReservationAtBegin()
+    {
+        await this.RunTest(
+            this.CreateRequest("2000-01-01T08:00:00.000Z", "2000-01-01T18:00:00.000Z"),
+            [this.CreateReservation("2000-01-01T07:00:00.000Z", "2000-01-01T09:00:00.000Z")],
+           true
+        );
+    }
+
+    [Fact]
+    public async Task Post_Reserve_ReturnsConflict_WithReservationAtEnd()
+    {
+        await this.RunTest(
+            this.CreateRequest("2000-01-01T08:00:00.000Z", "2000-01-01T18:00:00.000Z"),
+            [this.CreateReservation("2000-01-01T17:00:00.000Z", "2000-01-01T19:00:00.000Z")],
+            true
+        );
+    }
+
+    [Fact]
+    public async Task Post_Reserve_ReturnsConflict_WithOverlappingReservation()
+    {
+        await this.RunTest(
+            this.CreateRequest("2000-01-01T08:00:00.000Z", "2000-01-01T18:00:00.000Z"),
+            [this.CreateReservation("2000-01-01T07:00:00.000Z", "2000-01-01T19:00:00.000Z")],
+            true
+        );
+    }
+
+    [Fact]
+    public async Task Post_Reserve_ReturnsConflict_WithExactlyOverlappingReservation()
+    {
+        const string begin = "2000-01-01T08:00:00.000Z";
+        const string end   = "2000-01-01T18:00:00.000Z";
+        await this.RunTest(
+            this.CreateRequest(begin, end),
+            [this.CreateReservation(begin, end)],
+            true
+        );
     }
 }
