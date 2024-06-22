@@ -112,7 +112,7 @@ public class Tests : TestBase<App, State>
 
         // Assert
         this.Context.Reservations.Should()
-            .HaveCount(reservations.Length, "Reservation table should only contain the ones created in this test");
+            .HaveCount(reservations.Length, "Reservations table should only contain the ones created in this test");
         httpResponse.StatusCode.Should().Be(HttpStatusCode.OK);
         response.Should().BeEquivalentTo(expectedAvailableCars);
 
@@ -193,7 +193,7 @@ public class Tests : TestBase<App, State>
             .GETAsync<A.Endpoint, A.Request, IEnumerable<Car>>(requestData);
 
         // Assert
-        this.Context.Reservations.Should().BeEmpty("Reservation table should be empty");
+        this.Context.Reservations.Should().BeEmpty("Reservations table should be empty");
         httpResponse.StatusCode.Should().Be(HttpStatusCode.OK);
         response.Should().BeEquivalentTo(this.CarsAtStation());
     }

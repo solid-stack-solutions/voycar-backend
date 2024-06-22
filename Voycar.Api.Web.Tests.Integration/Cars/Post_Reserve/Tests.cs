@@ -143,7 +143,7 @@ public class Tests : TestBase<App, State>
             .GETAsync<R.Endpoint, R.Request, Guid>(requestData);
 
         // Assert
-        this.Context.Reservations.Should().BeEmpty("Reservation table should be empty");
+        this.Context.Reservations.Should().HaveCount(1, "Reservations table should only contain the ones created in this test");
         httpResponse.StatusCode.Should().Be(HttpStatusCode.OK);
         response.Should().NotBe(new Guid());
     }
