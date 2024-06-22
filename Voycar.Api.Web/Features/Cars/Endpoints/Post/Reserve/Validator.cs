@@ -1,5 +1,6 @@
 ﻿namespace Voycar.Api.Web.Features.Cars.Endpoints.Post.Reserve;
 
+using Members.Repository;
 using Repository;
 
 public class Validator : Validator<Request>
@@ -12,6 +13,8 @@ public class Validator : Validator<Request>
         this.RuleFor(req => this.Resolve<ICars>().Retrieve(req.CarId))
             .NotNull()
             .WithMessage("There is no car with the given ID");
-        // ToDo check if car is already reserved in that time, return conflict?
+        this.RuleFor(req => this.Resolve<IMembers>().Retrieve(req.MemberId))
+            .NotNull()
+            .WithMessage("There is no member with the given ID");
     }
 }
