@@ -38,33 +38,29 @@ public class Endpoint : Endpoint<Request, Results<Ok, BadRequest<string>>>
         var user = this._userRepository.Retrieve(req.UserId);
         if (user is null)
         {
-            await this.SendResultAsync(TypedResults.BadRequest("User does not exist"));
-            return;
+            this.ThrowError("User does not exist");
         }
 
         if (user.MemberId is null)
         {
-            await this.SendResultAsync(TypedResults.BadRequest("Member does not exist"));
-            return;
+            this.ThrowError("Member does not exist");
         }
+
 
         var reservation = this._reservationsRepository.Retrieve(req.Id);
         if (reservation is null)
         {
-            await this.SendResultAsync(TypedResults.BadRequest("Reservation does not exist"));
-            return;
+            this.ThrowError("Reservation does not exist");
         }
 
         if (!(reservation.Begin > DateTime.UtcNow))
         {
-            await this.SendResultAsync(TypedResults.BadRequest("Reservation cannot be deleted"));
-            return;
+            this.ThrowError("Reservation cannot be deleted");
         }
 
         if (!this._reservationsRepository.Delete(reservation.Id))
         {
-            await this.SendResultAsync(TypedResults.BadRequest("Failed to delete reservation"));
-            return;
+            this.ThrowError("Failed to delete reservation");
         }
 
         await this.SendResultAsync(TypedResults.Ok());
