@@ -5,7 +5,7 @@ using Repository;
 using Users.Repository;
 
 
-public class Endpoint : Endpoint<Request, Results<Ok, BadRequest<string>>>
+public class Endpoint : Endpoint<Request>
 {
     private readonly IUsers _userRepository;
     private readonly IReservations _reservationsRepository;
