@@ -22,6 +22,7 @@ public class Endpoint : Endpoint<Request, IEnumerable<Car>>
             s.Description = $"Retrieve {nameof(Car)} objects from the database at the given " +
                             "station that are available (not reserved) in the given timespan";
             s.Responses[200] = $"Available {nameof(Car)} objects (may be an empty array)";
+            s.Responses[400] = "If end-time is not after begin-time or no station with the given ID exists";
         });
     }
 
