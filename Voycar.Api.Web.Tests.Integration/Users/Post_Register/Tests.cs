@@ -19,22 +19,28 @@ public sealed class State : StateFixture
 
     public const string RoleName = "member";
 
-    public R.Request Request { get; set; } = new()
+    public R.Request Request { get; set; } = CreateValidRequest();
+
+
+    public static R.Request CreateValidRequest()
     {
-        Email = "test@test.de",
-        Password = "notsafe987",
-        FirstName = "null",
-        LastName = "null",
-        Street = "null",
-        HouseNumber = "null",
-        PostalCode = "null",
-        City = "null",
-        Country = "null",
-        BirthDate = new DateOnly(2002, 12, 12),
-        BirthPlace = "null",
-        PhoneNumber = "null",
-        PlanId = RoleId
-    };
+        return new R.Request
+        {
+            Email = "test@test.de",
+            Password = "notsafe987",
+            FirstName = "null",
+            LastName = "null",
+            Street = "null",
+            HouseNumber = "null",
+            PostalCode = "null",
+            City = "null",
+            Country = "null",
+            BirthDate = new DateOnly(2002, 12, 12),
+            BirthPlace = "null",
+            PhoneNumber = "null",
+            PlanId = RoleId
+        };
+    }
 }
 
 
@@ -60,57 +66,89 @@ public class Tests : TestBase<App, State>
     public async Task Post_Request_ReturnsBadRequest_DueToInvalidEmail()
     {
         // Arrange
-        this._state.Request.Email = "";
+        var request = State.CreateValidRequest();
+        request.Email = "";
 
         // Act
-        var (httpResponse, _) =
-            await this._app.Client.POSTAsync<R.Endpoint, R.Request, Entity>(this._state.Request);
+        var httpResponse = await this._app.Client.POSTAsync<R.Endpoint, R.Request>(request);
 
         // Assert
         httpResponse.StatusCode.Should().Be(HttpStatusCode.BadRequest);
-
-        // Cleanup
-        this._state.Request.Email = "test@test.de";
     }
+
 
     [Fact]
     public async Task Post_Request_ReturnsBadRequest_DueToInvalidPassword()
     {
         // Arrange
+        var request = State.CreateValidRequest();
+        request.Password = ""; // Set invalid Password
+
         // Act
+        var httpResponse = await this._app.Client.POSTAsync<R.Endpoint, R.Request>(request);
+
         // Assert
+        httpResponse.StatusCode.Should().Be(HttpStatusCode.BadRequest);
     }
+
 
     [Fact]
     public async Task Post_Request_ReturnsBadRequest_DueToInvalidFirstName()
     {
         // Arrange
+        var request = State.CreateValidRequest();
+        request.FirstName = ""; // Set invalid FirstName
+
         // Act
+        var httpResponse = await this._app.Client.POSTAsync<R.Endpoint, R.Request>(request);
+
         // Assert
+        httpResponse.StatusCode.Should().Be(HttpStatusCode.BadRequest);
     }
+
 
     [Fact]
     public async Task Post_Request_ReturnsBadRequest_DueToInvalidLastName()
     {
         // Arrange
+        var request = State.CreateValidRequest();
+        request.LastName = "";
+
         // Act
+        var httpResponse = await this._app.Client.POSTAsync<R.Endpoint, R.Request>(request);
+
         // Assert
+        httpResponse.StatusCode.Should().Be(HttpStatusCode.BadRequest);
     }
+
 
     [Fact]
     public async Task Post_Request_ReturnsBadRequest_DueToInvalidStreet()
     {
         // Arrange
+        var request = State.CreateValidRequest();
+        request.Street = "";
+
         // Act
+        var httpResponse = await this._app.Client.POSTAsync<R.Endpoint, R.Request>(request);
+
         // Assert
+        httpResponse.StatusCode.Should().Be(HttpStatusCode.BadRequest);
     }
+
 
     [Fact]
     public async Task Post_Request_ReturnsBadRequest_DueToInvalidHouseNumber()
     {
         // Arrange
+        var request = State.CreateValidRequest();
+        request.HouseNumber = "";
+
         // Act
+        var httpResponse = await this._app.Client.POSTAsync<R.Endpoint, R.Request>(request);
+
         // Assert
+        httpResponse.StatusCode.Should().Be(HttpStatusCode.BadRequest);
     }
 
 
@@ -118,8 +156,14 @@ public class Tests : TestBase<App, State>
     public async Task Post_Request_ReturnsBadRequest_DueToInvalidPostalCode()
     {
         // Arrange
+        var request = State.CreateValidRequest();
+        request.PostalCode = "";
+
         // Act
+        var httpResponse = await this._app.Client.POSTAsync<R.Endpoint, R.Request>(request);
+
         // Assert
+        httpResponse.StatusCode.Should().Be(HttpStatusCode.BadRequest);
     }
 
 
@@ -127,16 +171,29 @@ public class Tests : TestBase<App, State>
     public async Task Post_Request_ReturnsBadRequest_DueToInvalidCity()
     {
         // Arrange
+        var request = State.CreateValidRequest();
+        request.City = "";
+
         // Act
+        var httpResponse = await this._app.Client.POSTAsync<R.Endpoint, R.Request>(request);
+
         // Assert
+        httpResponse.StatusCode.Should().Be(HttpStatusCode.BadRequest);
     }
+
 
     [Fact]
     public async Task Post_Request_ReturnsBadRequest_DueToInvalidCountry()
     {
         // Arrange
+        var request = State.CreateValidRequest();
+        request.Country = "";
+
         // Act
+        var httpResponse = await this._app.Client.POSTAsync<R.Endpoint, R.Request>(request);
+
         // Assert
+        httpResponse.StatusCode.Should().Be(HttpStatusCode.BadRequest);
     }
 
 
@@ -144,23 +201,43 @@ public class Tests : TestBase<App, State>
     public async Task Post_Request_ReturnsBadRequest_DueToInvalidBirthDate()
     {
         // Arrange
+        var request = State.CreateValidRequest();
+        request.BirthDate = new DateOnly(2024, 1, 1);
+
         // Act
+        var httpResponse = await this._app.Client.POSTAsync<R.Endpoint, R.Request>(request);
+
         // Assert
+        httpResponse.StatusCode.Should().Be(HttpStatusCode.BadRequest);
     }
+
 
     [Fact]
     public async Task Post_Request_ReturnsBadRequest_DueToInvalidBirthPlace()
     {
         // Arrange
+        var request = State.CreateValidRequest();
+        request.BirthPlace = "";
+
         // Act
+        var httpResponse = await this._app.Client.POSTAsync<R.Endpoint, R.Request>(request);
+
         // Assert
+        httpResponse.StatusCode.Should().Be(HttpStatusCode.BadRequest);
     }
+
 
     [Fact]
     public async Task Post_Request_ReturnsBadRequest_DueToInvalidPhoneNumber()
     {
         // Arrange
+        var request = State.CreateValidRequest();
+        request.PhoneNumber = "";
+
         // Act
+        var httpResponse = await this._app.Client.POSTAsync<R.Endpoint, R.Request>(request);
+
         // Assert
+        httpResponse.StatusCode.Should().Be(HttpStatusCode.BadRequest);
     }
 }
