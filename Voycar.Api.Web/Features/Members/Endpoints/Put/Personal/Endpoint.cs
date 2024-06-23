@@ -29,7 +29,7 @@ public class Endpoint : Endpoint<Request, Results<Ok, BadRequest<string>>, Mappe
             summary.Summary = "Update personal details of logged in member";
             summary.Description =
                 "Update the personal details of the member who is logged in according to the request cookie";
-            summary.Responses[200] = "If member is found";
+            summary.Responses[200] = "If member is found and updated";
             summary.Responses[400] = "If the user somehow can't be found or the user is not a member";
         });
     }
