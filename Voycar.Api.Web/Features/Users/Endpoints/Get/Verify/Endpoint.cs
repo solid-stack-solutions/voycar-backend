@@ -45,8 +45,7 @@ public class Endpoint : Endpoint<Request>
 
         if (user is null)
         {
-            await this.SendErrorsAsync(cancellation: ct);
-            return;
+            this.ThrowError("Token does not belong to any user");
         }
 
         user.VerifiedAt = DateTime.UtcNow;

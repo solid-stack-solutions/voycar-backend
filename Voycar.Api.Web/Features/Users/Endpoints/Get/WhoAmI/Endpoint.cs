@@ -31,8 +31,7 @@ public class Endpoint : Endpoint<Request, Results<Ok<Response>, BadRequest<Error
         var user = this._userRepository.Retrieve(req.UserId);
         if (user is null)
         {
-            await this.SendResultAsync(TypedResults.BadRequest("User does not exist"));
-            return;
+            this.ThrowError("User does not exist");
         }
 
         await this.SendResultAsync(TypedResults.Ok(this.Map.FromEntity(user)));

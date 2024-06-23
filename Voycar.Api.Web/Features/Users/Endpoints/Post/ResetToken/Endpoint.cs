@@ -35,8 +35,7 @@ public class Endpoint : Endpoint<Request, Response>
 
         if (user is null)
         {
-            await this.SendErrorsAsync(cancellation: ct);
-            return;
+            this.ThrowError("User not found");
         }
 
         user.PasswordResetToken = Convert.ToHexString(RandomNumberGenerator.GetBytes(256));

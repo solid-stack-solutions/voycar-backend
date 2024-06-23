@@ -36,14 +36,12 @@ public class Endpoint : Endpoint<Request, Results<Ok<Response>, BadRequest<Error
         var user = this._userRepository.Retrieve(req.UserId);
         if (user is null)
         {
-            await this.SendResultAsync(TypedResults.BadRequest("User does not exist"));
-            return;
+            this.ThrowError("User does not exist");
         }
 
         if (user.MemberId is null)
         {
-            await this.SendResultAsync(TypedResults.BadRequest("Member does not exist"));
-            return;
+            this.ThrowError("Member does not exist");
         }
 
         var reservations = this._reservationsRepository.RetrieveAll().Where(r => r.MemberId == user.MemberId).ToList();

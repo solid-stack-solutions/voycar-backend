@@ -29,8 +29,7 @@ public class Endpoint : Endpoint<Request>
 
         if (user is null || user.ResetTokenExpires < DateTime.UtcNow)
         {
-            await this.SendErrorsAsync(cancellation: ct);
-            return;
+            this.ThrowError("Token does not belong to any user");
         }
 
         // Set new password hash
