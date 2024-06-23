@@ -4,7 +4,7 @@ using Repository;
 using Entities;
 using Users.Repository;
 
-public class Endpoint : Endpoint<Request, Results<Ok<Response>, BadRequest<string>>>
+public class Endpoint : Endpoint<Request, Results<Ok<Response>, BadRequest<ErrorResponse>>>
 {
     private readonly IUsers _userRepository;
     private readonly IReservations _reservationsRepository;

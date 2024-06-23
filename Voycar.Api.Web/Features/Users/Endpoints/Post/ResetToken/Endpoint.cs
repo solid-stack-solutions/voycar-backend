@@ -4,7 +4,7 @@ using System.Security.Cryptography;
 using Repository;
 using Service;
 
-public class Endpoint : Endpoint<Request, Results<Ok<Response>, BadRequest<ErrorResponse>>>
+public class Endpoint : Endpoint<Request, Response>
 {
     private readonly IUsers _userRepository;
     private readonly ILogger<Endpoint> _logger;

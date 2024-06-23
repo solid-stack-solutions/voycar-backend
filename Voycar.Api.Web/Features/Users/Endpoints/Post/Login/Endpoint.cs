@@ -3,7 +3,7 @@ namespace Voycar.Api.Web.Features.Users.Endpoints.Post.Login;
 using Entities;
 using Repository;
 
-public class Endpoint : Endpoint<Request, Results<Ok, BadRequest<ErrorResponse>>>
+public class Endpoint : Endpoint<Request>
 {
     private readonly IUsers _userRepository;
     private readonly Roles.Repository.IRoles _rolesRepository;

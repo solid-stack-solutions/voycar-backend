@@ -2,7 +2,7 @@ namespace Voycar.Api.Web.Features.Users.Endpoints.Post.ResetPassword;
 
 using Repository;
 
-public class Endpoint : Endpoint<Request, Results<Ok, BadRequest<ErrorResponse>>>
+public class Endpoint : Endpoint<Request>
 {
     private readonly IUsers _userRepository;
     private readonly ILogger<Endpoint> _logger;

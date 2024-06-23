@@ -11,7 +11,7 @@ using Service;
 /// This endpoint receives a registration request, checks for existing users,
 /// creates a new user account with a member entity and sends a verification email.
 /// </summary>
-public class Endpoint : Endpoint<Request, Results<Ok, BadRequest<ErrorResponse>>, Mapper>
+public class Endpoint : Endpoint<Request, Ok, Mapper>
 {
     private readonly IUsers _userRepository;
     private readonly Members.Repository.IMembers _memberRepository;

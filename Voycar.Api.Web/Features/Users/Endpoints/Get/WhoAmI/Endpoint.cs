@@ -2,7 +2,7 @@ namespace Voycar.Api.Web.Features.Users.Endpoints.Get.WhoAmI;
 
 using Repository;
 
-public class Endpoint : Endpoint<Request, Results<Ok<Response>, BadRequest<string>>, Mapper>
+public class Endpoint : Endpoint<Request, Results<Ok<Response>, BadRequest<ErrorResponse>>, Mapper>
 {
     private readonly IUsers _userRepository;
 
