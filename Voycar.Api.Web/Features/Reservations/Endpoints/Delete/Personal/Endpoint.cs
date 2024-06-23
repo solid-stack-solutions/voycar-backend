@@ -27,7 +27,7 @@ public class Endpoint : Endpoint<Request, Results<Ok, BadRequest<string>>>
             summary.Summary = $"Delete {nameof(Reservation)} of logged in member";
             summary.Description =
                 $"Delete the {nameof(Reservation)} of the member who is logged in according to the request cookie";
-            summary.Responses[200] = "If member is found";
+            summary.Responses[200] = "If member is found and resesrvation is deleted";
             summary.Responses[400] = "If one of the following occurs: user somehow can't be found, " +
                 "user ist not a member, reservertion does not exist/could not be deleted";
         });
