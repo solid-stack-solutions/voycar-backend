@@ -27,9 +27,9 @@ public class Endpoint : Endpoint<Request>
             summary.Summary = $"Delete {nameof(Reservation)} of logged in member";
             summary.Description =
                 $"Delete the {nameof(Reservation)} of the member who is logged in according to the request cookie";
-            summary.Responses[200] = "If member is found and resesrvation is deleted";
+            summary.Responses[200] = "If member is found and reservation is deleted";
             summary.Responses[400] = "If one of the following occurs: user somehow can't be found, " +
-                "user ist not a member, reservertion does not exist/could not be deleted";
+                                     "user ist not a member, reservation does not exist/could not be deleted";
         });
     }
 
@@ -54,7 +54,8 @@ public class Endpoint : Endpoint<Request>
             this.ThrowError("Reservation does not exist");
         }
 
-        if (!(reservation.Begin > DateTime.UtcNow))
+        // Check if member is allowed to delete the requested reservation
+        if (!(reservation.Begin > DateTime.UtcNow) || reservation.MemberId != user.MemberId)
         {
             this.ThrowError("Reservation cannot be deleted");
         }
