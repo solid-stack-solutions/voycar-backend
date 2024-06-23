@@ -40,28 +40,24 @@ public class Endpoint : Endpoint<Request, Results<Ok, BadRequest<string>>, Mappe
         var user = this._userRepository.Retrieve(req.UserId);
         if (user is null)
         {
-            await this.SendResultAsync(TypedResults.BadRequest("User does not exist"));
-            return;
+            this.ThrowError("User does not exist");
         }
 
         if (user.MemberId is null)
         {
-            await this.SendResultAsync(TypedResults.BadRequest("User is not a member"));
-            return;
+            this.ThrowError("User is not a member");
         }
 
 
         var member = this._memberRepository.Retrieve(user.MemberId.Value);
         if (member is null)
         {
-            await this.SendResultAsync(TypedResults.BadRequest("Member does not exist"));
-            return;
+            this.ThrowError("Member does not exist");
         }
 
         if (!this._memberRepository.Update(this.Map.ToEntity(req, member)))
         {
-            await this.SendResultAsync(TypedResults.BadRequest("Failed to update member data"));
-            return;
+            this.ThrowError("Failed to update member data");
         }
 
 
