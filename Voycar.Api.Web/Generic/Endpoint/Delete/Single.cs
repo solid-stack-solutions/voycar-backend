@@ -18,7 +18,16 @@ public abstract class Single<TEntity>
     public override void Configure()
     {
         this.Delete(typeof(TEntity).Name.ToLowerInvariant() + "/{id}");
-        this.Roles(this.Roles);
+
+        if (this.Roles.Length > 0)
+        {
+            this.Roles(this.Roles);
+        }
+        else
+        {
+            this.AllowAnonymous();
+        }
+
         this.Summary(s =>
         {
             s.Summary = $"Delete {typeof(TEntity).Name}";

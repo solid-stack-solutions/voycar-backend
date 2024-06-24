@@ -18,7 +18,16 @@ public abstract class All<TEntity>
     public override void Configure()
     {
         this.Get(typeof(TEntity).Name.ToLowerInvariant() + "/all");
-        this.Roles(this.Roles);
+
+        if (this.Roles.Length > 0)
+        {
+            this.Roles(this.Roles);
+        }
+        else
+        {
+            this.AllowAnonymous();
+        }
+
         this.Summary(s =>
         {
             s.Summary = $"Retrieve all {typeof(TEntity).Name}s";
