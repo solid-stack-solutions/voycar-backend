@@ -2,11 +2,11 @@ namespace Voycar.Api.Web.Tests.Integration.Users.Post_Register;
 
 using System.Runtime.CompilerServices;
 using Context;
+using Entities;
 using Generic;
 using Microsoft.VisualStudio.TestPlatform.ObjectModel;
 using Service;
 using R = Features.Users.Endpoints.Post.Register;
-
 
 public sealed class State : StateFixture
 {
@@ -43,7 +43,6 @@ public sealed class State : StateFixture
     }
 }
 
-
 public class Tests : TestBase<App, State>
 {
     private readonly App _app;
@@ -60,6 +59,37 @@ public class Tests : TestBase<App, State>
         State.RoleId = this.Context.Roles.First(r => r.Name == State.RoleName).Id;
     }
 
+    [Fact]
+    public async Task Template()
+    {
+        // Arrange
+        // Act
+        // Assert
+    }
+
+    [Fact]
+    public async Task Post_Request_ReturnsBadRequest_DueToExistingUser()
+    {
+        // Arrange
+        var request = State.CreateValidRequest();
+        var user = new User()
+        {
+            Id = new Guid("DCA3AC3E-00ED-4EF0-97CF-463E6AC926CE"),
+            Email = "test@test.de",
+            PasswordHash = "passwordTest"
+        };
+
+        this.Context.Users.Add(user);
+
+        // Act
+        var httpResponse = await this._app.Client.POSTAsync<R.Endpoint, R.Request>(request);
+
+        // Assert
+        httpResponse.StatusCode.Should().Be(HttpStatusCode.BadRequest);
+
+        // Cleanup
+        this.Context.Users.Remove(user);
+    }
 
     // Validator-Tests
     [Fact]
