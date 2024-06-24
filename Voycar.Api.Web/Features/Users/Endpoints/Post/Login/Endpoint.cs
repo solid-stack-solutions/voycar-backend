@@ -3,7 +3,7 @@ namespace Voycar.Api.Web.Features.Users.Endpoints.Post.Login;
 using Entities;
 using Repository;
 
-public class Endpoint : Endpoint<Request, Results<Ok, BadRequest<ErrorResponse>>>
+public class Endpoint : Endpoint<Request>
 {
     private readonly IUsers _userRepository;
     private readonly Roles.Repository.IRoles _rolesRepository;
@@ -24,20 +24,18 @@ public class Endpoint : Endpoint<Request, Results<Ok, BadRequest<ErrorResponse>>
 
     public override async Task HandleAsync(Request req, CancellationToken ct)
     {
-        var user = await this._userRepository.RetrieveByEmail(req.Email!.ToLowerInvariant());
+        var user = await this._userRepository.RetrieveByEmail(req.Email.ToLowerInvariant());
 
 
         // Check if user entered valid credentials and verified his email
-        if (user is null || user!.VerifiedAt is null ||
-            !BCrypt.Net.BCrypt.EnhancedVerify(req.Password, user.PasswordHash))
+        if (user?.VerifiedAt is null || !BCrypt.Net.BCrypt.EnhancedVerify(req.Password, user.PasswordHash))
         {
             // Do not send different request for user not found, since this would reveal which users are signed up
-            await this.SendErrorsAsync(cancellation: ct);
-            return;
+            this.ThrowError("Failed to log in");
         }
 
         // Login member
-        await this.SignInUserAsync(user!);
+        await this.SignInUserAsync(user);
     }
 
     /// <summary>

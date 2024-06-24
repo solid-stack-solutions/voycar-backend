@@ -8,7 +8,7 @@ using Repository;
 /// This endpoint receives a verification token, checks the validity,
 /// updates the user's verification status, and returns a response indicating success or failure.
 /// </summary>
-public class Endpoint : Endpoint<Request, Results<Ok, BadRequest<ErrorResponse>>>
+public class Endpoint : Endpoint<Request>
 {
     private readonly IUsers _userRepository;
     private readonly ILogger<Endpoint> _logger;
@@ -45,8 +45,7 @@ public class Endpoint : Endpoint<Request, Results<Ok, BadRequest<ErrorResponse>>
 
         if (user is null)
         {
-            await this.SendErrorsAsync(cancellation: ct);
-            return;
+            this.ThrowError("Token does not belong to any user");
         }
 
         user.VerifiedAt = DateTime.UtcNow;

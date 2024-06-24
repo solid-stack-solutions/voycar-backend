@@ -8,9 +8,12 @@ public class Validator : Validator<Request>
     {
         this.RuleFor(req => req.End - req.Begin)
             .GreaterThan(TimeSpan.Zero)
-            .WithMessage("End-time is not after begin-time");
+            .WithMessage("End-time is not after begin-time")
+            .WithName("generalErrors");
+
         this.RuleFor(req => this.Resolve<IStations>().Retrieve(req.StationId))
             .NotNull()
-            .WithMessage("There is no station with the given ID");
+            .WithMessage("There is no station with the given ID")
+            .WithName("generalErrors");
     }
 }

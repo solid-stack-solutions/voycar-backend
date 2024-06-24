@@ -2,7 +2,7 @@ namespace Voycar.Api.Web.Features.Users.Endpoints.Get.WhoAmI;
 
 using Repository;
 
-public class Endpoint : Endpoint<Request, Results<Ok<Response>, BadRequest<string>>, Mapper>
+public class Endpoint : Endpoint<Request, Results<Ok<Response>, BadRequest<ErrorResponse>>, Mapper>
 {
     private readonly IUsers _userRepository;
 
@@ -31,8 +31,7 @@ public class Endpoint : Endpoint<Request, Results<Ok<Response>, BadRequest<strin
         var user = this._userRepository.Retrieve(req.UserId);
         if (user is null)
         {
-            await this.SendResultAsync(TypedResults.BadRequest("User does not exist"));
-            return;
+            this.ThrowError("User does not exist");
         }
 
         await this.SendResultAsync(TypedResults.Ok(this.Map.FromEntity(user)));

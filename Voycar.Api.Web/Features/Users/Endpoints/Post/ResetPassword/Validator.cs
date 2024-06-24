@@ -5,9 +5,13 @@ public class Validator : Validator<Request>
     public Validator()
     {
         this.RuleFor(request => request.PasswordResetToken)
-            .NotEmpty().WithMessage("your password reset token is required!");
+            .NotEmpty()
+            .WithMessage("Password reset token is required")
+            .WithName("generalErrors");
 
         this.RuleFor(request => request.Password)
-            .NotEmpty().WithMessage("your password is required!");
+            .NotEmpty()
+            .WithMessage("Password is required")
+            .WithName("generalErrors");
     }
 }

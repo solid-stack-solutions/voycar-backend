@@ -2,7 +2,7 @@ namespace Voycar.Api.Web.Features.Users.Endpoints.Post.ResetPassword;
 
 using Repository;
 
-public class Endpoint : Endpoint<Request, Results<Ok, BadRequest<ErrorResponse>>>
+public class Endpoint : Endpoint<Request>
 {
     private readonly IUsers _userRepository;
     private readonly ILogger<Endpoint> _logger;
@@ -29,8 +29,7 @@ public class Endpoint : Endpoint<Request, Results<Ok, BadRequest<ErrorResponse>>
 
         if (user is null || user.ResetTokenExpires < DateTime.UtcNow)
         {
-            await this.SendErrorsAsync(cancellation: ct);
-            return;
+            this.ThrowError("Token does not belong to any user");
         }
 
         // Set new password hash
