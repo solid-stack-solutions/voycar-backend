@@ -5,6 +5,5 @@ using Repository;
 
 public class Single : Generic.Endpoint.Put.Single<Car>
 {
-    // ToDo roles
     public Single(ICars repository) : base(repository, ["admin"]) {}
 }

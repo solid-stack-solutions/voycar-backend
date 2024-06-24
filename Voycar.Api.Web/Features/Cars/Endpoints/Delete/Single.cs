@@ -5,6 +5,5 @@ using Repository;
 
 public class Single : Generic.Endpoint.Delete.Single<Car>
 {
-    // ToDo roles
     public Single(ICars repository) : base(repository, ["admin"]) {}
 }
