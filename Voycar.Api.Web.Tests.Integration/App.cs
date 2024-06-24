@@ -8,6 +8,14 @@ using Setup;
 using DotNet.Testcontainers.Builders;
 using Testcontainers.PostgreSql;
 
+/* Normally the SUT (API and database) will only be created once for all test-classes and cached afterward.
+ Disabling the WAF cache will create a new instance for every test-class resulting in worse test performance.
+ This behaviour is intended so that test-classes can perform operations on the database without impacting
+ any other tests which assert the content of the database.
+ See: https://fast-endpoints.com/docs/integration-unit-testing#app-fixture
+ See: https://gist.github.com/dj-nitehawk/04a78cea10f2239eb81c958c52ec84e0
+*/
+[DisableWafCache]
 public class App : AppFixture<Program>
 {
     /* Change this constant to true, to test against production database
@@ -20,7 +28,6 @@ public class App : AppFixture<Program>
     public HttpClient Employee { get; private set; }
     public HttpClient Admin { get; private set; }
 
-    // See: https://gist.github.com/dj-nitehawk/04a78cea10f2239eb81c958c52ec84e0
     protected override async Task PreSetupAsync()
     {
         if (TestAgainstProductionDb)
