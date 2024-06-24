@@ -9,6 +9,7 @@ using R = Features.Users.Endpoints.Post.Register;
 public sealed class State : StateFixture
 {
     public Guid Id { get; set; }
+
     public static Guid RoleId { get; set; }
     public const string RoleName = "member";
 
