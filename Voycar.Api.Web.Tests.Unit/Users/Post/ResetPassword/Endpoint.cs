@@ -94,10 +94,11 @@ public class Endpoint : TestBase<App>
         A.CallTo(() => this.FakeUserRepository.RetrieveByPasswordResetToken(this.Request.PasswordResetToken))
             .Returns(user);
 
-        // Act
-        var exception = await Assert.ThrowsAsync<ValidationFailureException>(() => ep.HandleAsync(this.Request, default));
+        // Act - local function
+        async Task Act() => await ep.HandleAsync(this.Request, default);
 
         // Assert
+        var exception = await Assert.ThrowsAnyAsync<ValidationFailureException>(Act);
         Assert.NotNull(exception);
         Assert.Equal("ThrowError() called! - Token does not belong to any user", exception.Message);
     }
