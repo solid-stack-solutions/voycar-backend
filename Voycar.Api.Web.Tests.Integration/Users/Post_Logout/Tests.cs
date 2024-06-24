@@ -2,12 +2,6 @@ namespace Voycar.Api.Web.Tests.Integration.Users.Post_Logout;
 
 using Context;
 using Setup;
-using R = Features.Users.Endpoints.Post.Logout;
-
-
-public sealed class State : StateFixture
-{
-}
 
 
 public class Tests : TestBase<App>
@@ -70,6 +64,7 @@ public class Tests : TestBase<App>
         firstHttpResponse.StatusCode.Should().Be(HttpStatusCode.OK);
         secondHttpResponse.StatusCode.Should().Be(HttpStatusCode.Unauthorized);
     }
+
 
     [Fact]
     public async Task Post_ReturnsUnauthorized_If_NotLoggedIn()
