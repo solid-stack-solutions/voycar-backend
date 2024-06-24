@@ -5,6 +5,5 @@ using Entities;
 
 public class SingleUnique : Generic.Endpoint.Post.SingleUnique<Reservation>
 {
-    // ToDo roles
-    public SingleUnique(IReservations repository) : base(repository, ["admin"]) {}
+    public SingleUnique(IReservations repository) : base(repository, ["admin", "employee"]) {}
 }

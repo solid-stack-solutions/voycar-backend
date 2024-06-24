@@ -11,44 +11,72 @@ public class Validator : Validator<Request>
     public Validator()
     {
         this.RuleFor(request => request.Email)
-            .NotEmpty().WithMessage("Your email is required!")
-            .EmailAddress().WithMessage("Not a valid email address");
+            .NotEmpty()
+            .WithMessage("Email is required")
+            .WithName("generalErrors")
+            .EmailAddress()
+            .WithMessage("Email address is not valid")
+            .WithName("generalErrors");
 
         this.RuleFor(request => request.Password)
-            .NotEmpty().WithMessage("Your password is required!");
+            .NotEmpty()
+            .WithMessage("Password is required");
 
         this.RuleFor(request => request.FirstName)
-            .NotEmpty().WithMessage("Your firstname is required!")
-            .Length(2, 250).WithMessage("Your firstname is too short or too long!");
+            .NotEmpty()
+            .WithMessage("Firstname is required")
+            .WithName("generalErrors")
+            .Length(2, 250)
+            .WithMessage("Firstname is too short or too long")
+            .WithName("generalErrors");
 
         this.RuleFor(request => request.LastName)
-            .NotEmpty().WithMessage("Your lastname is required!")
-            .Length(2, 250).WithMessage("Your lastname is too short or too long!");
+            .NotEmpty()
+            .WithMessage("Lastname is required")
+            .WithName("generalErrors")
+            .Length(2, 250)
+            .WithMessage("Lastname is too short or too long")
+            .WithName("generalErrors");
 
         this.RuleFor(request => request.Street)
-            .NotEmpty().WithMessage("Your street is required!");
+            .NotEmpty()
+            .WithMessage("Street is required")
+            .WithName("generalErrors");
 
         this.RuleFor(request => request.HouseNumber)
-            .NotEmpty().WithMessage("Your house number is required!");
+            .NotEmpty()
+            .WithMessage("House number is required")
+            .WithName("generalErrors");
 
         this.RuleFor(request => request.PostalCode)
-            .NotEmpty().WithMessage("Your postal code is required!");
+            .NotEmpty()
+            .WithMessage("Postal code is required")
+            .WithName("generalErrors");
 
         this.RuleFor(request => request.City)
-            .NotEmpty().WithMessage("Your place is required!");
+            .NotEmpty()
+            .WithMessage("City is required")
+            .WithName("generalErrors");
 
         this.RuleFor(request => request.Country)
-            .NotEmpty().WithMessage("Your country is required!");
+            .NotEmpty()
+            .WithMessage("Country is required")
+            .WithName("generalErrors");
 
         this.RuleFor(request
-                => (DateOnly.FromDateTime(DateTime.UtcNow).DayNumber
-                    - request.BirthDate.DayNumber) / 365)
-            .GreaterThan(18).WithMessage("You are not legal yet!");
+                => (DateOnly.FromDateTime(DateTime.UtcNow).DayNumber - request.BirthDate.DayNumber) / 365)
+            .GreaterThan(18)
+            .WithMessage("You are not legal yet")
+            .WithName("generalErrors");
 
         this.RuleFor(request => request.BirthPlace)
-            .NotEmpty().WithMessage("Your birth place is required!");
+            .NotEmpty()
+            .WithMessage("Birthplace is required!")
+            .WithName("generalErrors");
 
         this.RuleFor(request => request.PhoneNumber)
-            .NotEmpty().WithMessage("Your phone number is required!");
+            .NotEmpty()
+            .WithMessage("Phone number is required")
+            .WithName("generalErrors");
     }
 }

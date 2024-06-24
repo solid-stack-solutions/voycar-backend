@@ -11,7 +11,7 @@ using Service;
 /// This endpoint receives a registration request, checks for existing users,
 /// creates a new user account with a member entity and sends a verification email.
 /// </summary>
-public class Endpoint : Endpoint<Request, Results<Ok, BadRequest<ErrorResponse>>, Mapper>
+public class Endpoint : Endpoint<Request, Ok, Mapper>
 {
     private readonly IUsers _userRepository;
     private readonly Members.Repository.IMembers _memberRepository;
@@ -45,8 +45,7 @@ public class Endpoint : Endpoint<Request, Results<Ok, BadRequest<ErrorResponse>>
         if (await this._userRepository.RetrieveByEmail(req.Email.ToLowerInvariant()) is not null)
         {
             this._logger.LogWarning("User {UserMail} already exists.", req.Email);
-            await this.SendErrorsAsync(cancellation: ct);
-            return;
+            this.ThrowError("User already exists");
         }
 
         this._logger.LogInformation("Creating new member and user entities.");

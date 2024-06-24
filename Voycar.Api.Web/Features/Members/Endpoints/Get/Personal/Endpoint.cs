@@ -4,7 +4,7 @@ using Repository;
 using Users.Repository;
 
 
-public class Endpoint : Endpoint<Request, Results<Ok<Response>, BadRequest<string>>, Mapper>
+public class Endpoint : Endpoint<Request, Results<Ok<Response>, BadRequest<ErrorResponse>>, Mapper>
 {
     private readonly IUsers _userRepository;
     private readonly IMembers _memberRepository;
@@ -34,20 +34,17 @@ public class Endpoint : Endpoint<Request, Results<Ok<Response>, BadRequest<strin
         var user = this._userRepository.Retrieve(req.UserId);
         if (user is null)
         {
-            await this.SendResultAsync(TypedResults.BadRequest("User does not exist"));
-            return;
+            this.ThrowError("User does not exist");
         }
         if (user.MemberId is null)
         {
-            await this.SendResultAsync(TypedResults.BadRequest("Member does not exist"));
-            return;
+            this.ThrowError("Member does not exist");
         }
 
         var member = this._memberRepository.Retrieve(user.MemberId.Value);
         if (member is null)
         {
-            await this.SendResultAsync(TypedResults.BadRequest("Member does not exist"));
-            return;
+            this.ThrowError("Member does not exist");
         }
 
         await this.SendResultAsync(TypedResults.Ok(this.Map.FromEntities(member, user)));

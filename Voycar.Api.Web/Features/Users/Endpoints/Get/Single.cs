@@ -5,6 +5,5 @@ using Repository;
 
 public class Single : Generic.Endpoint.Get.Single<User>
 {
-    // ToDo roles
-    public Single(IUsers repository) : base(repository, ["admin"]) {}
+    public Single(IUsers repository) : base(repository, ["admin", "employee"]) {}
 }
