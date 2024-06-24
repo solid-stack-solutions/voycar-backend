@@ -5,6 +5,5 @@ using Entities;
 
 public class Single : Generic.Endpoint.Delete.Single<Reservation>
 {
-    // ToDo roles
     public Single(IReservations repository) : base(repository, ["admin"]) {}
 }

@@ -6,15 +6,6 @@ using Plans.Repository;
 
 public class Mapper : ResponseMapper<Response, Member>
 {
-    private readonly IPlans _planRepository;
-
-
-    public Mapper(IPlans planRepository)
-    {
-        this._planRepository = planRepository;
-    }
-
-
     public Response FromEntities(Member member, User user)
     {
         return new Response
@@ -31,7 +22,7 @@ public class Mapper : ResponseMapper<Response, Member>
             BirthPlace = member.BirthPlace,
             PhoneNumber = member.PhoneNumber,
             Email = user.Email,
-            PlanName = this._planRepository.Retrieve(member.PlanId)!.Name
+            PlanName = this.Resolve<IPlans>().Retrieve(member.PlanId)!.Name
         };
     }
 }

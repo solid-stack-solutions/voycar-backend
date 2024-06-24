@@ -15,7 +15,7 @@ public class Endpoint : Endpoint<Request, IEnumerable<Car>>
     public override void Configure()
     {
         this.Get(nameof(Car).ToLowerInvariant() + "/available");
-        this.Roles(["admin", "employee", "member"]);
+        this.Roles("admin", "employee", "member");
         this.Summary(s =>
         {
             s.Summary = $"Retrieve available {nameof(Car)}s";

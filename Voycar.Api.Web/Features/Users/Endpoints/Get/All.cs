@@ -5,6 +5,5 @@ using Repository;
 
 public class All : Generic.Endpoint.Get.All<User>
 {
-    // ToDo roles
-    public All(IUsers repository) : base(repository, ["admin"]) {}
+    public All(IUsers repository) : base(repository, ["admin", "employee"]) {}
 }
