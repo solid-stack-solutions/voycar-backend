@@ -25,6 +25,7 @@ public class App : AppFixture<Program>
     private const string TestMemberMail = "member.integration@test.de";
     private const string TestEmployeeMail = "employee.integration@test.de";
     private const string TestAdminMail = "admin.integration@test.de";
+    private const string Password = "integration";
     private PostgreSqlContainer Container { get; set; }
     private string ConnectionString { get; set; }
     public VoycarDbContext Context { get; private set; }
@@ -62,9 +63,9 @@ public class App : AppFixture<Program>
         await this.Context.Database.EnsureCreatedAsync(); // Populate with Db schema
 
         // Create custom HttpClients to use in tests
-        this.Member = await ClientFactory.CreateMemberClient(this, this.Context, TestMemberMail);
-        this.Employee = await ClientFactory.CreateEmployeeClient(this, this.Context, TestEmployeeMail);
-        this.Admin = await ClientFactory.CreateAdminClient(this, this.Context, TestAdminMail);
+        this.Member = await ClientFactory.CreateMemberClient(this, this.Context, TestMemberMail, Password);
+        this.Employee = await ClientFactory.CreateEmployeeClient(this, this.Context, TestEmployeeMail, Password);
+        this.Admin = await ClientFactory.CreateAdminClient(this, this.Context, TestAdminMail, Password);
     }
 
 
