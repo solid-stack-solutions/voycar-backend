@@ -5,7 +5,6 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Context;
 using Setup;
-using DotNet.Testcontainers.Builders;
 using Testcontainers.PostgreSql;
 
 /* Normally the SUT (API and database) will only be created once for all test-classes and cached afterward.
