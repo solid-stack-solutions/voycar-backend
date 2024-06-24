@@ -66,12 +66,8 @@ public class Endpoint : TestBase<App>
         A.CallTo(() => this.FakeUserRepository.RetrieveByVerificationToken(this.Request.VerificationToken))
             .Returns((User?)null);
 
-        // Act
-        await ep.HandleAsync(this.Request, default);
-        var rsp = ep.HttpContext.Response;
+        // Act & Assert
+        await Assert.ThrowsAnyAsync<Exception>(() => ep.HandleAsync(this.Request, default));
 
-        // Assert
-        Assert.NotNull(rsp);
-        Assert.Equal(StatusCodes.Status400BadRequest, rsp.StatusCode);
     }
 }

@@ -68,12 +68,11 @@ public class Endpoint : TestBase<App>
             .Returns((User?)null);
 
         // Act
-        await ep.HandleAsync(this.Request, default);
-        var rsp = ep.HttpContext.Response;
+        var exception = await Assert.ThrowsAsync<ValidationFailureException>(() => ep.HandleAsync(this.Request, default));
 
         // Assert
-        Assert.NotNull(rsp);
-        Assert.Equal(StatusCodes.Status400BadRequest, rsp.StatusCode);
+        Assert.NotNull(exception);
+        Assert.Equal("ThrowError() called! - Token does not belong to any user", exception.Message);
     }
 
 
@@ -96,11 +95,10 @@ public class Endpoint : TestBase<App>
             .Returns(user);
 
         // Act
-        await ep.HandleAsync(this.Request, default);
-        var rsp = ep.HttpContext.Response;
+        var exception = await Assert.ThrowsAsync<ValidationFailureException>(() => ep.HandleAsync(this.Request, default));
 
         // Assert
-        Assert.NotNull(rsp);
-        Assert.Equal(StatusCodes.Status400BadRequest, rsp.StatusCode);
+        Assert.NotNull(exception);
+        Assert.Equal("ThrowError() called! - Token does not belong to any user", exception.Message);
     }
 }
