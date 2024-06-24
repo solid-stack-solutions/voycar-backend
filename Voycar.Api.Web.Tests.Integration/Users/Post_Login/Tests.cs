@@ -182,4 +182,27 @@ public class Tests : TestBase<App, State>
         secondHttpResponse.StatusCode.Should().Be(HttpStatusCode.OK);
         thirdHttpResponse.StatusCode.Should().Be(HttpStatusCode.OK);
     }
+
+    [Fact]
+    public async Task Post_Multiple_Request_ReturnsOk_And_MembersAreLoggedIn()
+    {
+        // Arrange
+        var client1 = await ClientFactory.CreateMemberClient(this._app, this.Context, "memberClient1@test.de", "password");
+        var client2 = await ClientFactory.CreateMemberClient(this._app, this.Context, "memberClient2@test.de", "password");
+        var request1 = new R.Request { Email = "memberClient1@test.de", Password = "password" };
+        var request2 = new R.Request { Email = "memberClient2@test.de", Password = "password" };
+
+        // Act
+        var logoutResponse1 = await client1.PostAsync("/auth/logout", default);
+        var logoutResponse2 = await client2.PostAsync("/auth/logout", default);
+
+        var loginResponse1 = await client1.POSTAsync<R.Endpoint, R.Request>(request1);
+        var loginResponse2 = await client2.POSTAsync<R.Endpoint, R.Request>(request2);
+
+        // Assert
+        logoutResponse1.StatusCode.Should().Be(HttpStatusCode.OK);
+        logoutResponse2.StatusCode.Should().Be(HttpStatusCode.OK);
+        loginResponse1.StatusCode.Should().Be(HttpStatusCode.OK);
+        loginResponse2.StatusCode.Should().Be(HttpStatusCode.OK);
+    }
 }
