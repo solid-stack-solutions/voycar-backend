@@ -28,8 +28,10 @@ public class App : AppFixture<Program>
     public HttpClient Employee { get; private set; }
     public HttpClient Admin { get; private set; }
 
-    protected override async Task PreSetupAsync()
+    protected override async Task SetupAsync()
     {
+        // == Place one-time setup code here ==
+
         if (TestAgainstProductionDb)
         {
             // WARNING: This will test against production database and DELETE existing data
@@ -48,11 +50,6 @@ public class App : AppFixture<Program>
             .Build();
         await this.Container.StartAsync();
         this.ConnectionString = this.Container.GetConnectionString();
-    }
-
-    protected override async Task SetupAsync()
-    {
-        // == Place one-time setup code here ==
 
         // Set up Db for tests
         this.Context = this.Services.GetRequiredService<VoycarDbContext>();
