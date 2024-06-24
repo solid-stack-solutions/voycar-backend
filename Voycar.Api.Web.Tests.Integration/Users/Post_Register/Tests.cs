@@ -1,13 +1,10 @@
 namespace Voycar.Api.Web.Tests.Integration.Users.Post_Register;
 
-using System.Runtime.CompilerServices;
 using Context;
 using Entities;
-using Generic;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.VisualStudio.TestPlatform.ObjectModel;
-using Service;
 using R = Features.Users.Endpoints.Post.Register;
+
 
 public sealed class State : StateFixture
 {
@@ -47,6 +44,7 @@ public sealed class State : StateFixture
     }
 }
 
+
 public class Tests : TestBase<App, State>
 {
     private readonly App _app;
@@ -64,13 +62,6 @@ public class Tests : TestBase<App, State>
         State.PlanId = this.Context.Plans.First(p => p.Name == State.PlanName).Id;
     }
 
-    [Fact]
-    public async Task Template()
-    {
-        // Arrange
-        // Act
-        // Assert
-    }
 
     [Fact]
     public async Task Post_Request_ReturnsOk_And_SavesUserInDb()
@@ -106,6 +97,27 @@ public class Tests : TestBase<App, State>
         this._state.Id = userInDb.Id; // Save ID for later tests
     }
 
+
+    [Fact]
+    public async Task Post_Request_ReturnsOk_And_SavesUserInDb_WithLowerInvariantEmail()
+    {
+        // Arrange
+        var request = State.CreateValidRequest();
+        request.Email = "TEST@CAPSLOCK.de";
+
+        // Act
+        var httpResponse = await this._app.Client.POSTAsync<R.Endpoint, R.Request>(request);
+
+        // Arrange assertion
+        var userInDb =
+            await this.Context.Users.FirstOrDefaultAsync(user => user.Email == request.Email.ToLowerInvariant());
+
+        // Assert
+        userInDb!.Email.Should().Be("test@capslock.de");
+        httpResponse.StatusCode.Should().Be(HttpStatusCode.OK);
+    }
+
+
     [Fact]
     public async Task Post_Request_ReturnsBadRequest_DueToExistingUser()
     {
@@ -119,6 +131,7 @@ public class Tests : TestBase<App, State>
         // Assert
         httpResponse.StatusCode.Should().Be(HttpStatusCode.BadRequest);
     }
+
 
     [Fact]
     public async Task Post_Request_ReturnsBadRequest_DueToInvalidPlanId()
@@ -134,6 +147,7 @@ public class Tests : TestBase<App, State>
         // Assert
         httpResponse.StatusCode.Should().Be(HttpStatusCode.BadRequest);
     }
+
 
     // Validator-Tests
     [Fact]
