@@ -22,7 +22,8 @@ public class Tests : TestBase<App>
     public async Task Post_ReturnsOK_And_MemberIsNoLonger_LoggedIn()
     {
         // Arrange
-        var memberClient = await ClientFactory.CreateMemberClient(this._app, this.Context, "memberClient@test.de", "password");
+        var memberClient =
+            await ClientFactory.CreateMemberClient(this._app, this.Context, "memberClient@test.de", "password");
 
         // Act
         var firstHttpResponse = await memberClient.PostAsync("/auth/logout", default);
@@ -38,7 +39,8 @@ public class Tests : TestBase<App>
     public async Task Post_ReturnsOK_And_EmployeeIsNoLonger_LoggedIn()
     {
         // Arrange
-        var employeeClient = await ClientFactory.CreateMemberClient(this._app, this.Context, "employeeClient@test.de", "password");
+        var employeeClient =
+            await ClientFactory.CreateMemberClient(this._app, this.Context, "employeeClient@test.de", "password");
 
         // Act
         var firstHttpResponse = await employeeClient.PostAsync("/auth/logout", default);
@@ -54,7 +56,8 @@ public class Tests : TestBase<App>
     public async Task Post_ReturnsOK_And_AdminIsNoLonger_LoggedIn()
     {
         // Arrange
-        var adminClient = await ClientFactory.CreateMemberClient(this._app, this.Context, "adminClient@test.de", "password");
+        var adminClient =
+            await ClientFactory.CreateMemberClient(this._app, this.Context, "adminClient@test.de", "password");
 
         // Act
         var firstHttpResponse = await adminClient.PostAsync("/auth/logout", default);

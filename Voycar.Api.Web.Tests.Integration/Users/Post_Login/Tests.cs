@@ -7,11 +7,6 @@ using R = Features.Users.Endpoints.Post.Login;
 
 public sealed class State : StateFixture
 {
-    public Guid Id { get; set; }
-
-    public static Guid RoleId { get; set; }
-    public const string RoleName = "member";
-
     public static Guid PlanId { get; set; }
     public const string PlanName = "basic";
 
@@ -46,13 +41,12 @@ public class Tests : TestBase<App, State>
 
 
     // Setup request client
-
-
     public Tests(App app, State state)
     {
         this._app = app;
         this._state = state;
         this.Context = this._app.Context;
+        State.PlanId = this.Context.Plans.First(p => p.Name == State.PlanName).Id;
     }
 
 
@@ -75,13 +69,20 @@ public class Tests : TestBase<App, State>
 
 
     [Fact]
-    public async Task Post_Request_ReturnsBadRequest_DueToPasswordMismatch()
+    public async Task Post_Request_ReturnsBadRequest_DueToIncorrectPassword()
     {
         // Arrange
-        var memberClient = ClientFactory.CreateMemberClient(this._app, this.Context, "member@test.de");
+        var memberClient =
+            await ClientFactory.CreateMemberClient(this._app, this.Context, "member@test.de", "password");
+        var request = new R.Request { Email = "member@test.de", Password = "diffPassword" };
 
         // Act
+        var firstHttpResponse = await memberClient.PostAsync("/auth/logout", default); // Logout
+        var secondHttpResponse = await this._app.Client.POSTAsync<R.Endpoint, R.Request>(request); // Login
+
         // Assert
+        firstHttpResponse.StatusCode.Should().Be(HttpStatusCode.OK);
+        secondHttpResponse.StatusCode.Should().Be(HttpStatusCode.BadRequest);
     }
 
 
@@ -89,8 +90,14 @@ public class Tests : TestBase<App, State>
     public async Task Post_Request_ReturnsBadRequest_DueToNonExistingUser()
     {
         // Arrange
+        var client = this._app.CreateClient();
+        var request = new R.Request { Email = "doesNotExist@test.de", Password = "diffPassword" };
+
         // Act
+        var httpResponse = await client.POSTAsync<R.Endpoint, R.Request>(request);
+
         // Assert
+        httpResponse.StatusCode.Should().Be(HttpStatusCode.BadRequest);
     }
 
 
@@ -98,8 +105,19 @@ public class Tests : TestBase<App, State>
     public async Task Post_Request_ReturnsOk_And_MemberIsLoggedIn()
     {
         // Arrange
+        var memberClient =
+            await ClientFactory.CreateMemberClient(this._app, this.Context, "memberClient@test.de", "password");
+        var request = new R.Request { Email = "memberClient@test.de", Password = "password" };
+
         // Act
+        var firstHttpResponse = await memberClient.PostAsync("/auth/logout", default); // Logout
+        var secondHttpResponse = await this._app.Client.POSTAsync<R.Endpoint, R.Request>(request); // Login
+        var thirdHttpResponse = await this._app.Client.GetAsync("/user/whoami"); // Test if login was successful
+
         // Assert
+        firstHttpResponse.StatusCode.Should().Be(HttpStatusCode.OK);
+        secondHttpResponse.StatusCode.Should().Be(HttpStatusCode.OK);
+        thirdHttpResponse.StatusCode.Should().Be(HttpStatusCode.OK);
     }
 
 
@@ -107,8 +125,21 @@ public class Tests : TestBase<App, State>
     public async Task Post_Request_ReturnsOk_And_EmployeeIsLoggedIn()
     {
         // Arrange
+        var memberClient =
+            await ClientFactory.CreateEmployeeClient(this._app, this.Context, "employeeClient@test.de", "password");
+        var request = new R.Request { Email = "employeeClient@test.de", Password = "password" };
+
         // Act
+        var firstHttpResponse = await memberClient.PostAsync("/auth/logout", default); // Logout
+        var secondHttpResponse = await this._app.Client.POSTAsync<R.Endpoint, R.Request>(request); // Login
+        var thirdHttpResponse =
+            await this._app.Client.GetAsync(
+                "/reservation/all"); // Test if login was successful / requires employee role
+
         // Assert
+        firstHttpResponse.StatusCode.Should().Be(HttpStatusCode.OK);
+        secondHttpResponse.StatusCode.Should().Be(HttpStatusCode.OK);
+        thirdHttpResponse.StatusCode.Should().Be(HttpStatusCode.OK);
     }
 
 
@@ -116,7 +147,39 @@ public class Tests : TestBase<App, State>
     public async Task Post_Request_ReturnsOk_And_AdminIsLoggedIn()
     {
         // Arrange
+        var memberClient =
+            await ClientFactory.CreateAdminClient(this._app, this.Context, "adminClient@test.de", "password");
+        var request = new R.Request { Email = "adminClient@test.de", Password = "password" };
+
         // Act
+        var firstHttpResponse = await memberClient.PostAsync("/auth/logout", default); // Logout
+        var secondHttpResponse = await this._app.Client.POSTAsync<R.Endpoint, R.Request>(request); // Login
+        var thirdHttpResponse =
+            await this._app.Client.GetAsync("/role/all"); // Test if login was successful / requires admin role
+
         // Assert
+        firstHttpResponse.StatusCode.Should().Be(HttpStatusCode.OK);
+        secondHttpResponse.StatusCode.Should().Be(HttpStatusCode.OK);
+        thirdHttpResponse.StatusCode.Should().Be(HttpStatusCode.OK);
+    }
+
+    // Test login if member is already logged in
+    [Fact]
+    public async Task Post_Request_ReturnsOk_And_MemberIsStillLoggedIn()
+    {
+        // Arrange
+        var memberClient =
+            await ClientFactory.CreateMemberClient(this._app, this.Context, "memberClient@test.de", "password");
+        var request = new R.Request { Email = "memberClient@test.de", Password = "password" };
+
+        // Act
+        var firstHttpResponse = await this._app.Client.POSTAsync<R.Endpoint, R.Request>(request); // Login
+        var secondHttpResponse = await this._app.Client.POSTAsync<R.Endpoint, R.Request>(request); // Login
+        var thirdHttpResponse = await this._app.Client.GetAsync("/user/whoami"); // Test if member is still logged in
+
+        // Assert
+        firstHttpResponse.StatusCode.Should().Be(HttpStatusCode.OK);
+        secondHttpResponse.StatusCode.Should().Be(HttpStatusCode.OK);
+        thirdHttpResponse.StatusCode.Should().Be(HttpStatusCode.OK);
     }
 }
