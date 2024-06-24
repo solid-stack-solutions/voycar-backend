@@ -5,8 +5,7 @@ using Repository;
 
 public class All : Generic.Endpoint.Get.All<City>
 {
-    // ToDo roles
-    public All(ICities repository) : base(repository, ["admin"]) {}
+    public All(ICities repository) : base(repository, ["admin", "employee", "member"]) {}
 
     public override void Configure()
     {

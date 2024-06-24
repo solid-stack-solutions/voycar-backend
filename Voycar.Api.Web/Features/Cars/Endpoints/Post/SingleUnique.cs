@@ -5,6 +5,5 @@ using Repository;
 
 public class SingleUnique : Generic.Endpoint.Post.SingleUnique<Car>
 {
-    // ToDo roles
     public SingleUnique(ICars repository) : base(repository, ["admin"]) {}
 }

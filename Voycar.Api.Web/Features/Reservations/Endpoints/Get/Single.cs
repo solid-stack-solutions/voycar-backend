@@ -5,6 +5,5 @@ using Entities;
 
 public class Single : Generic.Endpoint.Get.Single<Reservation>
 {
-    // ToDo roles
-    public Single(IReservations repository) : base(repository, ["admin"]) {}
+    public Single(IReservations repository) : base(repository, ["admin", "employee"]) {}
 }

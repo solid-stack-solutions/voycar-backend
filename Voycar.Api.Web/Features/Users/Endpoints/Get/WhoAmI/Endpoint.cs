@@ -15,7 +15,7 @@ public class Endpoint : Endpoint<Request, Results<Ok<Response>, BadRequest<Error
     public override void Configure()
     {
         this.Get("user/whoami");
-        this.Roles("member", "employee", "admin");
+        this.Roles("admin", "employee", "member");
         this.Summary(summary =>
         {
             summary.Summary = "Get Email of logged in user";

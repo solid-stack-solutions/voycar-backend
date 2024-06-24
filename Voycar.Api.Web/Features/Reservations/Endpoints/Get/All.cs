@@ -5,6 +5,5 @@ using Entities;
 
 public class All : Generic.Endpoint.Get.All<Reservation>
 {
-    // ToDo roles
-    public All(IReservations repository) : base(repository, ["admin"]) {}
+    public All(IReservations repository) : base(repository, ["admin", "employee"]) {}
 }
