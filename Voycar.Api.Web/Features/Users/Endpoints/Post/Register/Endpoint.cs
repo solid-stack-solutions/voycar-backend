@@ -2,6 +2,7 @@ namespace Voycar.Api.Web.Features.Users.Endpoints.Post.Register;
 
 using System.Security.Cryptography;
 using Entities;
+using Plans.Repository;
 using Repository;
 using Service;
 
@@ -16,19 +17,22 @@ public class Endpoint : Endpoint<Request, Ok, Mapper>
     private readonly IUsers _userRepository;
     private readonly Members.Repository.IMembers _memberRepository;
     private readonly Roles.Repository.IRoles _roleRepository;
+    private readonly IPlans _planRepository;
     private readonly IEmailService _emailService;
     private readonly ILogger<Endpoint> _logger;
 
     private const string MemberRoleName = "member";
 
     public Endpoint(IUsers userRepository, Members.Repository.IMembers memberRepository, Roles.Repository.IRoles roleRepository,
-        IEmailService emailService, ILogger<Endpoint> logger)
+        IEmailService emailService, ILogger<Endpoint> logger, IPlans planRepository)
     {
         this._userRepository = userRepository;
         this._memberRepository = memberRepository;
         this._roleRepository = roleRepository;
+        this._planRepository = planRepository;
         this._emailService = emailService;
         this._logger = logger;
+
     }
 
 
@@ -46,6 +50,12 @@ public class Endpoint : Endpoint<Request, Ok, Mapper>
         {
             this._logger.LogWarning("User {UserMail} already exists.", req.Email);
             this.ThrowError("User already exists");
+        }
+
+        if (this._planRepository.Retrieve(req.PlanId) is null)
+        {
+            this._logger.LogWarning("PlanId {PlanId} does not exist.", req.PlanId);
+            this.ThrowError("Plan does not exist");
         }
 
         this._logger.LogInformation("Creating new member and user entities.");
