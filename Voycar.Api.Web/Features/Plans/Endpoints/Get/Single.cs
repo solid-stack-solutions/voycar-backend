@@ -5,5 +5,5 @@ using Repository;
 
 public class Single : Generic.Endpoint.Get.Single<Plan>
 {
-    public Single(IPlans repository) : base(repository, ["admin", "employee", "member"]) {}
+    public Single(IPlans repository) : base(repository, []) {}
 }
