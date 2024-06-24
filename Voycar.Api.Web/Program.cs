@@ -82,13 +82,24 @@ try
             settings.Version = "v1";
         };
     });
+    builder.Services.AddCors(options =>
+    {
+        options.AddDefaultPolicy(
+            policy =>
+            {
+                policy.AllowAnyOrigin();
+                policy.AllowAnyHeader();
+                policy.AllowAnyMethod();
+            });
+    });
 
     var app = builder.Build();
 
-    app.UseSerilogRequestLogging();
 
     // Caution: Swagger available in production environment
     app.UseSerilogRequestLogging()
+       .UseRouting()
+       .UseCors()
        .UseAuthentication()
        .UseAuthorization()
        .UseFastEndpoints(c =>
