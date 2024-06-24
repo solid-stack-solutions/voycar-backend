@@ -4,6 +4,7 @@ using System.Runtime.CompilerServices;
 using Context;
 using Entities;
 using Generic;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.VisualStudio.TestPlatform.ObjectModel;
 using Service;
 using R = Features.Users.Endpoints.Post.Register;
@@ -18,6 +19,9 @@ public sealed class State : StateFixture
     public static Guid RoleId { get; set; }
 
     public const string RoleName = "member";
+
+    public static Guid PlanId { get; set; }
+    public const string PlanName = "basic";
 
     public R.Request Request { get; set; } = CreateValidRequest();
 
@@ -38,7 +42,7 @@ public sealed class State : StateFixture
             BirthDate = new DateOnly(2002, 12, 12),
             BirthPlace = "null",
             PhoneNumber = "null",
-            PlanId = RoleId
+            PlanId = PlanId
         };
     }
 }
@@ -57,6 +61,7 @@ public class Tests : TestBase<App, State>
         this.Context = this._app.Context;
         this._state = state;
         State.RoleId = this.Context.Roles.First(r => r.Name == State.RoleName).Id;
+        State.PlanId = this.Context.Plans.First(p => p.Name == State.PlanName).Id;
     }
 
     [Fact]
@@ -68,27 +73,66 @@ public class Tests : TestBase<App, State>
     }
 
     [Fact]
+    public async Task Post_Request_ReturnsOk_And_SavesUserInDb()
+    {
+        // Arrange
+        var request = State.CreateValidRequest();
+
+        // Act
+        var httpResponse = await this._app.Client.POSTAsync<R.Endpoint, R.Request>(request);
+
+        // Arrange assertion
+        var userInDb = await this.Context.Users.FirstOrDefaultAsync(user => user.Email == request.Email);
+        var memberInDb = await this.Context.Members.FirstOrDefaultAsync(member => member.Id == userInDb!.MemberId);
+
+        // Assert
+        httpResponse.StatusCode.Should().Be(HttpStatusCode.OK);
+        userInDb.Should().NotBeNull();
+        memberInDb.Should().NotBeNull();
+
+        userInDb.Email.Should().Be(request.Email);
+
+        memberInDb.FirstName.Should().Be(request.FirstName);
+        memberInDb.LastName.Should().Be(request.LastName);
+        memberInDb.Street.Should().Be(request.Street);
+        memberInDb.HouseNumber.Should().Be(request.HouseNumber);
+        memberInDb.PostalCode.Should().Be(request.PostalCode);
+        memberInDb.City.Should().Be(request.City);
+        memberInDb.Country.Should().Be(request.Country);
+        memberInDb.BirthDate.Should().Be(request.BirthDate);
+        memberInDb.BirthPlace.Should().Be(request.BirthPlace);
+        memberInDb.PhoneNumber.Should().Be(request.PhoneNumber);
+        memberInDb.PlanId.Should().Be(request.PlanId);
+        this._state.Id = userInDb.Id; // Save ID for later tests
+    }
+
+    [Fact]
     public async Task Post_Request_ReturnsBadRequest_DueToExistingUser()
     {
         // Arrange
         var request = State.CreateValidRequest();
-        var user = new User()
-        {
-            Id = new Guid("DCA3AC3E-00ED-4EF0-97CF-463E6AC926CE"),
-            Email = "test@test.de",
-            PasswordHash = "passwordTest"
-        };
-
-        this.Context.Users.Add(user);
+        request.Email = "member.integration@test.de";
 
         // Act
         var httpResponse = await this._app.Client.POSTAsync<R.Endpoint, R.Request>(request);
 
         // Assert
         httpResponse.StatusCode.Should().Be(HttpStatusCode.BadRequest);
+    }
 
-        // Cleanup
-        this.Context.Users.Remove(user);
+    [Fact]
+    public async Task Post_Request_ReturnsBadRequest_DueToInvalidPlanId()
+    {
+        // Arrange
+        var request = State.CreateValidRequest();
+        request.Email = "invalidPlanId@test.de";
+        request.PlanId = new Guid("538B96BC-6149-420E-9B08-4952AE5DDA72"); // Some random Guid
+
+        // Act
+        var httpResponse = await this._app.Client.POSTAsync<R.Endpoint, R.Request>(request);
+
+        // Assert
+        httpResponse.StatusCode.Should().Be(HttpStatusCode.BadRequest);
     }
 
     // Validator-Tests
