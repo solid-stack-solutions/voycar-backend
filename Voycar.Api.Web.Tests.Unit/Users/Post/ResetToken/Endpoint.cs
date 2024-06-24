@@ -62,7 +62,7 @@ public class Endpoint : TestBase<App>
 
 
     [Fact]
-    public async Task Create_ResetToken_Fails_And_Returns_BadRequest()
+    public async Task Create_ResetToken_Fails_And_Throws_ValidationsFailure()
     {
         // Arrange
         var ep = this.SetupEndpoint();

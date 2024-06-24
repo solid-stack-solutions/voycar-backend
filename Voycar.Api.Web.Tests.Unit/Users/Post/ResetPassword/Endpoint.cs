@@ -77,7 +77,7 @@ public class Endpoint : TestBase<App>
 
 
     [Fact]
-    public async Task Reset_Password_For_Invalid_Reset_Token_Fails_And_Return_BadRequest()
+    public async Task Reset_Password_For_Invalid_Reset_Token_Fails_And_Throws_ValidationsFailure()
     {
         // Arrange
         var user = new User

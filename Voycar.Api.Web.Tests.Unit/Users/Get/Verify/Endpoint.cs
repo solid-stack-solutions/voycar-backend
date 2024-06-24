@@ -59,7 +59,7 @@ public class Endpoint : TestBase<App>
 
 
     [Fact]
-    public async Task Verify_User_Fails_And_Returns_BadRequest()
+    public async Task Verify_User_Fails_And_Throws_ValidationsFailure()
     {
         // Arrange
         var ep = this.SetupEndpoint();
