@@ -44,7 +44,7 @@ public class Endpoint : TestBase<App>
 
 
     [Fact]
-    public async Task Put_Request_ReturnsBadRequest_DueToNullUser()
+    public async Task Put_Request_Throws_ValidationsFailure_DueToNullUser()
     {
         // Arrange
         var ep = this.SetupEndpoint();
@@ -63,7 +63,7 @@ public class Endpoint : TestBase<App>
 
 
     [Fact]
-    public async Task Put_Request_ReturnsBadRequest_DueToNullMember()
+    public async Task Put_Request_Throws_ValidationsFailure_DueToNullMember()
     {
         // Arrange
         var ep = this.SetupEndpoint();
@@ -87,7 +87,7 @@ public class Endpoint : TestBase<App>
     }
 
     [Fact]
-    public async Task Put_Request_ReturnsBadRequest_DueToNonExistingMember()
+    public async Task Put_Request_Throws_ValidationsFailure_DueToNonExistingMember()
     {
         // Arrange
         var ep = this.SetupEndpoint();
@@ -112,7 +112,7 @@ public class Endpoint : TestBase<App>
     }
 
     [Fact]
-    public async Task Put_Request_ReturnsBadRequest_DueToFailedUpdate()
+    public async Task Put_Request_Throws_ValidationsFailure_DueToFailedUpdate()
     {
         // Arrange
         var ep = this.SetupEndpoint();
