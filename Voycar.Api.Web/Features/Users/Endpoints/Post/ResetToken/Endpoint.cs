@@ -23,7 +23,7 @@ public class Endpoint : Endpoint<Request, Response>
 
     public override void Configure()
     {
-        this.Get("auth/reset-token");
+        this.Post("auth/reset-token");
         this.AllowAnonymous();
     }
 
