@@ -41,7 +41,7 @@ public class Endpoint : Endpoint<Request, Ok, Mapper>
             s.Summary = "Register new member";
             s.Description = "Register a new member (if they don't exist already) and send a verification email";
             s.Responses[200] = "If registration is successful and verification email was sent";
-            s.Responses[400] = "If member already exists or personal details are invalid";
+            s.Responses[400] = "If member already exists or plan ID or personal details are invalid";
         });
     }
 
