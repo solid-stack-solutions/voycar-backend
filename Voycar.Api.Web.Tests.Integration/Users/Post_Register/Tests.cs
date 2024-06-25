@@ -32,6 +32,7 @@ public class Tests : TestBase<App, State>
         this._state.PlanId = this.Context.Plans.First(p => p.Name == State.PlanName).Id;
     }
 
+
     public R.Request CreateValidRequest()
     {
         return new R.Request
@@ -45,12 +46,14 @@ public class Tests : TestBase<App, State>
             PostalCode = "null",
             City = "null",
             Country = "null",
-            BirthDate = new DateOnly(2002, 12, 12),
+            BirthDate = new DateOnly(2002, 06, 25),
             BirthPlace = "null",
             PhoneNumber = "null",
-            PlanId = this._state.PlanId
+            PlanId = (Guid)this._state.PlanId
         };
     }
+
+
     [Fact]
     public async Task Post_Request_ReturnsOk_And_SavesUserInDb()
     {
@@ -82,6 +85,28 @@ public class Tests : TestBase<App, State>
         memberInDb.BirthPlace.Should().Be(request.BirthPlace);
         memberInDb.PhoneNumber.Should().Be(request.PhoneNumber);
         memberInDb.PlanId.Should().Be(request.PlanId);
+    }
+
+
+    [Fact]
+    public async Task Post_Request_JustTurned18_ReturnsOk_And_SavesUserInDb()
+    {
+        // Arrange
+        var request = this.CreateValidRequest();
+        request.Email = "test2@test2.de";
+        request.BirthDate = DateOnly.FromDateTime(DateTime.UtcNow).AddYears(-18);
+
+        // Act
+        var httpResponse = await this._app.Client.POSTAsync<R.Endpoint, R.Request>(request);
+
+        // Arrange assertion
+        var userInDb = await this.Context.Users.FirstOrDefaultAsync(user => user.Email == request.Email);
+        var memberInDb = await this.Context.Members.FirstOrDefaultAsync(member => member.Id == userInDb.MemberId);
+
+        // Assert
+        httpResponse.StatusCode.Should().Be(HttpStatusCode.OK);
+        userInDb.Should().NotBeNull();
+        memberInDb.Should().NotBeNull();
     }
 
 
@@ -278,7 +303,8 @@ public class Tests : TestBase<App, State>
     {
         // Arrange
         var request = this.CreateValidRequest();
-        request.BirthDate = new DateOnly(2024, 1, 1);
+
+        request.BirthDate = DateOnly.FromDateTime(DateTime.UtcNow);
 
         // Act
         var httpResponse = await this._app.Client.POSTAsync<R.Endpoint, R.Request>(request);
