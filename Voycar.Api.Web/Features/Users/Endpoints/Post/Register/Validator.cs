@@ -65,12 +65,12 @@ public class Validator : Validator<Request>
 
         this.RuleFor(request => request.BirthDate)
             .Must(this.BeAtLeast18YearsOld)
-            .WithMessage("You must be at least 18 years old.")
+            .WithMessage("You must be at least 18 years old")
             .WithName("generalErrors");
 
         this.RuleFor(request => request.BirthPlace)
             .NotEmpty()
-            .WithMessage("Birthplace is required!")
+            .WithMessage("Birthplace is required")
             .WithName("generalErrors");
 
         this.RuleFor(request => request.PhoneNumber)
