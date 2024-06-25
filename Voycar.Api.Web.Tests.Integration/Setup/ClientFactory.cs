@@ -16,12 +16,13 @@ public static class ClientFactory
     /// </summary>
     /// <param name="app">The <c>AppFixture</c> to create a new HTTP client with</param>
     /// <param name="context">The context to save the member in the database</param>
+    /// <param name="email">The Email to create and login the member</param>
+    /// <param name="password">The password to create and login the member</param>
     /// <returns>The created and logged in HTTP member client</returns>
     /// <exception cref="HttpRequestException">If the endpoint for creating a member fails</exception>
-    public static async Task<HttpClient> CreateMemberClient(AppFixture<Program> app, VoycarDbContext context)
+    public static async Task<HttpClient> CreateMemberClient(AppFixture<Program> app, VoycarDbContext context,
+        string email, string password)
     {
-        const string testMail = "member.integration@test.de";
-        const string password = "integration";
         const string planName = "basic";
 
         var member = app.CreateClient();
@@ -31,12 +32,13 @@ public static class ClientFactory
         {
             throw new RowNotInTableException($"plan \"{planName}\" is not in db");
         }
+
         // Register new member, calling endpoint since manually registering member would be too complicated
         var (registerHttpResponse, registerResponseBody) =
             await member.POSTAsync<Registration.Endpoint, Registration.Request, Registration.Response>(
                 new Registration.Request
                 {
-                    Email = testMail,
+                    Email = email.ToLowerInvariant(),
                     Password = password,
                     FirstName = "...",
                     LastName = "...",
@@ -58,8 +60,8 @@ public static class ClientFactory
             throw new HttpRequestException("unable to create new member from endpoint");
         }
 
-        await VerifyUserInDb(context, testMail);
-        await LogInHttpClient(member, testMail, password);
+        await VerifyUserInDb(context, email.ToLowerInvariant());
+        await LogInHttpClient(member, email.ToLowerInvariant(), password);
 
         return member;
     }
@@ -71,13 +73,14 @@ public static class ClientFactory
     /// </summary>
     /// <param name="app">The <c>AppFixture</c> to create a new HTTP client with</param>
     /// <param name="context">The context to save the employee in the database</param>
+    /// <param name="email">The Email to create and login the employee</param>
+    /// <param name="password">The password to create and login the employee</param>
     /// <returns>The created and logged in http employee client</returns>
     /// <exception cref="RowNotInTableException">If the employee role is not in the database</exception>
-    public static async Task<HttpClient> CreateEmployeeClient(AppFixture<Program> app, VoycarDbContext context)
+    public static async Task<HttpClient> CreateEmployeeClient(AppFixture<Program> app, VoycarDbContext context,
+        string email, string password)
     {
         const string EmployeeRoleName = "employee";
-        const string testMail = $"{EmployeeRoleName}.integration@test.de";
-        const string password = "integration";
 
         // Get employee role ID
         var roleId = (await context.Roles.FirstOrDefaultAsync(
@@ -87,7 +90,7 @@ public static class ClientFactory
             throw new RowNotInTableException($"role \"{EmployeeRoleName}\" is not in db");
         }
 
-        return await CreateUserWithRoleClient(app, context, (Guid)roleId, testMail, password);
+        return await CreateUserWithRoleClient(app, context, (Guid)roleId, email.ToLowerInvariant(), password);
     }
 
 
@@ -97,13 +100,14 @@ public static class ClientFactory
     /// </summary>
     /// <param name="app">The AppFixture to create a new http client with</param>
     /// <param name="context">The context to save the admin in the database</param>
+    /// <param name="email">The Email to create and login the admin</param>
+    /// <param name="password">The Password to create and login the admin</param>
     /// <returns>The created and logged in http admin client</returns>
     /// <exception cref="RowNotInTableException">If the admin role is not in the database</exception>
-    public static async Task<HttpClient> CreateAdminClient(AppFixture<Program> app, VoycarDbContext context)
+    public static async Task<HttpClient> CreateAdminClient(AppFixture<Program> app, VoycarDbContext context,
+        string email, string password)
     {
         const string AdminRoleName = "admin";
-        const string testMail = $"{AdminRoleName}.integration@test.de";
-        const string password = "integration";
 
         // Get admin role ID
         var roleId = (await context.Roles.FirstOrDefaultAsync(
@@ -113,7 +117,7 @@ public static class ClientFactory
             throw new RowNotInTableException($"role \"{AdminRoleName}\" is not in db");
         }
 
-        return await CreateUserWithRoleClient(app, context, (Guid)roleId, testMail, password);
+        return await CreateUserWithRoleClient(app, context, (Guid)roleId, email.ToLowerInvariant(), password);
     }
 
 
@@ -136,9 +140,7 @@ public static class ClientFactory
         // Create user entity
         var user = new User()
         {
-            Email = email,
-            PasswordHash = BCrypt.Net.BCrypt.EnhancedHashPassword(password),
-            RoleId = roleId
+            Email = email.ToLowerInvariant(), PasswordHash = BCrypt.Net.BCrypt.EnhancedHashPassword(password), RoleId = roleId
         };
         context.Users.Add(user);
         var changedAmount = await context.SaveChangesAsync();
@@ -148,8 +150,8 @@ public static class ClientFactory
         }
 
         var userClient = app.CreateClient();
-        await VerifyUserInDb(context, email);
-        await LogInHttpClient(userClient, email, password);
+        await VerifyUserInDb(context, email.ToLowerInvariant());
+        await LogInHttpClient(userClient, email.ToLowerInvariant(), password);
 
         return userClient;
     }

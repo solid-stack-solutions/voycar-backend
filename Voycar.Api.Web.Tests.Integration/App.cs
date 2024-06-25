@@ -7,6 +7,7 @@ using Context;
 using Setup;
 using Testcontainers.PostgreSql;
 
+
 /*
 Usually, the SUT (API and database) will only be created once for all test classes and cached afterward.
  Disabling the WAF cache will create a new instance for every test class, resulting in worse test performance.
@@ -21,12 +22,17 @@ public class App : AppFixture<Program>
     /* Change this constant to true, to test against production database
     WARNING: This will DELETE your existing data */
     private const bool TestAgainstProductionDb = false;
+    private const string TestMemberMail = "member.integration@test.de";
+    private const string TestEmployeeMail = "employee.integration@test.de";
+    private const string TestAdminMail = "admin.integration@test.de";
+    private const string Password = "integration";
     private PostgreSqlContainer Container { get; set; }
     private string ConnectionString { get; set; }
     public VoycarDbContext Context { get; private set; }
     public HttpClient Member { get; private set; }
     public HttpClient Employee { get; private set; }
     public HttpClient Admin { get; private set; }
+
 
     protected override async Task SetupAsync()
     {
@@ -57,15 +63,17 @@ public class App : AppFixture<Program>
         await this.Context.Database.EnsureCreatedAsync(); // Populate with Db schema
 
         // Create custom HttpClients to use in tests
-        this.Member = await ClientFactory.CreateMemberClient(this, this.Context);
-        this.Employee = await ClientFactory.CreateEmployeeClient(this, this.Context);
-        this.Admin = await ClientFactory.CreateAdminClient(this, this.Context);
+        this.Member = await ClientFactory.CreateMemberClient(this, this.Context, TestMemberMail, Password);
+        this.Employee = await ClientFactory.CreateEmployeeClient(this, this.Context, TestEmployeeMail, Password);
+        this.Admin = await ClientFactory.CreateAdminClient(this, this.Context, TestAdminMail, Password);
     }
+
 
     protected override void ConfigureApp(IWebHostBuilder builder)
     {
         // == Do host builder config here ==
     }
+
 
     protected override void ConfigureServices(IServiceCollection services)
     {
@@ -83,6 +91,7 @@ public class App : AppFixture<Program>
             options.UseNpgsql(this.ConnectionString);
         });
     }
+
 
     protected override Task TearDownAsync()
     {
