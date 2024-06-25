@@ -31,8 +31,7 @@ public class Endpoint : Endpoint<Request>
             s.Description = "Verify a user against the database " +
                             "and update time of verification";
             s.Responses[200] = "If verification is successful";
-            s.Responses[400] =
-                "If verification fails";
+            s.Responses[400] = "If verification fails";
             s.Params["verificationToken"] = "Verification token of the user to be verified";
         });
     }
