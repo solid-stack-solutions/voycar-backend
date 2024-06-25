@@ -19,6 +19,13 @@ public class Endpoint : Endpoint<Request>
     {
         this.Post("auth/reset-password");
         this.AllowAnonymous();
+        this.Summary(s =>
+        {
+            s.Summary = "Reset password of user";
+            s.Description = "Reset password of user with reset token and new password";
+            s.Responses[200] = "If reset is successful";
+            s.Responses[400] = "If reset token or password are invalid or do not belong to a known user";
+        });
     }
 
 
