@@ -7,29 +7,8 @@ using R = Features.Users.Endpoints.Post.Login;
 
 public sealed class State : StateFixture
 {
-    public static Guid PlanId { get; set; }
+    public Guid PlanId { get; set; }
     public const string PlanName = "basic";
-
-
-    public static Features.Users.Endpoints.Post.Register.Request CreateValidRequest()
-    {
-        return new Features.Users.Endpoints.Post.Register.Request
-        {
-            Email = "unverified@test.de",
-            Password = "notsafe987",
-            FirstName = "null",
-            LastName = "null",
-            Street = "null",
-            HouseNumber = "null",
-            PostalCode = "null",
-            City = "null",
-            Country = "null",
-            BirthDate = new DateOnly(2002, 12, 12),
-            BirthPlace = "null",
-            PhoneNumber = "null",
-            PlanId = PlanId
-        };
-    }
 }
 
 
@@ -46,9 +25,28 @@ public class Tests : TestBase<App, State>
         this._app = app;
         this._state = state;
         this.Context = this._app.Context;
-        State.PlanId = this.Context.Plans.First(p => p.Name == State.PlanName).Id;
+        this._state.PlanId = this.Context.Plans.First(p => p.Name == State.PlanName).Id;
     }
 
+    public Features.Users.Endpoints.Post.Register.Request CreateValidRequest()
+    {
+        return new Features.Users.Endpoints.Post.Register.Request
+        {
+            Email = "unverified@test.de",
+            Password = "notsafe987",
+            FirstName = "null",
+            LastName = "null",
+            Street = "null",
+            HouseNumber = "null",
+            PostalCode = "null",
+            City = "null",
+            Country = "null",
+            BirthDate = new DateOnly(2002, 12, 12),
+            BirthPlace = "null",
+            PhoneNumber = "null",
+            PlanId = this._state.PlanId
+        };
+    }
 
     [Fact]
     public async Task Post_Request_ReturnsBadRequest_DueToUnverifiedUser()
@@ -58,7 +56,7 @@ public class Tests : TestBase<App, State>
 
         await this._app.Client
             .POSTAsync<Features.Users.Endpoints.Post.Register.Endpoint, Features.Users.Endpoints.Post.Register.Request>(
-                State.CreateValidRequest());
+                this.CreateValidRequest()); // Register new user without verifying
 
         // Act
         var httpResponse = await this._app.Client.POSTAsync<R.Endpoint, R.Request>(request);
