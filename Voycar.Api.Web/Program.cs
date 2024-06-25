@@ -94,6 +94,7 @@ try
                 policy.WithOrigins("http://localhost:5173"); // Frontend URL, change this if frontend URL changes
                 policy.WithHeaders("content-type");
                 policy.AllowCredentials(); // Necessary to allow cookie authentication
+                policy.WithMethods(["POST", "GET", "DELETE", "PUT"]);
             });
     });
 
