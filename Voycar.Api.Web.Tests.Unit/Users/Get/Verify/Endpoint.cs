@@ -59,19 +59,19 @@ public class Endpoint : TestBase<App>
 
 
     [Fact]
-    public async Task Verify_User_Fails_And_Returns_BadRequest()
+    public async Task Verify_User_Fails_And_Throws_ValidationsFailure()
     {
         // Arrange
         var ep = this.SetupEndpoint();
         A.CallTo(() => this.FakeUserRepository.RetrieveByVerificationToken(this.Request.VerificationToken))
             .Returns((User?)null);
 
-        // Act
-        await ep.HandleAsync(this.Request, default);
-        var rsp = ep.HttpContext.Response;
+        // Act - local function
+        async Task Act() => await ep.HandleAsync(this.Request, default);
 
         // Assert
-        Assert.NotNull(rsp);
-        Assert.Equal(StatusCodes.Status400BadRequest, rsp.StatusCode);
+        var exception = await Assert.ThrowsAnyAsync<ValidationFailureException>(Act);
+        Assert.NotNull(exception);
+        Assert.Equal("ThrowError() called! - Token does not belong to any user", exception.Message);
     }
 }

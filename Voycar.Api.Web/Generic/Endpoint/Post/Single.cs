@@ -18,7 +18,16 @@ public abstract class Single<TEntity>
     public override void Configure()
     {
         this.Post(typeof(TEntity).Name.ToLowerInvariant());
-        this.Roles(this.Roles);
+
+        if (this.Roles.Length > 0)
+        {
+            this.Roles(this.Roles);
+        }
+        else
+        {
+            this.AllowAnonymous();
+        }
+
         this.Summary(s =>
         {
             s.Summary = $"Create {typeof(TEntity).Name}";
