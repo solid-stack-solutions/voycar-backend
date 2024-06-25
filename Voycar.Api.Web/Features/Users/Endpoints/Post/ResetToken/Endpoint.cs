@@ -25,6 +25,13 @@ public class Endpoint : Endpoint<Request, Response>
     {
         this.Post("auth/reset-token");
         this.AllowAnonymous();
+        this.Summary(s =>
+        {
+            s.Summary = "Request reset token for user";
+            s.Description = "Send an email with a password reset token to the user with the given email address";
+            s.Responses[200] = "If sending email is successful";
+            s.Responses[400] = "If email address is invalid or belongs to no user";
+        });
     }
 
 

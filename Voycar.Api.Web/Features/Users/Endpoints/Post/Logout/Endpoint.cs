@@ -6,6 +6,12 @@ public class Endpoint : EndpointWithoutRequest<Ok>
     {
         this.Post("auth/logout");
         this.Roles("admin", "employee", "member");
+        this.Summary(s =>
+        {
+            s.Summary = "Logout user";
+            s.Description = "Logout a user by withdrawing their cookie";
+            s.Responses[200] = "If logout was attempted";
+        });
     }
 
 
