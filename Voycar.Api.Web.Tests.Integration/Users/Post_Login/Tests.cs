@@ -2,7 +2,7 @@ namespace Voycar.Api.Web.Tests.Integration.Users.Post_Login;
 
 using Context;
 using Setup;
-using R = Features.Users.Endpoints.Post.Login;
+using L = Features.Users.Endpoints.Post.Login;
 
 
 public sealed class State : StateFixture
@@ -52,14 +52,14 @@ public class Tests : TestBase<App, State>
     public async Task Post_Request_ReturnsBadRequest_DueToUnverifiedUser()
     {
         // Arrange
-        var request = new R.Request { Email = "unverified@test.de", Password = "notsafe987" };
+        var request = new L.Request { Email = "unverified@test.de", Password = "notsafe987" };
 
         await this._app.Client
             .POSTAsync<Features.Users.Endpoints.Post.Register.Endpoint, Features.Users.Endpoints.Post.Register.Request>(
                 this.CreateValidRequest()); // Register new user without verifying
 
         // Act
-        var httpResponse = await this._app.Client.POSTAsync<R.Endpoint, R.Request>(request);
+        var httpResponse = await this._app.Client.POSTAsync<L.Endpoint, L.Request>(request);
 
         // Assert
         httpResponse.StatusCode.Should().Be(HttpStatusCode.BadRequest);
@@ -72,11 +72,11 @@ public class Tests : TestBase<App, State>
         // Arrange
         var memberClient =
             await ClientFactory.CreateMemberClient(this._app, this.Context, "member@test.de", "password");
-        var request = new R.Request { Email = "member@test.de", Password = "diffPassword" };
+        var request = new L.Request { Email = "member@test.de", Password = "diffPassword" };
 
         // Act
         var firstHttpResponse = await memberClient.PostAsync("/auth/logout", default); // Logout
-        var secondHttpResponse = await this._app.Client.POSTAsync<R.Endpoint, R.Request>(request); // Login
+        var secondHttpResponse = await this._app.Client.POSTAsync<L.Endpoint, L.Request>(request); // Login
 
         // Assert
         firstHttpResponse.StatusCode.Should().Be(HttpStatusCode.OK);
@@ -89,10 +89,10 @@ public class Tests : TestBase<App, State>
     {
         // Arrange
         var client = this._app.CreateClient();
-        var request = new R.Request { Email = "doesNotExist@test.de", Password = "diffPassword" };
+        var request = new L.Request { Email = "doesNotExist@test.de", Password = "diffPassword" };
 
         // Act
-        var httpResponse = await client.POSTAsync<R.Endpoint, R.Request>(request);
+        var httpResponse = await client.POSTAsync<L.Endpoint, L.Request>(request);
 
         // Assert
         httpResponse.StatusCode.Should().Be(HttpStatusCode.BadRequest);
@@ -105,11 +105,11 @@ public class Tests : TestBase<App, State>
         // Arrange
         var memberClient =
             await ClientFactory.CreateMemberClient(this._app, this.Context, "memberClient@test.de", "password");
-        var request = new R.Request { Email = "memberClient@test.de", Password = "password" };
+        var request = new L.Request { Email = "memberClient@test.de", Password = "password" };
 
         // Act
         var firstHttpResponse = await memberClient.PostAsync("/auth/logout", default); // Logout
-        var secondHttpResponse = await this._app.Client.POSTAsync<R.Endpoint, R.Request>(request); // Login
+        var secondHttpResponse = await this._app.Client.POSTAsync<L.Endpoint, L.Request>(request); // Login
         var thirdHttpResponse = await this._app.Client.GetAsync("/user/whoami"); // Test if login was successful
 
         // Assert
@@ -125,11 +125,11 @@ public class Tests : TestBase<App, State>
         // Arrange
         var memberClient =
             await ClientFactory.CreateEmployeeClient(this._app, this.Context, "employeeClient@test.de", "password");
-        var request = new R.Request { Email = "employeeClient@test.de", Password = "password" };
+        var request = new L.Request { Email = "employeeClient@test.de", Password = "password" };
 
         // Act
         var firstHttpResponse = await memberClient.PostAsync("/auth/logout", default); // Logout
-        var secondHttpResponse = await this._app.Client.POSTAsync<R.Endpoint, R.Request>(request); // Login
+        var secondHttpResponse = await this._app.Client.POSTAsync<L.Endpoint, L.Request>(request); // Login
         var thirdHttpResponse =
             await this._app.Client.GetAsync(
                 "/reservation/all"); // Test if login was successful / requires employee role
@@ -147,11 +147,11 @@ public class Tests : TestBase<App, State>
         // Arrange
         var memberClient =
             await ClientFactory.CreateAdminClient(this._app, this.Context, "adminClient@test.de", "password");
-        var request = new R.Request { Email = "adminClient@test.de", Password = "password" };
+        var request = new L.Request { Email = "adminClient@test.de", Password = "password" };
 
         // Act
         var firstHttpResponse = await memberClient.PostAsync("/auth/logout", default); // Logout
-        var secondHttpResponse = await this._app.Client.POSTAsync<R.Endpoint, R.Request>(request); // Login
+        var secondHttpResponse = await this._app.Client.POSTAsync<L.Endpoint, L.Request>(request); // Login
         var thirdHttpResponse =
             await this._app.Client.GetAsync("/role/all"); // Test if login was successful / requires admin role
 
@@ -168,11 +168,11 @@ public class Tests : TestBase<App, State>
         // Arrange
         var memberClient =
             await ClientFactory.CreateMemberClient(this._app, this.Context, "memberClient@test.de", "password");
-        var request = new R.Request { Email = "memberClient@test.de", Password = "password" };
+        var request = new L.Request { Email = "memberClient@test.de", Password = "password" };
 
         // Act
-        var firstHttpResponse = await this._app.Client.POSTAsync<R.Endpoint, R.Request>(request); // Login
-        var secondHttpResponse = await this._app.Client.POSTAsync<R.Endpoint, R.Request>(request); // Login
+        var firstHttpResponse = await this._app.Client.POSTAsync<L.Endpoint, L.Request>(request); // Login
+        var secondHttpResponse = await this._app.Client.POSTAsync<L.Endpoint, L.Request>(request); // Login
         var thirdHttpResponse = await this._app.Client.GetAsync("/user/whoami"); // Test if member is still logged in
 
         // Assert
@@ -187,15 +187,15 @@ public class Tests : TestBase<App, State>
         // Arrange
         var client1 = await ClientFactory.CreateMemberClient(this._app, this.Context, "memberClient1@test.de", "password");
         var client2 = await ClientFactory.CreateMemberClient(this._app, this.Context, "memberClient2@test.de", "password");
-        var request1 = new R.Request { Email = "memberClient1@test.de", Password = "password" };
-        var request2 = new R.Request { Email = "memberClient2@test.de", Password = "password" };
+        var request1 = new L.Request { Email = "memberClient1@test.de", Password = "password" };
+        var request2 = new L.Request { Email = "memberClient2@test.de", Password = "password" };
 
         // Act
         var logoutResponse1 = await client1.PostAsync("/auth/logout", default);
         var logoutResponse2 = await client2.PostAsync("/auth/logout", default);
 
-        var loginResponse1 = await client1.POSTAsync<R.Endpoint, R.Request>(request1);
-        var loginResponse2 = await client2.POSTAsync<R.Endpoint, R.Request>(request2);
+        var loginResponse1 = await client1.POSTAsync<L.Endpoint, L.Request>(request1);
+        var loginResponse2 = await client2.POSTAsync<L.Endpoint, L.Request>(request2);
 
         // Assert
         logoutResponse1.StatusCode.Should().Be(HttpStatusCode.OK);
