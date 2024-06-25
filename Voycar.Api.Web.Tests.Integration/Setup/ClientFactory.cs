@@ -140,7 +140,7 @@ public static class ClientFactory
         // Create user entity
         var user = new User()
         {
-            Email = email, PasswordHash = BCrypt.Net.BCrypt.EnhancedHashPassword(password), RoleId = roleId
+            Email = email.ToLowerInvariant(), PasswordHash = BCrypt.Net.BCrypt.EnhancedHashPassword(password), RoleId = roleId
         };
         context.Users.Add(user);
         var changedAmount = await context.SaveChangesAsync();
