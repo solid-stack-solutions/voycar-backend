@@ -16,8 +16,8 @@ public static class ClientFactory
     /// </summary>
     /// <param name="app">The <c>AppFixture</c> to create a new HTTP client with</param>
     /// <param name="context">The context to save the member in the database</param>
-    /// <param name="email">The Email of the logged in member</param>
-    /// <param name="password"></param>
+    /// <param name="email">The Email to create and login the member</param>
+    /// <param name="password">The password to create and login the member</param>
     /// <returns>The created and logged in HTTP member client</returns>
     /// <exception cref="HttpRequestException">If the endpoint for creating a member fails</exception>
     public static async Task<HttpClient> CreateMemberClient(AppFixture<Program> app, VoycarDbContext context,
