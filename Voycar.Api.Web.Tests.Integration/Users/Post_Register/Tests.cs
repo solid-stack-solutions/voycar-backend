@@ -72,9 +72,9 @@ public class Tests : TestBase<App, State>
         userInDb.Should().NotBeNull();
         memberInDb.Should().NotBeNull();
 
-        userInDb.Email.Should().Be(request.Email);
+        userInDb!.Email.Should().Be(request.Email);
 
-        memberInDb.FirstName.Should().Be(request.FirstName);
+        memberInDb!.FirstName.Should().Be(request.FirstName);
         memberInDb.LastName.Should().Be(request.LastName);
         memberInDb.Street.Should().Be(request.Street);
         memberInDb.HouseNumber.Should().Be(request.HouseNumber);
