@@ -313,6 +313,21 @@ public class Tests : TestBase<App, State>
         httpResponse.StatusCode.Should().Be(HttpStatusCode.BadRequest);
     }
 
+    [Fact]
+    public async Task Post_Request_ReturnsBadRequest_DueToInvalidBirthDate_OneDayTooYoung()
+    {
+        // Arrange
+        var request = this.CreateValidRequest();
+
+        request.BirthDate = DateOnly.FromDateTime(DateTime.UtcNow).AddYears(-18).AddDays(1);
+
+        // Act
+        var httpResponse = await this._app.Client.POSTAsync<R.Endpoint, R.Request>(request);
+
+        // Assert
+        httpResponse.StatusCode.Should().Be(HttpStatusCode.BadRequest);
+    }
+
 
     [Fact]
     public async Task Post_Request_ReturnsBadRequest_DueToInvalidBirthPlace()
