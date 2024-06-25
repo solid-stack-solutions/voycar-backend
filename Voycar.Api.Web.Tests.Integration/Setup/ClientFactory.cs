@@ -73,8 +73,8 @@ public static class ClientFactory
     /// </summary>
     /// <param name="app">The <c>AppFixture</c> to create a new HTTP client with</param>
     /// <param name="context">The context to save the employee in the database</param>
-    /// <param name="email">The Email of the logged in member</param>
-    /// <param name="password">The password of the logged in employee</param>
+    /// <param name="email">The Email to create and login the employee</param>
+    /// <param name="password">The password to create and login the employee</param>
     /// <returns>The created and logged in http employee client</returns>
     /// <exception cref="RowNotInTableException">If the employee role is not in the database</exception>
     public static async Task<HttpClient> CreateEmployeeClient(AppFixture<Program> app, VoycarDbContext context,
