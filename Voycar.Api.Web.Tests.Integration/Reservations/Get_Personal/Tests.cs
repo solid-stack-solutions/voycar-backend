@@ -54,7 +54,7 @@ public class Tests : TestBase<App, State>
             this.CreateReservation(
                 DateTime.UtcNow.ToString("yyyy-MM-ddTHH:mm:ss.fffZ", CultureInfo.InvariantCulture),
                 DateTime.UtcNow.AddHours(3).ToString("yyyy-MM-ddTHH:mm:ss.fffZ", CultureInfo.InvariantCulture)
-                ), // active
+            ), // active
             this.CreateReservation("2025-01-01T08:00:00.000Z", "2025-01-01T18:00:00.000Z") // planned
         };
 
@@ -62,7 +62,8 @@ public class Tests : TestBase<App, State>
         await this.Context.SaveChangesAsync();
 
         // Act
-        var (httpResponse, response) = await this._app.Member.GETAsync<P.Endpoint, P.Request, P.Response>(new P.Request());
+        var (httpResponse, response) =
+            await this._app.Member.GETAsync<P.Endpoint, P.Request, P.Response>(new P.Request());
 
         // Assert
         httpResponse.StatusCode.Should().Be(HttpStatusCode.OK);
@@ -91,7 +92,8 @@ public class Tests : TestBase<App, State>
         await this.Context.SaveChangesAsync();
 
         // Act
-        var (httpResponse, response) = await this._app.Member.GETAsync<P.Endpoint, P.Request, P.Response>(new P.Request());
+        var (httpResponse, response) =
+            await this._app.Member.GETAsync<P.Endpoint, P.Request, P.Response>(new P.Request());
 
         // Assert
         httpResponse.StatusCode.Should().Be(HttpStatusCode.OK);
@@ -127,7 +129,8 @@ public class Tests : TestBase<App, State>
         await this.Context.SaveChangesAsync();
 
         // Act
-        var (httpResponse, response) = await this._app.Member.GETAsync<P.Endpoint, P.Request, P.Response>(new P.Request());
+        var (httpResponse, response) =
+            await this._app.Member.GETAsync<P.Endpoint, P.Request, P.Response>(new P.Request());
 
         // Assert
         httpResponse.StatusCode.Should().Be(HttpStatusCode.OK);
@@ -158,7 +161,8 @@ public class Tests : TestBase<App, State>
         await this.Context.SaveChangesAsync();
 
         // Act
-        var (httpResponse, response) = await this._app.Member.GETAsync<P.Endpoint, P.Request, P.Response>(new P.Request());
+        var (httpResponse, response) =
+            await this._app.Member.GETAsync<P.Endpoint, P.Request, P.Response>(new P.Request());
 
         // Assert
         httpResponse.StatusCode.Should().Be(HttpStatusCode.OK);
@@ -168,17 +172,18 @@ public class Tests : TestBase<App, State>
 
         this.ValidatePlannedReservations(response, reservations);
 
-
         // Cleanup
         this.Context.RemoveRange(reservations);
         await this.Context.SaveChangesAsync();
     }
 
+
     [Fact]
     public async Task Get_Request_ReturnsOk_And_EmptyList()
     {
         // Act
-        var (httpResponse, response) = await this._app.Member.GETAsync<P.Endpoint, P.Request, P.Response>(new P.Request());
+        var (httpResponse, response) =
+            await this._app.Member.GETAsync<P.Endpoint, P.Request, P.Response>(new P.Request());
 
         // Assert
         httpResponse.StatusCode.Should().Be(HttpStatusCode.OK);
