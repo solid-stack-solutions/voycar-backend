@@ -18,7 +18,7 @@ public class Endpoint : Endpoint<Request, Results<Ok<Response>, BadRequest<Error
         this.Roles("admin", "employee", "member");
         this.Summary(summary =>
         {
-            summary.Summary = "Get Email of logged in user";
+            summary.Summary = "Get Email of logged-in user";
             summary.Description = "Get the Email of the user who is logged in according to the request cookie";
             summary.Responses[200] = "If user is found";
             summary.Responses[400] = "If the user somehow can't be found";

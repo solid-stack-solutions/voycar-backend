@@ -20,6 +20,13 @@ public class Endpoint : Endpoint<Request>
     {
         this.Post("auth/login");
         this.AllowAnonymous();
+        this.Summary(s =>
+        {
+            s.Summary = "Login user";
+            s.Description = "Login a user by verifying their credentials against the database";
+            s.Responses[200] = "If login is successful";
+            s.Responses[400] = "If login fails due to invalid credentials or user can't be found";
+        });
     }
 
     public override async Task HandleAsync(Request req, CancellationToken ct)
