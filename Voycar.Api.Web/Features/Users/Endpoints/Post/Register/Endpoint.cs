@@ -6,6 +6,7 @@ using Plans.Repository;
 using Repository;
 using Service;
 
+
 /// <summary>
 /// Handles the registration of new members.
 ///
@@ -23,8 +24,10 @@ public class Endpoint : Endpoint<Request, Ok, Mapper>
 
     private const string MemberRoleName = "member";
 
-    public Endpoint(IUsers userRepository, Members.Repository.IMembers memberRepository, Roles.Repository.IRoles roleRepository,
-        IEmailService emailService, ILogger<Endpoint> logger, IPlans planRepository)
+
+    public Endpoint(IUsers userRepository, Members.Repository.IMembers memberRepository,
+        Roles.Repository.IRoles roleRepository, IPlans planRepository,
+        IEmailService emailService, ILogger<Endpoint> logger)
     {
         this._userRepository = userRepository;
         this._memberRepository = memberRepository;
@@ -32,7 +35,6 @@ public class Endpoint : Endpoint<Request, Ok, Mapper>
         this._planRepository = planRepository;
         this._emailService = emailService;
         this._logger = logger;
-
     }
 
 
@@ -76,6 +78,7 @@ public class Endpoint : Endpoint<Request, Ok, Mapper>
             new Response { VerificationToken = user.VerificationToken! }
         ));
     }
+
 
     private User CreateUser(Request req, Member member)
     {

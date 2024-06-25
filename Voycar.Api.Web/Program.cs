@@ -82,13 +82,28 @@ try
             settings.Version = "v1";
         };
     });
+    builder.Services.AddCors(options =>
+    {
+        // Allow CORS requests from frontend with cookie. Origins and Headers have to be explicitly set and
+        // can not use any wildcards.
+        // See: https://developer.mozilla.org/en-US/docs/Web/HTTP/CORS#requests_with_credentials
+        //      "Credentialed requests and wildcards"
+        options.AddDefaultPolicy(
+            policy =>
+            {
+                policy.WithOrigins("http://localhost:5173"); // Frontend URL, change this if frontend URL changes
+                policy.WithHeaders("content-type");
+                policy.AllowCredentials(); // Necessary to allow cookie authentication
+            });
+    });
 
     var app = builder.Build();
 
-    app.UseSerilogRequestLogging();
 
     // Caution: Swagger available in production environment
     app.UseSerilogRequestLogging()
+       .UseRouting()
+       .UseCors()
        .UseAuthentication()
        .UseAuthorization()
        .UseFastEndpoints(c =>

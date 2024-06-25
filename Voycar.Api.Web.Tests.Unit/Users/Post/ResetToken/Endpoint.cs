@@ -62,19 +62,19 @@ public class Endpoint : TestBase<App>
 
 
     [Fact]
-    public async Task Create_ResetToken_Fails_And_Returns_BadRequest()
+    public async Task Create_ResetToken_Fails_And_Throws_ValidationsFailure()
     {
         // Arrange
         var ep = this.SetupEndpoint();
 
         A.CallTo(() => this.FakeUserRepository.RetrieveByEmail(this.Request.Email)).Returns((User?)null);
 
-        // Act
-        await ep.HandleAsync(this.Request, default);
-        var rsp = ep.HttpContext.Response;
+        // Act - local function
+        async Task Act() => await ep.HandleAsync(this.Request, default);
 
         // Assert
-        Assert.NotNull(rsp);
-        Assert.Equal(StatusCodes.Status400BadRequest, rsp.StatusCode);
+        var exception = await Assert.ThrowsAnyAsync<ValidationFailureException>(Act);
+        Assert.NotNull(exception);
+        Assert.Equal("ThrowError() called! - User not found", exception.Message);
     }
 }

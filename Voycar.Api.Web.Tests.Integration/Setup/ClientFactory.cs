@@ -16,8 +16,8 @@ public static class ClientFactory
     /// </summary>
     /// <param name="app">The <c>AppFixture</c> to create a new HTTP client with</param>
     /// <param name="context">The context to save the member in the database</param>
-    /// <param name="email">The Email of the logged in member</param>
-    /// <param name="password"></param>
+    /// <param name="email">The Email to create and login the member</param>
+    /// <param name="password">The password to create and login the member</param>
     /// <returns>The created and logged in HTTP member client</returns>
     /// <exception cref="HttpRequestException">If the endpoint for creating a member fails</exception>
     public static async Task<HttpClient> CreateMemberClient(AppFixture<Program> app, VoycarDbContext context,
@@ -73,8 +73,8 @@ public static class ClientFactory
     /// </summary>
     /// <param name="app">The <c>AppFixture</c> to create a new HTTP client with</param>
     /// <param name="context">The context to save the employee in the database</param>
-    /// <param name="email">The Email of the logged in member</param>
-    /// <param name="password">The password of the logged in employee</param>
+    /// <param name="email">The Email to create and login the employee</param>
+    /// <param name="password">The password to create and login the employee</param>
     /// <returns>The created and logged in http employee client</returns>
     /// <exception cref="RowNotInTableException">If the employee role is not in the database</exception>
     public static async Task<HttpClient> CreateEmployeeClient(AppFixture<Program> app, VoycarDbContext context,
@@ -100,8 +100,8 @@ public static class ClientFactory
     /// </summary>
     /// <param name="app">The AppFixture to create a new http client with</param>
     /// <param name="context">The context to save the admin in the database</param>
-    /// <param name="email">The Email of the logged in admin</param>
-    /// <param name="password">The Password of the logged in admin</param>
+    /// <param name="email">The Email to create and login the admin</param>
+    /// <param name="password">The Password to create and login the admin</param>
     /// <returns>The created and logged in http admin client</returns>
     /// <exception cref="RowNotInTableException">If the admin role is not in the database</exception>
     public static async Task<HttpClient> CreateAdminClient(AppFixture<Program> app, VoycarDbContext context,
@@ -140,7 +140,7 @@ public static class ClientFactory
         // Create user entity
         var user = new User()
         {
-            Email = email, PasswordHash = BCrypt.Net.BCrypt.EnhancedHashPassword(password), RoleId = roleId
+            Email = email.ToLowerInvariant(), PasswordHash = BCrypt.Net.BCrypt.EnhancedHashPassword(password), RoleId = roleId
         };
         context.Users.Add(user);
         var changedAmount = await context.SaveChangesAsync();
