@@ -1,43 +1,17 @@
 namespace Voycar.Api.Web.Tests.Integration.Users.Post_Register;
 
 using Context;
-using Entities;
 using Microsoft.EntityFrameworkCore;
 using R = Features.Users.Endpoints.Post.Register;
 
 
 public sealed class State : StateFixture
 {
-    public Guid Id { get; set; }
-
-    public static Guid RoleId { get; set; }
+    public Guid RoleId { get; set; }
     public const string RoleName = "member";
 
-    public static Guid PlanId { get; set; }
+    public Guid PlanId { get; set; }
     public const string PlanName = "basic";
-
-    public R.Request Request { get; set; } = CreateValidRequest();
-
-
-    public static R.Request CreateValidRequest()
-    {
-        return new R.Request
-        {
-            Email = "test@test.de",
-            Password = "notsafe987",
-            FirstName = "null",
-            LastName = "null",
-            Street = "null",
-            HouseNumber = "null",
-            PostalCode = "null",
-            City = "null",
-            Country = "null",
-            BirthDate = new DateOnly(2002, 12, 12),
-            BirthPlace = "null",
-            PhoneNumber = "null",
-            PlanId = PlanId
-        };
-    }
 }
 
 
@@ -54,23 +28,41 @@ public class Tests : TestBase<App, State>
         this._app = app;
         this.Context = this._app.Context;
         this._state = state;
-        State.RoleId = this.Context.Roles.First(r => r.Name == State.RoleName).Id;
-        State.PlanId = this.Context.Plans.First(p => p.Name == State.PlanName).Id;
+        this._state.RoleId = this.Context.Roles.First(r => r.Name == State.RoleName).Id;
+        this._state.PlanId = this.Context.Plans.First(p => p.Name == State.PlanName).Id;
     }
 
-
+    public R.Request CreateValidRequest()
+    {
+        return new R.Request
+        {
+            Email = "test@test.de",
+            Password = "notsafe987",
+            FirstName = "null",
+            LastName = "null",
+            Street = "null",
+            HouseNumber = "null",
+            PostalCode = "null",
+            City = "null",
+            Country = "null",
+            BirthDate = new DateOnly(2002, 12, 12),
+            BirthPlace = "null",
+            PhoneNumber = "null",
+            PlanId = this._state.PlanId
+        };
+    }
     [Fact]
     public async Task Post_Request_ReturnsOk_And_SavesUserInDb()
     {
         // Arrange
-        var request = State.CreateValidRequest();
+        var request = this.CreateValidRequest();
 
         // Act
         var httpResponse = await this._app.Client.POSTAsync<R.Endpoint, R.Request>(request);
 
         // Arrange assertion
         var userInDb = await this.Context.Users.FirstOrDefaultAsync(user => user.Email == request.Email);
-        var memberInDb = await this.Context.Members.FirstOrDefaultAsync(member => member.Id == userInDb!.MemberId);
+        var memberInDb = await this.Context.Members.FirstOrDefaultAsync(member => member.Id == userInDb.MemberId);
 
         // Assert
         httpResponse.StatusCode.Should().Be(HttpStatusCode.OK);
@@ -90,7 +82,6 @@ public class Tests : TestBase<App, State>
         memberInDb.BirthPlace.Should().Be(request.BirthPlace);
         memberInDb.PhoneNumber.Should().Be(request.PhoneNumber);
         memberInDb.PlanId.Should().Be(request.PlanId);
-        this._state.Id = userInDb.Id; // Save ID for later tests
     }
 
 
@@ -98,7 +89,7 @@ public class Tests : TestBase<App, State>
     public async Task Post_Request_ReturnsOk_And_SavesUserInDb_WithLowerInvariantEmail()
     {
         // Arrange
-        var request = State.CreateValidRequest();
+        var request = this.CreateValidRequest();
         request.Email = "TEST@CAPSLOCK.de";
 
         // Act
@@ -109,6 +100,7 @@ public class Tests : TestBase<App, State>
             await this.Context.Users.FirstOrDefaultAsync(user => user.Email == request.Email.ToLowerInvariant());
 
         // Assert
+        userInDb.Should().NotBeNull();
         userInDb!.Email.Should().Be("test@capslock.de");
         httpResponse.StatusCode.Should().Be(HttpStatusCode.OK);
     }
@@ -118,7 +110,7 @@ public class Tests : TestBase<App, State>
     public async Task Post_Request_ReturnsBadRequest_DueToExistingUser()
     {
         // Arrange
-        var request = State.CreateValidRequest();
+        var request = this.CreateValidRequest();
         request.Email = "member.integration@test.de";
 
         // Act
@@ -133,7 +125,7 @@ public class Tests : TestBase<App, State>
     public async Task Post_Request_ReturnsBadRequest_DueToInvalidPlanId()
     {
         // Arrange
-        var request = State.CreateValidRequest();
+        var request = this.CreateValidRequest();
         request.Email = "invalidPlanId@test.de";
         request.PlanId = new Guid("538B96BC-6149-420E-9B08-4952AE5DDA72"); // Some random Guid
 
@@ -150,7 +142,7 @@ public class Tests : TestBase<App, State>
     public async Task Post_Request_ReturnsBadRequest_DueToInvalidEmail()
     {
         // Arrange
-        var request = State.CreateValidRequest();
+        var request = this.CreateValidRequest();
         request.Email = "";
 
         // Act
@@ -165,7 +157,7 @@ public class Tests : TestBase<App, State>
     public async Task Post_Request_ReturnsBadRequest_DueToInvalidPassword()
     {
         // Arrange
-        var request = State.CreateValidRequest();
+        var request = this.CreateValidRequest();
         request.Password = ""; // Set invalid Password
 
         // Act
@@ -180,7 +172,7 @@ public class Tests : TestBase<App, State>
     public async Task Post_Request_ReturnsBadRequest_DueToInvalidFirstName()
     {
         // Arrange
-        var request = State.CreateValidRequest();
+        var request = this.CreateValidRequest();
         request.FirstName = ""; // Set invalid FirstName
 
         // Act
@@ -195,7 +187,7 @@ public class Tests : TestBase<App, State>
     public async Task Post_Request_ReturnsBadRequest_DueToInvalidLastName()
     {
         // Arrange
-        var request = State.CreateValidRequest();
+        var request = this.CreateValidRequest();
         request.LastName = "";
 
         // Act
@@ -210,7 +202,7 @@ public class Tests : TestBase<App, State>
     public async Task Post_Request_ReturnsBadRequest_DueToInvalidStreet()
     {
         // Arrange
-        var request = State.CreateValidRequest();
+        var request = this.CreateValidRequest();
         request.Street = "";
 
         // Act
@@ -225,7 +217,7 @@ public class Tests : TestBase<App, State>
     public async Task Post_Request_ReturnsBadRequest_DueToInvalidHouseNumber()
     {
         // Arrange
-        var request = State.CreateValidRequest();
+        var request = this.CreateValidRequest();
         request.HouseNumber = "";
 
         // Act
@@ -240,7 +232,7 @@ public class Tests : TestBase<App, State>
     public async Task Post_Request_ReturnsBadRequest_DueToInvalidPostalCode()
     {
         // Arrange
-        var request = State.CreateValidRequest();
+        var request = this.CreateValidRequest();
         request.PostalCode = "";
 
         // Act
@@ -255,7 +247,7 @@ public class Tests : TestBase<App, State>
     public async Task Post_Request_ReturnsBadRequest_DueToInvalidCity()
     {
         // Arrange
-        var request = State.CreateValidRequest();
+        var request = this.CreateValidRequest();
         request.City = "";
 
         // Act
@@ -270,7 +262,7 @@ public class Tests : TestBase<App, State>
     public async Task Post_Request_ReturnsBadRequest_DueToInvalidCountry()
     {
         // Arrange
-        var request = State.CreateValidRequest();
+        var request = this.CreateValidRequest();
         request.Country = "";
 
         // Act
@@ -285,7 +277,7 @@ public class Tests : TestBase<App, State>
     public async Task Post_Request_ReturnsBadRequest_DueToInvalidBirthDate()
     {
         // Arrange
-        var request = State.CreateValidRequest();
+        var request = this.CreateValidRequest();
         request.BirthDate = new DateOnly(2024, 1, 1);
 
         // Act
@@ -300,7 +292,7 @@ public class Tests : TestBase<App, State>
     public async Task Post_Request_ReturnsBadRequest_DueToInvalidBirthPlace()
     {
         // Arrange
-        var request = State.CreateValidRequest();
+        var request = this.CreateValidRequest();
         request.BirthPlace = "";
 
         // Act
@@ -315,7 +307,7 @@ public class Tests : TestBase<App, State>
     public async Task Post_Request_ReturnsBadRequest_DueToInvalidPhoneNumber()
     {
         // Arrange
-        var request = State.CreateValidRequest();
+        var request = this.CreateValidRequest();
         request.PhoneNumber = "";
 
         // Act
