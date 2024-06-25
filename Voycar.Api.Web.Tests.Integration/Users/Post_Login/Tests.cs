@@ -3,6 +3,7 @@ namespace Voycar.Api.Web.Tests.Integration.Users.Post_Login;
 using Context;
 using Setup;
 using L = Features.Users.Endpoints.Post.Login;
+using Register = Features.Users.Endpoints.Post.Register;
 
 
 public sealed class State : StateFixture
@@ -28,9 +29,9 @@ public class Tests : TestBase<App, State>
         this._state.PlanId = this.Context.Plans.First(p => p.Name == State.PlanName).Id;
     }
 
-    public Features.Users.Endpoints.Post.Register.Request CreateValidRequest()
+    public Register.Request CreateValidRequest()
     {
-        return new Features.Users.Endpoints.Post.Register.Request
+        return new Register.Request
         {
             Email = "unverified@test.de",
             Password = "notsafe987",
@@ -55,7 +56,7 @@ public class Tests : TestBase<App, State>
         var request = new L.Request { Email = "unverified@test.de", Password = "notsafe987" };
 
         await this._app.Client
-            .POSTAsync<Features.Users.Endpoints.Post.Register.Endpoint, Features.Users.Endpoints.Post.Register.Request>(
+            .POSTAsync<Register.Endpoint, Register.Request>(
                 this.CreateValidRequest()); // Register new user without verifying
 
         // Act
