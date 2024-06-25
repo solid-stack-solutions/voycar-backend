@@ -29,6 +29,7 @@ public class Tests : TestBase<App, State>
         this._state.PlanId = this.Context.Plans.First(p => p.Name == State.PlanName).Id;
     }
 
+
     public Register.Request CreateValidRequest()
     {
         return new Register.Request
@@ -48,6 +49,7 @@ public class Tests : TestBase<App, State>
             PlanId = this._state.PlanId
         };
     }
+
 
     [Fact]
     public async Task Post_Request_ReturnsBadRequest_DueToUnverifiedUser()
@@ -80,7 +82,9 @@ public class Tests : TestBase<App, State>
         var secondHttpResponse = await this._app.Client.POSTAsync<L.Endpoint, L.Request>(request); // Login
 
         // Assert
-        firstHttpResponse.StatusCode.Should().Be(HttpStatusCode.OK);
+        firstHttpResponse.StatusCode.Should().Be(HttpStatusCode.OK,
+            "factory method produced logged in member who should be able to log out");
+        ;
         secondHttpResponse.StatusCode.Should().Be(HttpStatusCode.BadRequest);
     }
 
@@ -114,7 +118,8 @@ public class Tests : TestBase<App, State>
         var thirdHttpResponse = await this._app.Client.GetAsync("/user/whoami"); // Test if login was successful
 
         // Assert
-        firstHttpResponse.StatusCode.Should().Be(HttpStatusCode.OK);
+        firstHttpResponse.StatusCode.Should().Be(HttpStatusCode.OK,
+            "factory method produced logged in member who should be able to log out");
         secondHttpResponse.StatusCode.Should().Be(HttpStatusCode.OK);
         thirdHttpResponse.StatusCode.Should().Be(HttpStatusCode.OK);
     }
@@ -136,7 +141,8 @@ public class Tests : TestBase<App, State>
                 "/reservation/all"); // Test if login was successful / requires employee role
 
         // Assert
-        firstHttpResponse.StatusCode.Should().Be(HttpStatusCode.OK);
+        firstHttpResponse.StatusCode.Should().Be(HttpStatusCode.OK,
+            "factory method produced logged in employee who should be able to log out");
         secondHttpResponse.StatusCode.Should().Be(HttpStatusCode.OK);
         thirdHttpResponse.StatusCode.Should().Be(HttpStatusCode.OK);
     }
@@ -157,10 +163,12 @@ public class Tests : TestBase<App, State>
             await this._app.Client.GetAsync("/role/all"); // Test if login was successful / requires admin role
 
         // Assert
-        firstHttpResponse.StatusCode.Should().Be(HttpStatusCode.OK);
+        firstHttpResponse.StatusCode.Should().Be(HttpStatusCode.OK,
+            "factory method produced logged in admin who should be able to log out");
         secondHttpResponse.StatusCode.Should().Be(HttpStatusCode.OK);
         thirdHttpResponse.StatusCode.Should().Be(HttpStatusCode.OK);
     }
+
 
     // Test login if member is already logged in
     [Fact]
@@ -182,12 +190,15 @@ public class Tests : TestBase<App, State>
         thirdHttpResponse.StatusCode.Should().Be(HttpStatusCode.OK);
     }
 
+
     [Fact]
-    public async Task Post_Multiple_Request_ReturnsOk_And_MembersAreLoggedIn()
+    public async Task Post_Multiple_Request_ReturnOk_And_MembersAreLoggedIn()
     {
         // Arrange
-        var client1 = await ClientFactory.CreateMemberClient(this._app, this.Context, "memberClient1@test.de", "password");
-        var client2 = await ClientFactory.CreateMemberClient(this._app, this.Context, "memberClient2@test.de", "password");
+        var client1 =
+            await ClientFactory.CreateMemberClient(this._app, this.Context, "memberClient1@test.de", "password");
+        var client2 =
+            await ClientFactory.CreateMemberClient(this._app, this.Context, "memberClient2@test.de", "password");
         var request1 = new L.Request { Email = "memberClient1@test.de", Password = "password" };
         var request2 = new L.Request { Email = "memberClient2@test.de", Password = "password" };
 
@@ -199,8 +210,10 @@ public class Tests : TestBase<App, State>
         var loginResponse2 = await client2.POSTAsync<L.Endpoint, L.Request>(request2);
 
         // Assert
-        logoutResponse1.StatusCode.Should().Be(HttpStatusCode.OK);
-        logoutResponse2.StatusCode.Should().Be(HttpStatusCode.OK);
+        logoutResponse1.StatusCode.Should().Be(HttpStatusCode.OK,
+            "factory method produced logged in member who should be able to log out");
+        logoutResponse2.StatusCode.Should().Be(HttpStatusCode.OK,
+            "factory method produced logged in member who should be able to log out");
         loginResponse1.StatusCode.Should().Be(HttpStatusCode.OK);
         loginResponse2.StatusCode.Should().Be(HttpStatusCode.OK);
     }
