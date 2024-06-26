@@ -43,6 +43,8 @@ public class Tests : TestBase<App, State>
         // Assert
         httpResponse.StatusCode.Should().Be(HttpStatusCode.OK);
         member.Should().NotBeNull();
+        user.Should().NotBeNull();
+        plan.Should().NotBeNull();
 
         member.Id.Should().Be(response.MemberId);
         member.FirstName.Should().Be(response.FirstName);
