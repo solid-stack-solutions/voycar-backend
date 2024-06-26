@@ -43,37 +43,11 @@ public class Tests : TestBase<App, State>
         };
     }
 
-    private static void ValidateExpiredReservations(P.Response response, List<Reservation> reservations)
+    private static void ValidateReservations(List<Reservation> reservations, List<Reservation> responseReservations)
     {
         foreach (var reservation in reservations)
         {
-            var responseReservation = response.expired.FirstOrDefault(r => r.Id == reservation.Id);
-            responseReservation.Should().NotBeNull();
-
-            responseReservation!.Begin.ToShortTimeString().Should().Be(reservation.Begin.ToShortTimeString());
-            responseReservation.End.ToShortTimeString().Should().Be(reservation.End.ToShortTimeString());
-        }
-    }
-
-
-    private static void ValidateActiveReservations(P.Response response, List<Reservation> reservations)
-    {
-        foreach (var reservation in reservations)
-        {
-            var responseReservation = response.active.FirstOrDefault(r => r.Id == reservation.Id);
-            responseReservation.Should().NotBeNull();
-
-            responseReservation!.Begin.ToShortTimeString().Should().Be(reservation.Begin.ToShortTimeString());
-            responseReservation.End.ToShortTimeString().Should().Be(reservation.End.ToShortTimeString());
-        }
-    }
-
-
-    private static void ValidatePlannedReservations(P.Response response, List<Reservation> reservations)
-    {
-        foreach (var reservation in reservations)
-        {
-            var responseReservation = response.planned.FirstOrDefault(r => r.Id == reservation.Id);
+            var responseReservation = responseReservations.FirstOrDefault(r => r.Id == reservation.Id);
             responseReservation.Should().NotBeNull();
 
             responseReservation!.Begin.ToShortTimeString().Should().Be(reservation.Begin.ToShortTimeString());
@@ -141,7 +115,7 @@ public class Tests : TestBase<App, State>
         response.active.Count.Should().Be(0);
         response.planned.Count.Should().Be(0);
 
-        ValidateExpiredReservations(response, reservations);
+        ValidateReservations(reservations, response.expired);
 
         // Cleanup
         this.Context.RemoveRange(reservations);
@@ -178,7 +152,7 @@ public class Tests : TestBase<App, State>
         response.active.Count.Should().Be(3);
         response.planned.Count.Should().Be(0);
 
-        ValidateActiveReservations(response, reservations);
+        ValidateReservations(reservations, response.active);
 
         // Cleanup
         this.Context.RemoveRange(reservations);
@@ -210,7 +184,7 @@ public class Tests : TestBase<App, State>
         response.active.Count.Should().Be(0);
         response.planned.Count.Should().Be(3);
 
-        ValidatePlannedReservations(response, reservations);
+        ValidateReservations(reservations, response.planned);
 
         // Cleanup
         this.Context.RemoveRange(reservations);
