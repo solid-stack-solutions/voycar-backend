@@ -9,7 +9,6 @@ using R = Features.Members.Endpoints.Put.Personal;
 public class Tests : TestBase<App>
 {
     private readonly App _app;
-
     private readonly VoycarDbContext Context;
 
 
