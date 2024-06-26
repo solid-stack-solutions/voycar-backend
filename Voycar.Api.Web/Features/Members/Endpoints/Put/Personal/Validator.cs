@@ -46,7 +46,7 @@ public class Validator : Validator<Request>
             .WithName("generalErrors");
 
         this.RuleFor(request => request.BirthDate)
-            .Must(this.BeAtLeast18YearsOld)
+            .Must(BeAtLeast18YearsOld)
             .WithMessage("You must be at least 18 years old")
             .WithName("generalErrors");
 
@@ -62,12 +62,12 @@ public class Validator : Validator<Request>
     }
 
 
-    private bool BeAtLeast18YearsOld(DateOnly birthDate)
+    private static bool BeAtLeast18YearsOld(DateOnly birthDate)
     {
         var today = DateOnly.FromDateTime(DateTime.UtcNow);
         var age = today.Year - birthDate.Year;
 
-        // Adjust age if the birth date hasn't occurred yet this year
+        // Adjust age if the birthdate hasn't occurred yet this year
         if (today < birthDate.AddYears(age))
         {
             age--;
