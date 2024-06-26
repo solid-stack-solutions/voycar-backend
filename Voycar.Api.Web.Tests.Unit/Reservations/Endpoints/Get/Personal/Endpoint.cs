@@ -1,6 +1,5 @@
 namespace Voycar.Api.Web.Tests.Unit.Reservations.Endpoints.Get.Personal;
 
-using System.Globalization;
 using Entities;
 using FakeItEasy;
 using Features.Reservations.Endpoints.Get.Personal;
