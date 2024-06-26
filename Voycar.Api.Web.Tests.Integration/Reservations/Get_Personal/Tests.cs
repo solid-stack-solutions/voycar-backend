@@ -31,7 +31,7 @@ public class Tests : TestBase<App, State>
     }
 
 
-    public Reservation CreateReservation(string begin, string end)
+    private Reservation CreateReservation(string begin, string end)
     {
         return new Reservation
         {
