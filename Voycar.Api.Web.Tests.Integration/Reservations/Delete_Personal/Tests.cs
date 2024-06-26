@@ -154,7 +154,7 @@ public class Tests : TestBase<App, State>
             PostalCode = "null",
             City = "null",
             Country = "null",
-            BirthDate = new DateOnly(2000,12,12),
+            BirthDate = new DateOnly(2000, 12, 12),
             BirthPlace = "null",
             PhoneNumber = "null",
             PlanId = this._state.PlanId
