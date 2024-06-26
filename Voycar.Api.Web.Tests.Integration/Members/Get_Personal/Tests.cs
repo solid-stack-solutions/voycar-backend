@@ -22,8 +22,8 @@ public class Tests : TestBase<App, State>
     public Tests(App app, State state)
     {
         this._app = app;
-        this.Context = this._app.Context;
         this._state = state;
+        this.Context = this._app.Context;
         this._state.MemberId = this.Context.Members.First().Id;
     }
 
