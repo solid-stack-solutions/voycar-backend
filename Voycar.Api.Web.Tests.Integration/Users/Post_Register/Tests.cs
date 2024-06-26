@@ -183,7 +183,7 @@ public class Tests : TestBase<App, State>
     {
         // Arrange
         var request = this.CreateValidRequest();
-        request.Password = ""; // Set invalid Password
+        request.Password = "";
 
         // Act
         var httpResponse = await this._app.Client.POSTAsync<R.Endpoint, R.Request>(request);
@@ -198,7 +198,7 @@ public class Tests : TestBase<App, State>
     {
         // Arrange
         var request = this.CreateValidRequest();
-        request.FirstName = ""; // Set invalid FirstName
+        request.FirstName = "";
 
         // Act
         var httpResponse = await this._app.Client.POSTAsync<R.Endpoint, R.Request>(request);

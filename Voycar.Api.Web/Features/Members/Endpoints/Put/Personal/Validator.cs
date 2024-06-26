@@ -45,10 +45,9 @@ public class Validator : Validator<Request>
             .WithMessage("Country is required")
             .WithName("generalErrors");
 
-        this.RuleFor(request =>
-                (DateOnly.FromDateTime(DateTime.UtcNow).DayNumber - request.BirthDate.DayNumber) / 365)
-            .GreaterThan(18)
-            .WithMessage("You are not legal yet")
+        this.RuleFor(request => request.BirthDate)
+            .Must(BeAtLeast18YearsOld)
+            .WithMessage("You must be at least 18 years old")
             .WithName("generalErrors");
 
         this.RuleFor(request => request.BirthPlace)
@@ -60,5 +59,20 @@ public class Validator : Validator<Request>
             .NotEmpty()
             .WithMessage("Phone number is required")
             .WithName("generalErrors");
+    }
+
+
+    private static bool BeAtLeast18YearsOld(DateOnly birthDate)
+    {
+        var today = DateOnly.FromDateTime(DateTime.UtcNow);
+        var age = today.Year - birthDate.Year;
+
+        // Adjust age if the birthdate hasn't occurred yet this year
+        if (today < birthDate.AddYears(age))
+        {
+            age--;
+        }
+
+        return age >= 18;
     }
 }
