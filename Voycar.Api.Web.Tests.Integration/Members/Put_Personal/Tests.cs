@@ -21,7 +21,7 @@ public class Tests : TestBase<App>
     }
 
 
-    public R.Request CreateValidRequest()
+    private static R.Request CreateValidRequest()
     {
         return new R.Request
         {
@@ -44,7 +44,7 @@ public class Tests : TestBase<App>
     {
         // Arrange
         var email = "NewMemberClient@test.de";
-        var request = this.CreateValidRequest();
+        var request = CreateValidRequest();
         var memberClient = await ClientFactory.CreateMemberClient(this._app, this.Context, email, "password");
 
         // Act
@@ -80,7 +80,7 @@ public class Tests : TestBase<App>
         // Arrange
         var email = "NewMember@test.de";
         var memberClient = await ClientFactory.CreateMemberClient(this._app, this.Context, email, "password");
-        var request = this.CreateValidRequest();
+        var request = CreateValidRequest();
         request.BirthDate = DateOnly.FromDateTime(DateTime.UtcNow).AddYears(-18);
 
         // Act
@@ -102,7 +102,7 @@ public class Tests : TestBase<App>
     public async Task Put_Request_ReturnsBadRequest_DueToInvalidFirstName()
     {
         // Arrange
-        var request = this.CreateValidRequest();
+        var request = CreateValidRequest();
         request.FirstName = "";
 
         // Act
@@ -117,7 +117,7 @@ public class Tests : TestBase<App>
     public async Task Put_Request_ReturnsBadRequest_DueToInvalidLastName()
     {
         // Arrange
-        var request = this.CreateValidRequest();
+        var request = CreateValidRequest();
         request.LastName = "";
 
         // Act
@@ -132,7 +132,7 @@ public class Tests : TestBase<App>
     public async Task Put_Request_ReturnsBadRequest_DueToInvalidStreet()
     {
         // Arrange
-        var request = this.CreateValidRequest();
+        var request = CreateValidRequest();
         request.Street = "";
 
         // Act
@@ -147,7 +147,7 @@ public class Tests : TestBase<App>
     public async Task Put_Request_ReturnsBadRequest_DueToInvalidHouseNumber()
     {
         // Arrange
-        var request = this.CreateValidRequest();
+        var request = CreateValidRequest();
         request.HouseNumber = "";
 
         // Act
@@ -162,7 +162,7 @@ public class Tests : TestBase<App>
     public async Task Put_Request_ReturnsBadRequest_DueToInvalidPostalCode()
     {
         // Arrange
-        var request = this.CreateValidRequest();
+        var request = CreateValidRequest();
         request.PostalCode = "";
 
         // Act
@@ -177,7 +177,7 @@ public class Tests : TestBase<App>
     public async Task Put_Request_ReturnsBadRequest_DueToInvalidCity()
     {
         // Arrange
-        var request = this.CreateValidRequest();
+        var request = CreateValidRequest();
         request.City = "";
 
         // Act
@@ -192,7 +192,7 @@ public class Tests : TestBase<App>
     public async Task Put_Request_ReturnsBadRequest_DueToInvalidCountry()
     {
         // Arrange
-        var request = this.CreateValidRequest();
+        var request = CreateValidRequest();
         request.Country = "";
 
         // Act
@@ -207,7 +207,7 @@ public class Tests : TestBase<App>
     public async Task Put_Request_ReturnsBadRequest_DueToInvalidBirthDate()
     {
         // Arrange
-        var request = this.CreateValidRequest();
+        var request = CreateValidRequest();
 
         request.BirthDate = DateOnly.FromDateTime(DateTime.UtcNow);
 
@@ -223,7 +223,7 @@ public class Tests : TestBase<App>
     public async Task Put_Request_ReturnsBadRequest_DueToInvalidBirthDate_OneDayTooYoung()
     {
         // Arrange
-        var request = this.CreateValidRequest();
+        var request = CreateValidRequest();
 
         request.BirthDate = DateOnly.FromDateTime(DateTime.UtcNow).AddYears(-18).AddDays(1);
 
@@ -239,7 +239,7 @@ public class Tests : TestBase<App>
     public async Task Put_Request_ReturnsBadRequest_DueToInvalidBirthPlace()
     {
         // Arrange
-        var request = this.CreateValidRequest();
+        var request = CreateValidRequest();
         request.BirthPlace = "";
 
         // Act
@@ -254,7 +254,7 @@ public class Tests : TestBase<App>
     public async Task Put_Request_ReturnsBadRequest_DueToInvalidPhoneNumber()
     {
         // Arrange
-        var request = this.CreateValidRequest();
+        var request = CreateValidRequest();
         request.PhoneNumber = "";
 
         // Act
