@@ -47,7 +47,7 @@ public class Tests : TestBase<App, State>
     {
         foreach (var reservation in reservations)
         {
-            var responseReservation = responseReservations.FirstOrDefault(r => r.Id == reservation.Id);
+            var responseReservation = responseReservations.First(r => r.Id == reservation.Id);
             responseReservation.Should().NotBeNull();
 
             responseReservation!.Begin.ToShortTimeString().Should().Be(reservation.Begin.ToShortTimeString());
