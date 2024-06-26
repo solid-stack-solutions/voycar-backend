@@ -5,7 +5,6 @@ using FakeItEasy;
 using Features.Members.Endpoints.Put.Personal;
 using Features.Members.Repository;
 using Features.Users.Repository;
-using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
 
 
@@ -26,7 +25,7 @@ public class Endpoint : TestBase<App>
         Country = "null",
         BirthDate = new DateOnly(2002, 06, 25),
         BirthPlace = "null",
-        PhoneNumber = "null",
+        PhoneNumber = "null"
     };
 
 
