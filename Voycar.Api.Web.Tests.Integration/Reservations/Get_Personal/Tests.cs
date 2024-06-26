@@ -50,12 +50,15 @@ public class Tests : TestBase<App, State>
         // Arrange
         var reservations = new List<Reservation>
         {
-            this.CreateReservation("2022-01-01T08:00:00.000Z", "2022-01-01T18:00:00.000Z"), // expired
+            // Expired
+            this.CreateReservation("2022-01-01T08:00:00.000Z", "2022-01-01T18:00:00.000Z"),
+            // Active
             this.CreateReservation(
                 DateTime.UtcNow.ToString("yyyy-MM-ddTHH:mm:ss.fffZ", CultureInfo.InvariantCulture),
                 DateTime.UtcNow.AddHours(3).ToString("yyyy-MM-ddTHH:mm:ss.fffZ", CultureInfo.InvariantCulture)
-            ), // active
-            this.CreateReservation("2025-01-01T08:00:00.000Z", "2025-01-01T18:00:00.000Z") // planned
+            ),
+            // Planned
+            this.CreateReservation("2025-01-01T08:00:00.000Z", "2025-01-01T18:00:00.000Z")
         };
 
         await this.Context.Reservations.AddRangeAsync(reservations);
