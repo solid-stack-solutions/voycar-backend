@@ -43,6 +43,43 @@ public class Tests : TestBase<App, State>
         };
     }
 
+    private static void ValidateExpiredReservations(P.Response response, List<Reservation> reservations)
+    {
+        foreach (var reservation in reservations)
+        {
+            var responseReservation = response.expired.FirstOrDefault(r => r.Id == reservation.Id);
+            responseReservation.Should().NotBeNull();
+
+            responseReservation!.Begin.ToShortTimeString().Should().Be(reservation.Begin.ToShortTimeString());
+            responseReservation.End.ToShortTimeString().Should().Be(reservation.End.ToShortTimeString());
+        }
+    }
+
+
+    private static void ValidateActiveReservations(P.Response response, List<Reservation> reservations)
+    {
+        foreach (var reservation in reservations)
+        {
+            var responseReservation = response.active.FirstOrDefault(r => r.Id == reservation.Id);
+            responseReservation.Should().NotBeNull();
+
+            responseReservation!.Begin.ToShortTimeString().Should().Be(reservation.Begin.ToShortTimeString());
+            responseReservation.End.ToShortTimeString().Should().Be(reservation.End.ToShortTimeString());
+        }
+    }
+
+
+    private static void ValidatePlannedReservations(P.Response response, List<Reservation> reservations)
+    {
+        foreach (var reservation in reservations)
+        {
+            var responseReservation = response.planned.FirstOrDefault(r => r.Id == reservation.Id);
+            responseReservation.Should().NotBeNull();
+
+            responseReservation!.Begin.ToShortTimeString().Should().Be(reservation.Begin.ToShortTimeString());
+            responseReservation.End.ToShortTimeString().Should().Be(reservation.End.ToShortTimeString());
+        }
+    }
 
     [Fact]
     public async Task Get_Request_ReturnsOk_And_ListOfReservations()
@@ -104,7 +141,7 @@ public class Tests : TestBase<App, State>
         response.active.Count.Should().Be(0);
         response.planned.Count.Should().Be(0);
 
-        this.ValidateExpiredReservations(response, reservations);
+        ValidateExpiredReservations(response, reservations);
 
         // Cleanup
         this.Context.RemoveRange(reservations);
@@ -141,7 +178,7 @@ public class Tests : TestBase<App, State>
         response.active.Count.Should().Be(3);
         response.planned.Count.Should().Be(0);
 
-        this.ValidateActiveReservations(response, reservations);
+        ValidateActiveReservations(response, reservations);
 
         // Cleanup
         this.Context.RemoveRange(reservations);
@@ -173,7 +210,7 @@ public class Tests : TestBase<App, State>
         response.active.Count.Should().Be(0);
         response.planned.Count.Should().Be(3);
 
-        this.ValidatePlannedReservations(response, reservations);
+        ValidatePlannedReservations(response, reservations);
 
         // Cleanup
         this.Context.RemoveRange(reservations);
@@ -215,44 +252,5 @@ public class Tests : TestBase<App, State>
 
         // Assert
         httpResponse.StatusCode.Should().Be(HttpStatusCode.Forbidden);
-    }
-
-
-    private void ValidateExpiredReservations(P.Response response, List<Reservation> reservations)
-    {
-        foreach (var reservation in reservations)
-        {
-            var responseReservation = response.expired.FirstOrDefault(r => r.Id == reservation.Id);
-            responseReservation.Should().NotBeNull();
-
-            responseReservation!.Begin.ToShortTimeString().Should().Be(reservation.Begin.ToShortTimeString());
-            responseReservation.End.ToShortTimeString().Should().Be(reservation.End.ToShortTimeString());
-        }
-    }
-
-
-    private void ValidateActiveReservations(P.Response response, List<Reservation> reservations)
-    {
-        foreach (var reservation in reservations)
-        {
-            var responseReservation = response.active.FirstOrDefault(r => r.Id == reservation.Id);
-            responseReservation.Should().NotBeNull();
-
-            responseReservation!.Begin.ToShortTimeString().Should().Be(reservation.Begin.ToShortTimeString());
-            responseReservation.End.ToShortTimeString().Should().Be(reservation.End.ToShortTimeString());
-        }
-    }
-
-
-    private void ValidatePlannedReservations(P.Response response, List<Reservation> reservations)
-    {
-        foreach (var reservation in reservations)
-        {
-            var responseReservation = response.planned.FirstOrDefault(r => r.Id == reservation.Id);
-            responseReservation.Should().NotBeNull();
-
-            responseReservation!.Begin.ToShortTimeString().Should().Be(reservation.Begin.ToShortTimeString());
-            responseReservation.End.ToShortTimeString().Should().Be(reservation.End.ToShortTimeString());
-        }
     }
 }
