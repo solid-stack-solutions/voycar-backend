@@ -3,7 +3,7 @@ namespace Voycar.Api.Web.Tests.Integration.Users.Post_ResetPassword;
 using Context;
 using Setup;
 using R = Features.Users.Endpoints.Post.ResetPassword;
-using L = Features.Users.Endpoints.Post.Login;
+using Login = Features.Users.Endpoints.Post.Login;
 
 
 public class Tests : TestBase<App>
@@ -41,7 +41,7 @@ public class Tests : TestBase<App>
         // Act
         var firstHttpResponse = await memberClient.POSTAsync<R.Endpoint, R.Request>(request);
         var secondHttpResponse = await memberClient
-            .POSTAsync<L.Endpoint, L.Request>(new L.Request { Email = email, Password = request.Password });
+            .POSTAsync<Login.Endpoint, Login.Request>(new Login.Request { Email = email, Password = request.Password });
 
         // Assert
         userInDb.Should().NotBeNull();
@@ -72,7 +72,7 @@ public class Tests : TestBase<App>
         // Act
         var firstHttpResponse = await employeeClient.POSTAsync<R.Endpoint, R.Request>(request);
         var secondHttpResponse = await employeeClient
-            .POSTAsync<L.Endpoint, L.Request>(new L.Request { Email = email, Password = request.Password });
+            .POSTAsync<Login.Endpoint, Login.Request>(new Login.Request { Email = email, Password = request.Password });
 
         // Assert
         userInDb.Should().NotBeNull();
@@ -103,7 +103,7 @@ public class Tests : TestBase<App>
         // Act
         var firstHttpResponse = await adminClient.POSTAsync<R.Endpoint, R.Request>(request);
         var secondHttpResponse = await adminClient
-            .POSTAsync<L.Endpoint, L.Request>(new L.Request { Email = email, Password = request.Password });
+            .POSTAsync<Login.Endpoint, Login.Request>(new Login.Request { Email = email, Password = request.Password });
 
         // Assert
         userInDb.Should().NotBeNull();
