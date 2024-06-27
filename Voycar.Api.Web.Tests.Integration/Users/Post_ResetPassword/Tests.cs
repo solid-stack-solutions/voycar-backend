@@ -7,26 +7,17 @@ using R = Features.Users.Endpoints.Post.ResetPassword;
 using L = Features.Users.Endpoints.Post.Login;
 
 
-public sealed class State : StateFixture
-{
-    public Guid MemberId { get; set; }
-}
-
-
-public class Tests : TestBase<App, State>
+public class Tests : TestBase<App>
 {
     private readonly App _app;
-    private readonly State _state;
     private readonly VoycarDbContext Context;
 
 
     // Setup request client
-    public Tests(App app, State state)
+    public Tests(App app)
     {
         this._app = app;
         this.Context = this._app.Context;
-        this._state = state;
-        this._state.MemberId = this.Context.Members.First().Id;
     }
 
 
