@@ -10,7 +10,7 @@ public class Users : Generic.Repository.Repository<User>, IUsers
 
     public Task<User?> RetrieveByVerificationToken(string verificationToken)
     {
-        return this._context.Users.FirstOrDefaultAsync(member => member.VerificationToken == verificationToken);
+        return this.DbSet.FirstOrDefaultAsync(user => user.VerificationToken == verificationToken);
     }
 
     public Task<User?> RetrieveByEmail(string email)
