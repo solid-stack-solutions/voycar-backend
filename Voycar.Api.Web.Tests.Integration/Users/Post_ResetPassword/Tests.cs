@@ -1,7 +1,6 @@
 namespace Voycar.Api.Web.Tests.Integration.Users.Post_ResetPassword;
 
 using Context;
-using Microsoft.EntityFrameworkCore;
 using Setup;
 using R = Features.Users.Endpoints.Post.ResetPassword;
 using L = Features.Users.Endpoints.Post.Login;
