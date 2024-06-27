@@ -4,11 +4,12 @@ using Context;
 using Microsoft.EntityFrameworkCore;
 using Setup;
 using V = Features.Users.Endpoints.Get.Verify;
-
+using Registration = Features.Users.Endpoints.Post.Register;
 
 public sealed class State : StateFixture
 {
-    public Guid MemberId { get; set; }
+    public Guid PlanId { get; set; }
+    public string PlanName = "basic";
 }
 
 
@@ -23,8 +24,9 @@ public class Tests : TestBase<App, State>
     public Tests(App app, State state)
     {
         this._app = app;
-        this.Context = this._app.Context;
         this._state = state;
+        this.Context = this._app.Context;
+        this._state.PlanId = this.Context.Plans.First(plan => plan.Name == this._state.PlanName).Id;
     }
 
 
@@ -32,12 +34,36 @@ public class Tests : TestBase<App, State>
     public async Task Get_Request_ReturnsOk_And_VerifiesMember()
     {
         // Arrange
-        const string email = "member@test.de";
-        var memberClient = await ClientFactory.CreateMemberClient(this._app, this.Context, email, "password");
+        const string email = "user@test.de";
+        var memberClient = this._app.CreateClient();
+
+        // Register new member
+        var (registerHttpResponse, _) =
+            await memberClient.POSTAsync<Registration.Endpoint, Registration.Request, Registration.Response>(
+                new Registration.Request
+                {
+                    Email = email.ToLowerInvariant(),
+                    Password = "password",
+                    FirstName = "...",
+                    LastName = "...",
+                    Street = "...",
+                    HouseNumber = "...",
+                    PostalCode = "...",
+                    City = "...",
+                    Country = "...",
+                    BirthDate = new DateOnly(2000,
+                        1,
+                        1),
+                    BirthPlace = "...",
+                    PhoneNumber = "...",
+                    PlanId = this._state.PlanId
+                }
+            );
+
         var request = new V.Request { VerificationToken = "0B4391E5-7D74-40AB-8BCC-B7FD7B660D87" };
 
-        var userInDb = this.Context.Users.First(user => user.Email == email);
-        userInDb.VerificationToken = "0B4391E5-7D74-40AB-8BCC-B7FD7B660D87";
+        var userInDb = this.Context.Users.First(u => u.Email == email);
+        userInDb.VerificationToken = request.VerificationToken;
 
         await this.Context.SaveChangesAsync();
 
@@ -48,6 +74,7 @@ public class Tests : TestBase<App, State>
         await this.Context.Entry(userInDb).ReloadAsync();
 
         // Assert
+        registerHttpResponse.StatusCode.Should().Be(HttpStatusCode.OK);
         userInDb.Should().NotBeNull();
         userInDb.VerifiedAt.Should().NotBeNull();
         httpResponse.StatusCode.Should().Be(HttpStatusCode.OK);
@@ -62,7 +89,7 @@ public class Tests : TestBase<App, State>
         var request = new V.Request { VerificationToken = null! };
 
         // Act
-        var httpResponse = await this._app.Member.POSTAsync<V.Endpoint, V.Request>(request);
+        var httpResponse = await this._app.Member.GETAsync<V.Endpoint, V.Request>(request);
 
         // Assert
         httpResponse.StatusCode.Should().Be(HttpStatusCode.BadRequest);
