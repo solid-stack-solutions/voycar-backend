@@ -81,7 +81,7 @@ public class Tests : TestBase<App, State>
     }
 
 
-    // Validator-Tests
+    // Validator-Test
     [Fact]
     public async Task Post_Request_ReturnsBadRequest_DueToInvalidResetToken()
     {
