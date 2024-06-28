@@ -1,7 +1,6 @@
 namespace Voycar.Api.Web.Features.Members.Endpoints.Put.Personal;
 
 using Entities;
-using Plans.Repository;
 using Repository;
 using Users.Repository;
 
@@ -10,14 +9,12 @@ public class Endpoint : Endpoint<Request, Ok, Mapper>
 {
     private readonly IUsers _userRepository;
     private readonly IMembers _memberRepository;
-    private readonly IPlans _planRepository;
 
 
-    public Endpoint(IUsers userRepository, IMembers memberRepository, IPlans planRepository)
+    public Endpoint(IUsers userRepository, IMembers memberRepository)
     {
         this._userRepository = userRepository;
         this._memberRepository = memberRepository;
-        this._planRepository = planRepository;
     }
 
 
@@ -32,7 +29,7 @@ public class Endpoint : Endpoint<Request, Ok, Mapper>
                 "Update the personal details of the member who is logged in according to the request cookie";
             summary.Responses[200] = "If member is found and updated";
             summary.Responses[400] = "If the user somehow can't be found or the user is not a member " +
-                                     "or member could not be updated";
+                "or member could not be updated";
         });
     }
 
@@ -50,10 +47,6 @@ public class Endpoint : Endpoint<Request, Ok, Mapper>
             this.ThrowError("User is not a member");
         }
 
-        if (this._planRepository.Retrieve(req.PlanId) is null)
-        {
-            this.ThrowError("Plan does not exist");
-        }
 
         var member = this._memberRepository.Retrieve(user.MemberId.Value);
         if (member is null)
