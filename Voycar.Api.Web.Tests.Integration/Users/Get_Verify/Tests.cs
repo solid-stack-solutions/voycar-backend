@@ -1,8 +1,6 @@
 namespace Voycar.Api.Web.Tests.Integration.Users.Get_Verify;
 
 using Context;
-using Microsoft.EntityFrameworkCore;
-using Setup;
 using V = Features.Users.Endpoints.Get.Verify;
 using Registration = Features.Users.Endpoints.Post.Register;
 
