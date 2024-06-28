@@ -2,7 +2,6 @@ namespace Voycar.Api.Web.Tests.Integration.Users.Post_ResetToken;
 
 using Context;
 using Entities;
-using Features.Users.Repository;
 using Setup;
 using R = Features.Users.Endpoints.Post.ResetToken;
 
