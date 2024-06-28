@@ -56,15 +56,15 @@ public class Endpoint : Endpoint<Request, Ok, Mapper>
             this.ThrowError("Plan does not exist");
         }
 
-        if (plan.Id == req.PlanId)
-        {
-            this.ThrowError("Cannot update the plan with the same ID");
-        }
-
         var member = this._memberRepository.Retrieve(user.MemberId.Value);
         if (member is null)
         {
             this.ThrowError("Member does not exist");
+        }
+
+        if (plan.Id == member.PlanId)
+        {
+            this.ThrowError("Cannot update the plan with the same ID");
         }
 
         if (!this._memberRepository.Update(this.Map.ToEntity(req, member)))
