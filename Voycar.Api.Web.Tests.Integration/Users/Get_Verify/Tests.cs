@@ -26,7 +26,7 @@ public class Tests : TestBase<App, State>
         this._app = app;
         this._state = state;
         this.Context = this._app.Context;
-        this._state.PlanId = this.Context.Plans.First(plan => plan.Name == this._state.PlanName).Id;
+        this._state.PlanId = this.Context.Plans.First(plan => plan.Name == State.PlanName).Id;
     }
 
 
@@ -51,9 +51,7 @@ public class Tests : TestBase<App, State>
                     PostalCode = "...",
                     City = "...",
                     Country = "...",
-                    BirthDate = new DateOnly(2000,
-                        1,
-                        1),
+                    BirthDate = new DateOnly(2000, 1, 1),
                     BirthPlace = "...",
                     PhoneNumber = "...",
                     PlanId = this._state.PlanId
