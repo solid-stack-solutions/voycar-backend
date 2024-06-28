@@ -96,7 +96,7 @@ public class Endpoint : TestBase<App>
             PasswordHash = "notsafe987",
             MemberId = new Guid("E610101A-ED58-4A2F-8DEB-9FEAAEDD6B7C")
         };
-        var member = new Member { Id = (Guid)user.MemberId };
+        var member = new Member { Id = user.MemberId.Value };
 
         A.CallTo(() => this.FakeUserRepository.Retrieve(this.Request.UserId)).Returns(user);
         A.CallTo(() => this.FakeMemberRepository.Retrieve(member.Id)).Returns(member);
