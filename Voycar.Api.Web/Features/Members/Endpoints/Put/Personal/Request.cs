@@ -17,4 +17,7 @@ public class Request
 
     // Contact information
     public string PhoneNumber { get; set; }
+
+    // Plan information
+    public Guid PlanId { get; set; }
 }
