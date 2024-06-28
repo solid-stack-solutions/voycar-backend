@@ -36,7 +36,7 @@ public class Endpoint : TestBase<App>
             Email = "test@test.de",
             PasswordHash = "passwordHash",
             VerificationToken = "randomToken",
-            VerifiedAt = null,
+            VerifiedAt = null
         };
 
         var ep = this.SetupEndpoint();
