@@ -2,6 +2,7 @@ namespace Voycar.Api.Web.Tests.Integration.Users.Post_ResetToken;
 
 using Context;
 using Entities;
+using Features.Users.Repository;
 using Setup;
 using R = Features.Users.Endpoints.Post.ResetToken;
 
@@ -18,10 +19,10 @@ public class Tests : TestBase<App>
         this.Context = this._app.Context;
     }
 
-    private User ArrangeAssertion(string email)
+    private async Task<User> ArrangeAssertion(string email)
     {
         var userInDb = this.Context.Users.First(u => u.Email == email);
-        this.Context.Entry(userInDb).ReloadAsync();
+        await this.Context.Entry(userInDb).ReloadAsync();
         return userInDb;
     }
 
@@ -44,7 +45,7 @@ public class Tests : TestBase<App>
         var httpResponse = await memberClient.POSTAsync<R.Endpoint, R.Request>(new R.Request { Email = email });
 
         // Assert
-        Assert(this.ArrangeAssertion(email));
+        Assert(await this.ArrangeAssertion(email));
         httpResponse.StatusCode.Should().Be(HttpStatusCode.OK);
     }
 
@@ -60,7 +61,7 @@ public class Tests : TestBase<App>
         var httpResponse = await employeeClient.POSTAsync<R.Endpoint, R.Request>(new R.Request { Email = email });
 
         // Assert
-        Assert(this.ArrangeAssertion(email));
+        Assert(await this.ArrangeAssertion(email));
         httpResponse.StatusCode.Should().Be(HttpStatusCode.OK);
     }
 
@@ -76,7 +77,7 @@ public class Tests : TestBase<App>
         var httpResponse = await adminClient.POSTAsync<R.Endpoint, R.Request>(new R.Request { Email = email });
 
         // Assert
-        Assert(this.ArrangeAssertion(email));
+        Assert(await this.ArrangeAssertion(email));
         httpResponse.StatusCode.Should().Be(HttpStatusCode.OK);
     }
 
