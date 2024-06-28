@@ -21,7 +21,7 @@ public class Mapper : RequestMapper<Request, Member>
             BirthDate = r.BirthDate,
             BirthPlace = r.BirthPlace,
             PhoneNumber = r.PhoneNumber,
-            PlanId = r.PlanId
+            PlanId = member.PlanId
         };
     }
 }
