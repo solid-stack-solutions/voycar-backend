@@ -1,9 +1,9 @@
 namespace Voycar.Api.Web.Tests.Integration.Users.Post_ResetToken;
 
 using Context;
+using Entities;
 using Setup;
 using R = Features.Users.Endpoints.Post.ResetToken;
-
 
 public class Tests : TestBase<App>
 {
@@ -18,6 +18,20 @@ public class Tests : TestBase<App>
         this.Context = this._app.Context;
     }
 
+    private User ArrangeAssertion(string email)
+    {
+        var userInDb = this.Context.Users.First(u => u.Email == email);
+        this.Context.Entry(userInDb).ReloadAsync();
+        return userInDb;
+    }
+
+    private static void Assert(User user)
+    {
+        user.Should().NotBeNull();
+        user.PasswordResetToken.Should().NotBeNull();
+        user.ResetTokenExpires.Should().NotBeNull();
+        user.ResetTokenExpires.Should().BeCloseTo(DateTime.UtcNow.AddMinutes(30), TimeSpan.FromMinutes(1));
+    }
 
     [Fact]
     public async Task Post_Request_AsMember_ReturnsOk_And_SetsResetToken()
@@ -25,20 +39,12 @@ public class Tests : TestBase<App>
         // Arrange
         const string email = "member@test.de";
         var memberClient = await ClientFactory.CreateMemberClient(this._app, this.Context, email, "password");
-        var request = new R.Request { Email = email };
 
         // Act
-        var httpResponse = await memberClient.POSTAsync<R.Endpoint, R.Request>(request);
-
-        // Arrange assertion
-        var userInDb = this.Context.Users.First(u => u.Email == email);
-        await this.Context.Entry(userInDb).ReloadAsync();
+        var httpResponse = await memberClient.POSTAsync<R.Endpoint, R.Request>(new R.Request { Email = email });
 
         // Assert
-        userInDb.Should().NotBeNull();
-        userInDb.PasswordResetToken.Should().NotBeNull();
-        userInDb.ResetTokenExpires.Should().NotBeNull();
-        userInDb.ResetTokenExpires.Should().BeCloseTo(DateTime.UtcNow.AddMinutes(30), TimeSpan.FromMinutes(1));
+        Assert(this.ArrangeAssertion(email));
         httpResponse.StatusCode.Should().Be(HttpStatusCode.OK);
     }
 
@@ -49,20 +55,12 @@ public class Tests : TestBase<App>
         // Arrange
         const string email = "employee@test.de";
         var employeeClient = await ClientFactory.CreateEmployeeClient(this._app, this.Context, email, "password");
-        var request = new R.Request { Email = email };
 
         // Act
-        var httpResponse = await employeeClient.POSTAsync<R.Endpoint, R.Request>(request);
-
-        // Arrange assertion
-        var userInDb = this.Context.Users.First(u => u.Email == email);
-        await this.Context.Entry(userInDb).ReloadAsync();
+        var httpResponse = await employeeClient.POSTAsync<R.Endpoint, R.Request>(new R.Request { Email = email });
 
         // Assert
-        userInDb.Should().NotBeNull();
-        userInDb.PasswordResetToken.Should().NotBeNull();
-        userInDb.ResetTokenExpires.Should().NotBeNull();
-        userInDb.ResetTokenExpires.Should().BeCloseTo(DateTime.UtcNow.AddMinutes(30), TimeSpan.FromMinutes(1));
+        Assert(this.ArrangeAssertion(email));
         httpResponse.StatusCode.Should().Be(HttpStatusCode.OK);
     }
 
@@ -73,20 +71,12 @@ public class Tests : TestBase<App>
         // Arrange
         const string email = "admin@test.de";
         var adminClient = await ClientFactory.CreateAdminClient(this._app, this.Context, email, "password");
-        var request = new R.Request { Email = email };
 
         // Act
-        var httpResponse = await adminClient.POSTAsync<R.Endpoint, R.Request>(request);
-
-        // Arrange assertion
-        var userInDb = this.Context.Users.First(u => u.Email == email);
-        await this.Context.Entry(userInDb).ReloadAsync();
+        var httpResponse = await adminClient.POSTAsync<R.Endpoint, R.Request>(new R.Request { Email = email });
 
         // Assert
-        userInDb.Should().NotBeNull();
-        userInDb.PasswordResetToken.Should().NotBeNull();
-        userInDb.ResetTokenExpires.Should().NotBeNull();
-        userInDb.ResetTokenExpires.Should().BeCloseTo(DateTime.UtcNow.AddMinutes(30), TimeSpan.FromMinutes(1));
+        Assert(this.ArrangeAssertion(email));
         httpResponse.StatusCode.Should().Be(HttpStatusCode.OK);
     }
 
