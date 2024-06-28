@@ -5,22 +5,31 @@ using Microsoft.EntityFrameworkCore;
 using Setup;
 using R = Features.Members.Endpoints.Put.Personal;
 
+public sealed class State : StateFixture
+{
+    public Guid PlanId { get; set; }
+    public const string PlanName = "basic";
+}
 
-public class Tests : TestBase<App>
+
+public class Tests : TestBase<App, State>
 {
     private readonly App _app;
+    private readonly State _state;
     private readonly VoycarDbContext Context;
 
 
     // Setup request client
-    public Tests(App app)
+    public Tests(App app, State state)
     {
         this._app = app;
+        this._state = state;
         this.Context = this._app.Context;
+        this._state.PlanId = this.Context.Plans.First(p => p.Name == State.PlanName).Id;
     }
 
 
-    private static R.Request CreateValidRequest()
+    private R.Request CreateValidRequest()
     {
         return new R.Request
         {
@@ -34,6 +43,7 @@ public class Tests : TestBase<App>
             BirthDate = new DateOnly(2002, 06, 25),
             BirthPlace = "null",
             PhoneNumber = "null",
+            PlanId = this._state.PlanId
         };
     }
 
@@ -43,7 +53,7 @@ public class Tests : TestBase<App>
     {
         // Arrange
         var email = "NewMemberClient@test.de";
-        var request = CreateValidRequest();
+        var request = this.CreateValidRequest();
         var memberClient = await ClientFactory.CreateMemberClient(this._app, this.Context, email, "password");
 
         // Act
@@ -70,6 +80,7 @@ public class Tests : TestBase<App>
         memberInDb.BirthDate.Should().Be(request.BirthDate);
         memberInDb.BirthPlace.Should().Be(request.BirthPlace);
         memberInDb.PhoneNumber.Should().Be(request.PhoneNumber);
+        memberInDb.PlanId.Should().Be(request.PlanId);
     }
 
 
@@ -79,7 +90,7 @@ public class Tests : TestBase<App>
         // Arrange
         var email = "NewMember@test.de";
         var memberClient = await ClientFactory.CreateMemberClient(this._app, this.Context, email, "password");
-        var request = CreateValidRequest();
+        var request = this.CreateValidRequest();
         request.BirthDate = DateOnly.FromDateTime(DateTime.UtcNow).AddYears(-18);
 
         // Act
@@ -101,7 +112,7 @@ public class Tests : TestBase<App>
     public async Task Put_Request_ReturnsBadRequest_DueToInvalidFirstName()
     {
         // Arrange
-        var request = CreateValidRequest();
+        var request = this.CreateValidRequest();
         request.FirstName = "";
 
         // Act
@@ -116,7 +127,7 @@ public class Tests : TestBase<App>
     public async Task Put_Request_ReturnsBadRequest_DueToInvalidLastName()
     {
         // Arrange
-        var request = CreateValidRequest();
+        var request = this.CreateValidRequest();
         request.LastName = "";
 
         // Act
@@ -131,7 +142,7 @@ public class Tests : TestBase<App>
     public async Task Put_Request_ReturnsBadRequest_DueToInvalidStreet()
     {
         // Arrange
-        var request = CreateValidRequest();
+        var request = this.CreateValidRequest();
         request.Street = "";
 
         // Act
@@ -146,7 +157,7 @@ public class Tests : TestBase<App>
     public async Task Put_Request_ReturnsBadRequest_DueToInvalidHouseNumber()
     {
         // Arrange
-        var request = CreateValidRequest();
+        var request = this.CreateValidRequest();
         request.HouseNumber = "";
 
         // Act
@@ -161,7 +172,7 @@ public class Tests : TestBase<App>
     public async Task Put_Request_ReturnsBadRequest_DueToInvalidPostalCode()
     {
         // Arrange
-        var request = CreateValidRequest();
+        var request = this.CreateValidRequest();
         request.PostalCode = "";
 
         // Act
@@ -176,7 +187,7 @@ public class Tests : TestBase<App>
     public async Task Put_Request_ReturnsBadRequest_DueToInvalidCity()
     {
         // Arrange
-        var request = CreateValidRequest();
+        var request = this.CreateValidRequest();
         request.City = "";
 
         // Act
@@ -191,7 +202,7 @@ public class Tests : TestBase<App>
     public async Task Put_Request_ReturnsBadRequest_DueToInvalidCountry()
     {
         // Arrange
-        var request = CreateValidRequest();
+        var request = this.CreateValidRequest();
         request.Country = "";
 
         // Act
@@ -206,7 +217,7 @@ public class Tests : TestBase<App>
     public async Task Put_Request_ReturnsBadRequest_DueToInvalidBirthDate()
     {
         // Arrange
-        var request = CreateValidRequest();
+        var request = this.CreateValidRequest();
 
         request.BirthDate = DateOnly.FromDateTime(DateTime.UtcNow);
 
@@ -222,7 +233,7 @@ public class Tests : TestBase<App>
     public async Task Put_Request_ReturnsBadRequest_DueToInvalidBirthDate_OneDayTooYoung()
     {
         // Arrange
-        var request = CreateValidRequest();
+        var request = this.CreateValidRequest();
 
         request.BirthDate = DateOnly.FromDateTime(DateTime.UtcNow).AddYears(-18).AddDays(1);
 
@@ -238,7 +249,7 @@ public class Tests : TestBase<App>
     public async Task Put_Request_ReturnsBadRequest_DueToInvalidBirthPlace()
     {
         // Arrange
-        var request = CreateValidRequest();
+        var request = this.CreateValidRequest();
         request.BirthPlace = "";
 
         // Act
@@ -253,8 +264,23 @@ public class Tests : TestBase<App>
     public async Task Put_Request_ReturnsBadRequest_DueToInvalidPhoneNumber()
     {
         // Arrange
-        var request = CreateValidRequest();
+        var request = this.CreateValidRequest();
         request.PhoneNumber = "";
+
+        // Act
+        var httpResponse = await this._app.Member.PUTAsync<R.Endpoint, R.Request>(request);
+
+        // Assert
+        httpResponse.StatusCode.Should().Be(HttpStatusCode.BadRequest);
+    }
+
+
+    [Fact]
+    public async Task Put_Request_ReturnsBadRequest_DueToInvalidPlanId()
+    {
+        // Arrange
+        var request = this.CreateValidRequest();
+        request.PlanId = new Guid("8FC8C386-42B3-44DC-8163-2197F626A290");
 
         // Act
         var httpResponse = await this._app.Member.PUTAsync<R.Endpoint, R.Request>(request);
