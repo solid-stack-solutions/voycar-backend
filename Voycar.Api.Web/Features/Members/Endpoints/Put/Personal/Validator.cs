@@ -59,6 +59,11 @@ public class Validator : Validator<Request>
             .NotEmpty()
             .WithMessage("Phone number is required")
             .WithName("generalErrors");
+
+        this.RuleFor(request => request.PlanId)
+            .NotEmpty()
+            .WithMessage("Plan id is required")
+            .WithName("generalErrors");
     }
 
 
