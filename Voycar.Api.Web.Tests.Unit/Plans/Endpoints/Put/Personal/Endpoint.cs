@@ -101,6 +101,31 @@ public class Endpoint : TestBase<App>
         Assert.Equal("ThrowError() called! - Plan does not exist", exception.Message);
     }
 
+    [Fact]
+    public async Task Put_Request_Throws_ValidationsFailure_DueToNullSamePlanIds()
+    {
+        // Arrange
+        var ep = this.SetupEndpoint();
+        var user = new User
+        {
+            Email = "test@test.de",
+            PasswordHash = "notsafe987",
+            MemberId = new Guid("1A83EDDB-58A2-4B63-AA9F-25346546090D")
+        };
+
+        A.CallTo(() => this.FakeUserRepository.Retrieve(this.Request.UserId)).Returns(user);
+        A.CallTo(() => this.FakeMemberRepository.Retrieve(user.MemberId.Value)).Returns(new Member{PlanId = this.Request.PlanId});
+        A.CallTo(() => this.FakePlanRepository.Retrieve(this.Request.PlanId)).Returns(new Plan{ Id = this.Request.PlanId});
+
+        // Act
+        async Task Act() => await ep.HandleAsync(this.Request, default);
+
+        // Assert
+        var exception = await Assert.ThrowsAnyAsync<ValidationFailureException>(Act);
+        Assert.NotNull(exception);
+        Assert.Equal("ThrowError() called! - Cannot update the plan with the same ID", exception.Message);
+    }
+
 
 
     [Fact]
