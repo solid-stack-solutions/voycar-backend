@@ -169,6 +169,7 @@ public class Endpoint : TestBase<App>
         var member = new Member
         {
             Id = new Guid("E610101A-ED58-4A2F-8DEB-9FEAAEDD6B7C"),
+            PlanId = new Guid("6B225435-8657-4851-95AF-68D6E1ED9B7B")
         };
 
 
