@@ -9,7 +9,7 @@ using Registration = Features.Users.Endpoints.Post.Register;
 public sealed class State : StateFixture
 {
     public Guid PlanId { get; set; }
-    public string PlanName = "basic";
+    public const string PlanName = "basic";
 }
 
 
