@@ -107,6 +107,21 @@ public class Tests : TestBase<App, State>
     }
 
 
+    [Fact]
+    public async Task Put_Request_ReturnsBadRequest_DueToInvalidPlanId()
+    {
+        // Arrange
+        var request = this.CreateValidRequest();
+        request.PlanId = new Guid("8FC8C386-42B3-44DC-8163-2197F626A290");
+
+        // Act
+        var httpResponse = await this._app.Member.PUTAsync<R.Endpoint, R.Request>(request);
+
+        // Assert
+        httpResponse.StatusCode.Should().Be(HttpStatusCode.BadRequest);
+    }
+
+
     // Validator-Tests
     [Fact]
     public async Task Put_Request_ReturnsBadRequest_DueToInvalidFirstName()
@@ -266,21 +281,6 @@ public class Tests : TestBase<App, State>
         // Arrange
         var request = this.CreateValidRequest();
         request.PhoneNumber = "";
-
-        // Act
-        var httpResponse = await this._app.Member.PUTAsync<R.Endpoint, R.Request>(request);
-
-        // Assert
-        httpResponse.StatusCode.Should().Be(HttpStatusCode.BadRequest);
-    }
-
-
-    [Fact]
-    public async Task Put_Request_ReturnsBadRequest_DueToInvalidPlanId()
-    {
-        // Arrange
-        var request = this.CreateValidRequest();
-        request.PlanId = new Guid("8FC8C386-42B3-44DC-8163-2197F626A290");
 
         // Act
         var httpResponse = await this._app.Member.PUTAsync<R.Endpoint, R.Request>(request);
