@@ -50,9 +50,15 @@ public class Endpoint : Endpoint<Request, Ok, Mapper>
             this.ThrowError("User is not a member");
         }
 
-        if (this._planRepository.Retrieve(req.PlanId) is null)
+        var plan = this._planRepository.Retrieve(req.PlanId);
+        if (plan is null)
         {
             this.ThrowError("Plan does not exist");
+        }
+
+        if (plan.Id == req.PlanId)
+        {
+            this.ThrowError("Cannot update the plan with the same ID");
         }
 
         var member = this._memberRepository.Retrieve(user.MemberId.Value);
