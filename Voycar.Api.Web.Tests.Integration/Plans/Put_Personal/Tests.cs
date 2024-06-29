@@ -39,7 +39,7 @@ public class Tests : TestBase<App, State>
     public async Task Put_Request_ReturnsOk_And_UpdatePlanInDb()
     {
         // Arrange
-        var email = "abc@test.de";
+        const string email = "abc@test.de";
         var request = this.CreateValidRequest();
         var memberClient = await ClientFactory.CreateMemberClient(this._app, this.Context, email, "password");
 
