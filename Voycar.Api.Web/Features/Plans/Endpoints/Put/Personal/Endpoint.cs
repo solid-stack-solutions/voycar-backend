@@ -32,7 +32,7 @@ public class Endpoint : Endpoint<Request, Ok, Mapper>
                 "Update the plan details of the member who is logged in according to the request cookie";
             summary.Responses[200] = "If member is found and their plan is updated";
             summary.Responses[400] = "If the user somehow can't be found or the user is not a member " +
-                                     "or member could not be updated";
+                                     "or their plan could not be updated";
         });
     }
 
