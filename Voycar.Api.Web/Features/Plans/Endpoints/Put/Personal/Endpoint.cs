@@ -6,7 +6,7 @@ using Repository;
 using Users.Repository;
 
 
-public class Endpoint : Endpoint<Request, Ok, Mapper>
+public class Endpoint : Endpoint<Request, Ok>
 {
     private readonly IUsers _userRepository;
     private readonly IMembers _memberRepository;
@@ -67,7 +67,8 @@ public class Endpoint : Endpoint<Request, Ok, Mapper>
             this.ThrowError("Cannot update the plan with the same ID");
         }
 
-        if (!this._memberRepository.Update(this.Map.ToEntity(req, member)))
+        member.PlanId = plan.Id;
+        if (!this._memberRepository.Update(member))
         {
             this.ThrowError("Failed to update member data");
         }
