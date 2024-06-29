@@ -62,7 +62,7 @@ public class Tests : TestBase<App, State>
     public async Task Put_Request_ReturnsBadRequest_DueToPlans_WithSameId()
     {
         // Arrange
-        var email = "cba@test.de";
+        const string email = "cba@test.de";
         var request = this.CreateValidRequest();
         request.PlanId = this.Context.Plans.First(p => p.Name == "basic").Id;
         var memberClient = await ClientFactory.CreateMemberClient(this._app, this.Context, email, "password");
