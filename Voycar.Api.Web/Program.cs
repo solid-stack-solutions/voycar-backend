@@ -81,6 +81,7 @@ try
             settings.Title = "Voycar Web API Documentation";
             settings.Version = "v1";
         };
+        options.EnableJWTBearerAuth = false;
     });
     builder.Services.AddCors(options =>
     {
@@ -124,6 +125,9 @@ try
                });
                ep.Summary(s =>
                {
+                   var existingDescription = s.Description;
+                   var rolesDescription = $"\n\nRequired role: {(ep.AllowedRoles.Count > 0 ? string.Join(", ", ep.AllowedRoles) : "")}";
+                   s.Description = existingDescription + rolesDescription;
                    s.Responses[401] = "If requesting user isn't authorized";
                    s.Responses[403] = "If requesting user doesn't have the required roles";
                });
