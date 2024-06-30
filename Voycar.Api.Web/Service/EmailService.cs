@@ -28,7 +28,7 @@ public class EmailService : IEmailService
 
     public void SendPasswordResetEmail(User user)
     {
-        var email = this.CreatePasswordResetEmail(user, CreatePasswordResetLink());
+        var email = this.CreatePasswordResetEmail(user, CreatePasswordResetLink(user));
         this.SendEmail(email);
     }
 
@@ -67,10 +67,9 @@ public class EmailService : IEmailService
     }
 
 
-    // ToDo Link to Frontend must be added + PasswordResetToken must be attached
-    private static string CreatePasswordResetLink()
+    private static string CreatePasswordResetLink(User user)
     {
-        return $"http://localhost:8080/auth/reset-password"; // FrontendLink?token={PasswordResetToken}
+        return $"http://localhost:5173/forgot-password/{user.PasswordResetToken}";
     }
 
 
@@ -103,7 +102,7 @@ public class EmailService : IEmailService
         email.Subject = "Voycar-Passwort-Reset";
 
 
-        var content = $"Bitte klicken Sie auf den folgenden Link, um Ihr Passwort zurückzusetzen: " +
+        var content = $"Bitte klick auf den folgenden Link, um dein Passwort zurückzusetzen: " +
                       $"<a href=\"{passwordResetLink}\">Link zum Passwort-Reset</a>";
 
         var htmlContent = $"<html><body><p style='font-weight: bold;'>{content}</p></body></html>";
