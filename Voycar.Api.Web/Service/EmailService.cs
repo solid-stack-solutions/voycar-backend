@@ -67,7 +67,6 @@ public class EmailService : IEmailService
     }
 
 
-    // ToDo Link to Frontend must be added + PasswordResetToken must be attached
     private static string CreatePasswordResetLink(User user)
     {
         return $"http://localhost:5173/forgot-password/{user.PasswordResetToken}";
