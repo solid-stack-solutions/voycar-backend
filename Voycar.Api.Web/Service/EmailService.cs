@@ -102,7 +102,7 @@ public class EmailService : IEmailService
         email.Subject = "Voycar-Passwort-Reset";
 
 
-        var content = $"Bitte klicken Sie auf den folgenden Link, um Ihr Passwort zurückzusetzen: " +
+        var content = $"Bitte klick auf den folgenden Link, um dein Passwort zurückzusetzen: " +
                       $"<a href=\"{passwordResetLink}\">Link zum Passwort-Reset</a>";
 
         var htmlContent = $"<html><body><p style='font-weight: bold;'>{content}</p></body></html>";
