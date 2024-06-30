@@ -4,7 +4,7 @@ using System.Security.Cryptography;
 using Repository;
 using Service;
 
-public class Endpoint : Endpoint<Request, Response>
+public class Endpoint : Endpoint<Request>
 {
     private readonly IUsers _userRepository;
     private readonly ILogger<Endpoint> _logger;
@@ -53,9 +53,6 @@ public class Endpoint : Endpoint<Request, Response>
         this._emailService.SendPasswordResetEmail(user);
         this._logger.LogInformation("Password-Reset-Token successfully created for User with ID: {UserId}", user.Id);
 
-        // ToDo PasswordResetToken must be removed later (is used for debug purposes)
-        await this.SendResultAsync(TypedResults.Ok(
-            new Response { PasswordResetToken = user.PasswordResetToken }
-        ));
+        await this.SendResultAsync(TypedResults.Ok());
     }
 }
