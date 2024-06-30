@@ -8,7 +8,7 @@
 ### Technology Overview
 - [FastEndpoints](https://fast-endpoints.com/)
 - [MailKit](https://github.com/jstedfast/MailKit) (sending verification mails)
-- [BCrypt.Net-Next](https://www.nuget.org/packages/BCrypt.Net-Next) (password hashing)
+- [BCrypt.Net](https://github.com/BcryptNet/bcrypt.net) (password hashing)
 - [Serilog.AspNetCore](https://github.com/serilog/serilog-aspnetcore) (logging)
 - [PostgreSQL](https://www.postgresql.org/) database
    - [Entity Framework Core](https://learn.microsoft.com/en-us/ef/core/)
