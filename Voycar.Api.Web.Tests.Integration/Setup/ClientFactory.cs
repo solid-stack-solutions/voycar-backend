@@ -34,8 +34,8 @@ public static class ClientFactory
         }
 
         // Register new member, calling endpoint since manually registering member would be too complicated
-        var (registerHttpResponse, registerResponseBody) =
-            await member.POSTAsync<Registration.Endpoint, Registration.Request, Registration.Response>(
+        var registerHttpResponse =
+            await member.POSTAsync<Registration.Endpoint, Registration.Request>(
                 new Registration.Request
                 {
                     Email = email.ToLowerInvariant(),

@@ -79,11 +79,7 @@ public class Endpoint : Endpoint<Request, Ok, Mapper>
 
 
         this._emailService.SendVerificationEmail(user);
-
-        // ToDo VerificationToken must be removed later (is used for debug purposes)
-        await this.SendResultAsync(TypedResults.Ok(
-            new Response { VerificationToken = user.VerificationToken! }
-        ));
+        await this.SendResultAsync(TypedResults.Ok());
     }
 
 
