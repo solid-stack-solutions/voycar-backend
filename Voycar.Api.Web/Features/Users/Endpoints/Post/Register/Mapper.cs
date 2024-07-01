@@ -2,7 +2,7 @@ namespace Voycar.Api.Web.Features.Users.Endpoints.Post.Register;
 
 using Entities;
 
-public class Mapper : Mapper<Request, Response, Member>
+public class Mapper : RequestMapper<Request, Member>
 {
     public override Member ToEntity(Request r)
     {

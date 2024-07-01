@@ -36,8 +36,8 @@ public class Tests : TestBase<App, State>
         var memberClient = this._app.CreateClient();
 
         // Register new member
-        var (registerHttpResponse, _) =
-            await memberClient.POSTAsync<Registration.Endpoint, Registration.Request, Registration.Response>(
+        var registerHttpResponse =
+            await memberClient.POSTAsync<Registration.Endpoint, Registration.Request>(
                 new Registration.Request
                 {
                     Email = email.ToLowerInvariant(),

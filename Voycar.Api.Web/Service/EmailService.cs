@@ -60,10 +60,9 @@ public class EmailService : IEmailService
     }
 
 
-    // ToDo Link to Frontend must be added + VerificationToken must be attached
     private static string CreateVerificationLink(User user)
     {
-        return $"http://localhost:8080/auth/verify/{user.VerificationToken}"; // FrontendLink?token={VerificationToken}
+        return $"http://localhost:5173/verify/{user.VerificationToken}";
     }
 
 
@@ -81,7 +80,7 @@ public class EmailService : IEmailService
         email.Subject = "Voycar-Konto-Verifizierung";
 
 
-        var content = $"Bitte klicken Sie auf den folgenden Link, um Ihr Konto zu verifizieren: " +
+        var content = $"Bitte klick auf den folgenden Link, um dein Konto zu verifizieren: " +
                       $"<a href=\"{verificationLink}\">Link zum Verifizieren</a>";
 
         var htmlContent = $"<html><body><p style='font-weight: bold;'>{content}</p></body></html>";
