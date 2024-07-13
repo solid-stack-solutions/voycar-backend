@@ -17,6 +17,9 @@ public class EmailService : IEmailService
     private const string SmtpEmail = "voycar.dev@gmail.com";
     private const string SmtpHostAddress = "smtp.gmail.com";
     private const int SmtpPort = 587;
+    private const string HtmlVerifyTemplate = "Html/VerifyEmail.html";
+    private const string HtmlResetPasswordTemplate = "Html/PasswordResetEmail.html";
+    private const string Logo = "Images/logo-full-black.png";
 
 
     public void SendVerificationEmail(User user)
@@ -80,17 +83,14 @@ public class EmailService : IEmailService
         email.Subject = "Voycar-Konto-Verifizierung";
 
         var builder = new BodyBuilder();
-
-        // Load verify template
-        var htmlVerifyTemplate = File.ReadAllText("VerifyEmail.html");
-
+        var htmlVerifyTemplate = File.ReadAllText(HtmlVerifyTemplate);
         var htmlContent = htmlVerifyTemplate
             .Replace("{name}", user.Member.FirstName)
             .Replace("{verificationLink}", verificationLink);
 
         builder.HtmlBody = htmlContent;
 
-        var logo = builder.LinkedResources.Add("logo-full-black.png");
+        var logo = builder.LinkedResources.Add(Logo);
         logo.ContentId = "logo";
 
         email.Body = builder.ToMessageBody();
@@ -107,16 +107,13 @@ public class EmailService : IEmailService
         email.Subject = "Voycar-Passwort-Reset";
 
         var builder = new BodyBuilder();
-
-        // Load verify template
-        var htmlResetPasswordTemplate = File.ReadAllText("PasswordResetEmail.html");
-
+        var htmlResetPasswordTemplate = File.ReadAllText(HtmlResetPasswordTemplate);
         var htmlContent = htmlResetPasswordTemplate
             .Replace("{passwordResetLink}", passwordResetLink);
 
         builder.HtmlBody = htmlContent;
 
-        var logo = builder.LinkedResources.Add("logo-full-black.png");
+        var logo = builder.LinkedResources.Add(Logo);
         logo.ContentId = "logo";
 
         email.Body = builder.ToMessageBody();
