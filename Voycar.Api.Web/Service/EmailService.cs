@@ -79,15 +79,21 @@ public class EmailService : IEmailService
         email.To.Add(MailboxAddress.Parse(user.Email));
         email.Subject = "Voycar-Konto-Verifizierung";
 
+        var builder = new BodyBuilder();
 
-        var content = $"Bitte klick auf den folgenden Link, um dein Konto zu verifizieren: " +
-                      $"<a href=\"{verificationLink}\">Link zum Verifizieren</a>";
+        // Load verify template
+        var htmlVerifyTemplate = File.ReadAllText("VerifyEmail.html");
 
-        var htmlContent = $"<html><body><p style='font-weight: bold;'>{content}</p></body></html>";
-        email.Body = new TextPart("html")
-        {
-            Text = htmlContent
-        };
+        var htmlContent = htmlVerifyTemplate
+            .Replace("{name}", user.Member.FirstName)
+            .Replace("{verificationLink}", verificationLink);
+
+        builder.HtmlBody = htmlContent;
+
+        var logo = builder.LinkedResources.Add("logo-full-black.png");
+        logo.ContentId = "logo";
+
+        email.Body = builder.ToMessageBody();
 
         return email;
     }
@@ -100,15 +106,20 @@ public class EmailService : IEmailService
         email.To.Add(MailboxAddress.Parse(user.Email));
         email.Subject = "Voycar-Passwort-Reset";
 
+        var builder = new BodyBuilder();
 
-        var content = $"Bitte klick auf den folgenden Link, um dein Passwort zurückzusetzen: " +
-                      $"<a href=\"{passwordResetLink}\">Link zum Passwort-Reset</a>";
+        // Load verify template
+        var htmlResetPasswordTemplate = File.ReadAllText("PasswordResetEmail.html");
 
-        var htmlContent = $"<html><body><p style='font-weight: bold;'>{content}</p></body></html>";
-        email.Body = new TextPart("html")
-        {
-            Text = htmlContent
-        };
+        var htmlContent = htmlResetPasswordTemplate
+            .Replace("{passwordResetLink}", passwordResetLink);
+
+        builder.HtmlBody = htmlContent;
+
+        var logo = builder.LinkedResources.Add("logo-full-black.png");
+        logo.ContentId = "logo";
+
+        email.Body = builder.ToMessageBody();
 
         return email;
     }
