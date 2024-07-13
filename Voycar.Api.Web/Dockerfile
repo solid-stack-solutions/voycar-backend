@@ -21,6 +21,4 @@ FROM base AS final
 WORKDIR /app
 COPY --from=publish /app/publish .
 
-COPY /Voycar.Api.Web/Service/ /app/
-
 ENTRYPOINT ["dotnet", "Voycar.Api.Web.dll"]
