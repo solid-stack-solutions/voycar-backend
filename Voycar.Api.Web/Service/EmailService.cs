@@ -1,9 +1,11 @@
 namespace Voycar.Api.Web.Service;
 
+using System.Text;
 using MailKit.Net.Smtp;
 using MailKit.Security;
 using MimeKit;
 using Entities;
+
 
 /// <summary>
 /// Service for sending verification and password reset emails to users.
@@ -17,9 +19,6 @@ public class EmailService : IEmailService
     private const string SmtpEmail = "voycar.dev@gmail.com";
     private const string SmtpHostAddress = "smtp.gmail.com";
     private const int SmtpPort = 587;
-    private const string HtmlVerifyTemplate = "Html/VerifyEmail.html";
-    private const string HtmlResetPasswordTemplate = "Html/PasswordResetEmail.html";
-    private const string Logo = "Images/logo-full-black.png";
 
 
     public void SendVerificationEmail(User user)
@@ -83,15 +82,11 @@ public class EmailService : IEmailService
         email.Subject = "Voycar-Konto-Verifizierung";
 
         var builder = new BodyBuilder();
-        var htmlVerifyTemplate = File.ReadAllText(HtmlVerifyTemplate);
-        var htmlContent = htmlVerifyTemplate
+        var htmlContent = Templates.HtmlVerifyTemplate
             .Replace("{name}", user.Member.FirstName)
             .Replace("{verificationLink}", verificationLink);
 
         builder.HtmlBody = htmlContent;
-
-        var logo = builder.LinkedResources.Add(Logo);
-        logo.ContentId = "logo";
 
         email.Body = builder.ToMessageBody();
 
@@ -107,14 +102,10 @@ public class EmailService : IEmailService
         email.Subject = "Voycar-Passwort-Reset";
 
         var builder = new BodyBuilder();
-        var htmlResetPasswordTemplate = File.ReadAllText(HtmlResetPasswordTemplate);
-        var htmlContent = htmlResetPasswordTemplate
+        var htmlContent = Templates.HtmlResetPasswordTemplate
             .Replace("{passwordResetLink}", passwordResetLink);
 
         builder.HtmlBody = htmlContent;
-
-        var logo = builder.LinkedResources.Add(Logo);
-        logo.ContentId = "logo";
 
         email.Body = builder.ToMessageBody();
 
