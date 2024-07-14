@@ -1,6 +1,5 @@
 namespace Voycar.Api.Web.Service;
 
-using System.Text;
 using MailKit.Net.Smtp;
 using MailKit.Security;
 using MimeKit;
