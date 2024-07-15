@@ -5,6 +5,7 @@ using MailKit.Security;
 using MimeKit;
 using Entities;
 
+
 /// <summary>
 /// Service for sending verification and password reset emails to users.
 ///
@@ -21,14 +22,14 @@ public class EmailService : IEmailService
 
     public void SendVerificationEmail(User user)
     {
-        var email = this.CreateVerificationEmail(user, CreateVerificationLink(user));
+        var email = CreateVerificationEmail(user, CreateVerificationLink(user));
         this.SendEmail(email);
     }
 
 
     public void SendPasswordResetEmail(User user)
     {
-        var email = this.CreatePasswordResetEmail(user, CreatePasswordResetLink(user));
+        var email = CreatePasswordResetEmail(user, CreatePasswordResetLink(user));
         this.SendEmail(email);
     }
 
@@ -72,43 +73,40 @@ public class EmailService : IEmailService
     }
 
 
-    private MimeMessage CreateVerificationEmail(User user, string verificationLink)
+    private static MimeMessage CreateVerificationEmail(User user, string verificationLink)
     {
         var email = new MimeMessage();
         email.From.Add(MailboxAddress.Parse(SmtpEmail));
         email.To.Add(MailboxAddress.Parse(user.Email));
         email.Subject = "Voycar-Konto-Verifizierung";
 
+        var builder = new BodyBuilder();
+        var htmlContent = Templates.HtmlVerifyTemplate
+            .Replace("{name}", user.Member!.FirstName)
+            .Replace("{verificationLink}", verificationLink);
 
-        var content = $"Bitte klick auf den folgenden Link, um dein Konto zu verifizieren: " +
-                      $"<a href=\"{verificationLink}\">Link zum Verifizieren</a>";
+        builder.HtmlBody = htmlContent;
 
-        var htmlContent = $"<html><body><p style='font-weight: bold;'>{content}</p></body></html>";
-        email.Body = new TextPart("html")
-        {
-            Text = htmlContent
-        };
+        email.Body = builder.ToMessageBody();
 
         return email;
     }
 
 
-    private MimeMessage CreatePasswordResetEmail(User user, string passwordResetLink)
+    private static MimeMessage CreatePasswordResetEmail(User user, string passwordResetLink)
     {
         var email = new MimeMessage();
         email.From.Add(MailboxAddress.Parse(SmtpEmail));
         email.To.Add(MailboxAddress.Parse(user.Email));
         email.Subject = "Voycar-Passwort-Reset";
 
+        var builder = new BodyBuilder();
+        var htmlContent = Templates.HtmlResetPasswordTemplate
+            .Replace("{passwordResetLink}", passwordResetLink);
 
-        var content = $"Bitte klick auf den folgenden Link, um dein Passwort zurückzusetzen: " +
-                      $"<a href=\"{passwordResetLink}\">Link zum Passwort-Reset</a>";
+        builder.HtmlBody = htmlContent;
 
-        var htmlContent = $"<html><body><p style='font-weight: bold;'>{content}</p></body></html>";
-        email.Body = new TextPart("html")
-        {
-            Text = htmlContent
-        };
+        email.Body = builder.ToMessageBody();
 
         return email;
     }
