@@ -16,9 +16,9 @@ public class Templates
                               style='max-width: 600px; margin: 0 auto; background-color: #ffffff; padding: 20px; border-radius: 10px; box-shadow: 0 0 10px rgba(0,0,0,0.1);'>
                               <h1 style='color: #333333; text-align: center;'>Voycar-Konto-Verifizierung</h1>
                               <p>Hallo {name},</p>
-                              <p>vielen Dank, dass Du Dich bei Voycar registriert hast!</p>
-                              <p>Damit wir Deine Registrierung abschließen können, musst Du Deine E-Mail-Adresse bestätigen.</p>
-                              <p>Bitte klick auf den folgenden Link, um Dein Konto zu verifizieren:</p>
+                              <p>vielen Dank, dass du dich bei Voycar registriert hast!</p>
+                              <p>Damit wir deine Registrierung abschließen können, musst du deine Email-Adresse bestätigen.</p>
+                              <p>Bitte klicke auf den folgenden Link, um dein Konto zu verifizieren:</p>
                               <p style='text-align: center;'>
                                   <a href='{verificationLink}'
                                      style='display: inline-block; background-color: #4CAF50; color: #ffffff; padding: 10px 20px; text-decoration: none; border-radius: 5px;'>Konto
