@@ -22,14 +22,14 @@ public class EmailService : IEmailService
 
     public void SendVerificationEmail(User user)
     {
-        var email = this.CreateVerificationEmail(user, CreateVerificationLink(user));
+        var email = CreateVerificationEmail(user, CreateVerificationLink(user));
         this.SendEmail(email);
     }
 
 
     public void SendPasswordResetEmail(User user)
     {
-        var email = this.CreatePasswordResetEmail(user, CreatePasswordResetLink(user));
+        var email = CreatePasswordResetEmail(user, CreatePasswordResetLink(user));
         this.SendEmail(email);
     }
 
@@ -73,7 +73,7 @@ public class EmailService : IEmailService
     }
 
 
-    private MimeMessage CreateVerificationEmail(User user, string verificationLink)
+    private static MimeMessage CreateVerificationEmail(User user, string verificationLink)
     {
         var email = new MimeMessage();
         email.From.Add(MailboxAddress.Parse(SmtpEmail));
@@ -82,7 +82,7 @@ public class EmailService : IEmailService
 
         var builder = new BodyBuilder();
         var htmlContent = Templates.HtmlVerifyTemplate
-            .Replace("{name}", user.Member.FirstName)
+            .Replace("{name}", user.Member!.FirstName)
             .Replace("{verificationLink}", verificationLink);
 
         builder.HtmlBody = htmlContent;
@@ -93,7 +93,7 @@ public class EmailService : IEmailService
     }
 
 
-    private MimeMessage CreatePasswordResetEmail(User user, string passwordResetLink)
+    private static MimeMessage CreatePasswordResetEmail(User user, string passwordResetLink)
     {
         var email = new MimeMessage();
         email.From.Add(MailboxAddress.Parse(SmtpEmail));
