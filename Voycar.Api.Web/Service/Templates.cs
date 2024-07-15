@@ -24,7 +24,7 @@ public class Templates
                                      style='display: inline-block; background-color: #4CAF50; color: #ffffff; padding: 10px 20px; text-decoration: none; border-radius: 5px;'>Konto
                                       verifizieren</a>
                               </p>
-                              <p>Mit freundlichen Grüßen,<br>Dein Voycar-Team</p>
+                              <p>Mit freundlichen Grüßen<br>dein Voycar-Team</p>
                           </div>
                       </body>
                   </html>
