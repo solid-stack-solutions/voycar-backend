@@ -43,7 +43,7 @@ public class Templates
                     <div
                         style='max-width: 600px; margin: 0 auto; background-color: #ffffff; padding: 20px; border-radius: 10px; box-shadow: 0 0 10px rgba(0,0,0,0.1);'>
                         <h1 style='color: #333333; text-align: center;'>Voycar-Passwort-Reset</h1>
-                        <p>Bitte klick auf den folgenden Link, um dein Passwort zurückzusetzen:</p>
+                        <p>Bitte klicke auf den folgenden Link, um dein Passwort zurückzusetzen:</p>
                         <p style='text-align: center;'>
                             <a href='{passwordResetLink}'
                                style='display: inline-block; background-color: #4CAF50; color: #ffffff; padding: 10px 20px; text-decoration: none;
