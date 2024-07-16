@@ -159,7 +159,6 @@ public static class ClientFactory
 
     private static async Task VerifyUserInDb(VoycarDbContext context, string email)
     {
-        // ToDo register endpoint should return ID, which can then be used to find user
         var userEntity = await context.Users.FirstOrDefaultAsync(user => user.Email == email);
         if (userEntity is null)
         {
