@@ -28,6 +28,7 @@ cd voycar-frontend
 - Make a copy of `.env.example` and name it `.env` (will be Git-ignored)
 - Set the names and values of your secret environment variables in there
 - Run `docker compose up`
+- Create and apply a migration (see [Migrations](#migrations))
 
 # Development
 
@@ -37,7 +38,7 @@ cd voycar-frontend
 - Identifiers of dependency-injected properties are camelCase with a leading underscore, e.g. `_myProperty`
 
 ### Migrations
-Database migrations can be generated automatically from the [EF Core `DbContext`](https://learn.microsoft.com/en-us/dotnet/api/microsoft.entityframeworkcore.dbcontext?view=efcore-8.0). Creating migrations and updating the database with them is necessary every time an entity associated with the `DbContext` changes.
+Database migrations can be generated automatically from the [EF Core `DbContext`](https://learn.microsoft.com/en-us/dotnet/api/microsoft.entityframeworkcore.dbcontext?view=efcore-8.0). Creating migrations and applying them is necessary every time an entity associated with the `DbContext` changes.
 
 ```sh
 # Make sure you are in the right directory with the necessary commands available
@@ -46,7 +47,7 @@ dotnet tool restore
 
 # Create a migration
 dotnet ef migrations add <Migration_Name>
-# Update running database with created migration 
+# Apply created migration to running (!) database
 dotnet ef database update <Migration_Name> --connection "User ID=admin;Password=admin;Server=localhost;Port=5432;Database=VoycarDb"
 ```
 
